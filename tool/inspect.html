@@ -1,0 +1,52 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+<html>
+<head>
+  <title>JSON Inspector</title>
+  <link rel="STYLESHEET" href="inspect.css" />
+  <script>
+function _loadJson(form) {
+  var text = form.text.value;
+  var func = function(){
+    var obj = eval("("+text+")");
+    _handleJson(obj);
+  };
+  window.setTimeout(func, 50);
+  return false;
+}
+
+function _handleJson(json) {
+  document.getElementById('xul').contentWindow._populateTree(json);
+}
+
+// from http://guymal.com/mycode/100_percent_iframe/
+function resize_iframe() {
+  var height = window.innerHeight;
+  document.getElementById("xul").style.height =
+      parseInt(height - document.getElementById("xul").offsetTop - 25) + "px";
+}
+
+// this will resize the iframe every
+// time you change the size of the window.
+window.onresize=resize_iframe; 
+
+  </script>
+</head>
+<body>
+
+<b style="font-size: 120%">JSON Inspector</b> -
+
+<form onsubmit="_loadJson(this); return false;">
+Input Json Text
+<input type="SUBMIT" value="Show me the Tree!">
+(Firefox only)
+<textarea name="text" style="width:100%; heigh:30%">
+</textarea>
+</form>
+
+<p>
+
+<iframe id="xul" src="inspect.xul" style="width:100%" onload="resize_iframe()"></iframe>
+
+</body>
+</html>
+

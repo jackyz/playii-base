@@ -1,0 +1,31 @@
+<div id="head">
+  HEAD
+</div>
+<div id="side">
+  SIDE
+</div>
+<div id="main" style="border:1px solid #000;">
+  MAIN
+</div>
+<div id="foot">
+  FOOT
+</div>
+<div id="info">
+</div>
+<!-- div id="debug" style="display:none;" -->
+<div id="debug">
+  utils:
+  <a href="javascript:(function(){ $('#log').empty() })()">clean_log</a>
+  <div id="log"></div>
+  <div id="server_log"></div>
+</div>
+
+<script language="javascript">
+// the base interface :: main structure of ui (common browser)
+
+$(function(){
+  boot.load("#side", "/side");
+  boot.load("#main", currentScene);
+});
+</script>
+

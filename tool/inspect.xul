@@ -1,0 +1,22 @@
+<?xml version="1.0"?>
+<?xml-stylesheet href="chrome://global/skin" type="text/css"?>
+
+<window id="example-window" title="GData JSON Inspector"
+        xmlns:html="http://www.w3.org/1999/xhtml"
+        xmlns="http://www.mozilla.org/keymaster/gatekeeper/there.is.only.xul"
+        >
+
+<html:script id="script" src="inspect.js"></html:script>
+
+<tree flex="1" id="tree" hidecolumnpicker="true">
+  <treecols>
+    <treecol label="Property" primary="true" flex="1" />
+    <splitter class="tree-splitter"/>
+    <treecol label="Value" flex="9" />
+  </treecols>
+
+  <treechildren id="treechildren" />
+</tree>
+
+</window>
+
