@@ -1,32 +1,83 @@
 (function(){
 
+   // **** 常量
+
+   var F = ["E", "S", "W", "N"];     // 方：东南西北
+
+   var Z = [                         // 字
+     1,2,3,4,5,6,7,8,9,              // 万
+     11,12,13,14,15,16,17,18,19,     // 饼
+     21,22,23,24,25,26,27,28,29,     // 索
+     31,32,33,34,35,36,37            // 字
+   ];
+
+   var NF = function(a,b){return a-b;};
+
 // ****************************************************************
 // * TEST FUNCTIONS
 // ****************************************************************
 
    function test() {
-     var t1 = (new Date()).getTime();
-     // for (var i=0; i<1000; i++) xpai();
-     var t2 = (new Date()).getTime();
-     print("time:"+(t2-t1));
+
+     void tc();
+
+     assert( xpai() != xpai());
+
+     info("xpai :: success "+ tc() +"ms");
+
+     void tc();
+
+     assert( is_gang([1,1,1], 1));
+     assert( is_gang([1,1,1,2,3,5], 1));
+     assert(!is_gang([1,1,2,3,5], 1));
+     info("is_gang :: success "+ tc() +"ms");
+
+     assert( is_peng([1,1], 1));
+     assert( is_peng([1,1,1], 1));
+     assert( is_peng([1,1,1,6,7], 1));
+     assert(!is_peng([1,2,3], 1));
+     info("is_peng :: success "+ tc() +"ms");
+
+     assert( is_shun(1, 2, 3));
+     assert(!is_shun(2, 3, 3));
+     assert( is_shun(2, 4, 3));
+     assert(!is_shun(3, 4, 3));
+     assert( is_shun(4, 5, 3));
+     assert(!is_shun(5, 6, 3));
+     info("is_shun :: success "+ tc() +"ms");
+
+     /*
+     assert(!is_hu([].sort(NF)));
+     assert(!is_hu([1].sort(NF)));
+     assert( is_hu([1,1].sort(NF)));
+     assert(!is_hu([1,2].sort(NF)));
+     assert(!is_hu([1,1,1].sort(NF)));
+     assert(!is_hu([1,1,2].sort(NF)));
+     assert(!is_hu([1,1,1,1].sort(NF)));
+     assert(!is_hu([1,1,1,2].sort(NF)));
+     assert(!is_hu([1,1,1,1,2].sort(NF)));
+     assert( is_hu([1,1,1,1,2,2].sort(NF)));
+     assert(!is_hu([1,1,1,1,2,3].sort(NF)));
+     assert(!is_hu([1,1,1,1,2,2,2].sort(NF)));
+     assert(!is_hu([1,1,1,1,2,2,3].sort(NF)));
+     assert(!is_hu([1,1,1,1,2,2,3,4].sort(NF)));
+     assert(!is_hu([1,1,1,1,2,2,3,3,4].sort(NF)));
+     assert( is_hu([1,1,1,2,2,3,3,4].sort(NF)));
+     info("is_hu :: success "+ tc() +"ms");
+
+     assert( is_done([1,1,1,2,2,3,3], 4) );
+     info("is_done :: success "+ tc() +"ms");
+      */
+
+     assert( is_ting([1,2,2, 2,2,3, 21,21,21, 31,31,31, 37]) );
+     info("is_ting :: success "+ tc() +"ms");
    }
 
 // ****************************************************************
 // * EVENT FUNCTIONS
 // ****************************************************************
 
-   // **** 常量
-
-   var F = ["E", "S", "W", "N"];     // 方：东南西北
-
-   var Z = [                         // 字
-     1,2,3,4,5,6,7,8,9,              // 饼
-     11,12,13,14,15,16,17,18,19,     // 索
-     21,22,23,24,25,26,27,28,29,     // 万
-     31,32,33,34,35,36,37            // 字
-   ];
-
-   // **** 用户列表管理
+  // **** 用户列表管理
 
    function enter(who, nick, data){
      cast(this.list)("enter")(who, nick); // 广播
@@ -123,20 +174,21 @@
 	 cast(who)("error")("{error}"); // 通知
        } else { // 成胡
 	 // **** 成功终局
-	 var bill = do_bill(sit); // 算番/结钱 bill 是 object
+	 var bill = do_bill(sit); // 算番/结钱 bill 是算番和结钱结果的 object
 	 if (this.host != sit) this.host = next(sit); // 轮庄
 	 this.play = false; // 终局
 	 cast(this.list)("pai")("done", bill); // 广播胡牌结果
 	 return; // 没有必要继续叫牌
        }
      } else if (cmd == "gang") { // ** 杠
+       // TODO 明杠，暗杠
        if (!is_gang(this.game[sit].hide, this.game.card)) { // 算杠
 	 cast(who)("error")("{error}"); // 通知
        } else { // 成杠
 	 // 设置杠牌
-	 this.game[sit].hide = delete(this.game.card, this.game[sit].hide);
-	 this.game[sit].hide = delete(this.game.card, this.game[sit].hide);
-	 this.game[sit].hide = delete(this.game.card, this.game[sit].hide);
+	 this.game[sit].hide = remove(this.game.card, this.game[sit].hide);
+	 this.game[sit].hide = remove(this.game.card, this.game[sit].hide);
+	 this.game[sit].hide = remove(this.game.card, this.game[sit].hide);
 	 this.game[sit].show.push(this.game.card);
 	 this.game[sit].show.push(this.game.card);
 	 this.game[sit].show.push(this.game.card);
@@ -156,8 +208,8 @@
 	 cast(who)("error")("{error}"); // 通知
        } else { // 成碰
 	 // 设置碰牌
-	 this.game[sit].hide = delete(this.game.card, this.game[sit].hide);
-	 this.game[sit].hide = delete(this.game.card, this.game[sit].hide);
+	 this.game[sit].hide = remove(this.game.card, this.game[sit].hide);
+	 this.game[sit].hide = remove(this.game.card, this.game[sit].hide);
 	 this.game[sit].show.push(this.game.card);
 	 this.game[sit].show.push(this.game.card);
 	 this.game[sit].show.push(this.game.card);
@@ -169,17 +221,21 @@
 	 cast(this.list)("pai")("peng", sit, this.game.card);
        }
      } else if (cmd == "shun") { // ** 吃
+       if (this.game.card > 30) return false; // 字牌，不能吃
        var p1 = arguments[2]; // 第三参数为第一个吃牌
+       if (!member(p1, this.game[sit].hide)) return;
        var p2 = arguments[3]; // 第四参数为第二个吃牌
+       if (!member(p2, this.game[sit].hide)) return;
        if (!is_shun(p1, p2, this.game.card)) { // 算吃
 	 cast(who)("error")("{error}"); // 通知
        } else { // 成顺
 	 // 设置吃牌
-	 this.game[sit].hide = delete(p1, this.game[sit].hide);
-	 this.game[sit].hide = delete(p2, this.game[sit].hide);
-	 this.game[sit].show.push(p1);
-	 this.game[sit].show.push(p2);
-	 this.game[sit].show.push(this.game.card);
+	 this.game[sit].hide = remove(p1, this.game[sit].hide);
+	 this.game[sit].hide = remove(p2, this.game[sit].hide);
+	 var ps = []; ps.push(p1, p2, this.game.card); ps.sort();
+	 this.game[sit].show.push(ps[0]);
+	 this.game[sit].show.push(ps[1]);
+	 this.game[sit].show.push(ps[2]);
 	 this.game.card = "";
 	 // 轮到 sit 出牌
 	 this.game.last = sit;
@@ -202,7 +258,7 @@
 	 cast(who)("error")("{error}"); // 通知
        } else {
 	 // 设置出牌
-	 this.game[sit].hide = delete(p, this.game[sit].hide);
+	 this.game[sit].hide = remove(p, this.game[sit].hide);
 	 this.game.card = p;
 	 // 轮到 sit 的下家叫牌
 	 this.game.last = sit;
@@ -237,7 +293,7 @@
    function loop(){
      if (this.game.turn == "") { // 尚未开始轮询,等待打出
        var sit = this.game.last; // sit 是 last
-       var cmds = calc_cmds(this.game[sit], this.game.card); // 计算可选项
+       var cmds = do_calc(this.game[sit], this.game.card); // 计算可选项
        cmds.push("drop"); // sit 有打牌选项
        // 要求 sit 作出选择 // 完成叫牌
        cast(this.sits[sit].id)("pai")("wait", this.game[sit].hide, cmds);
@@ -308,36 +364,120 @@
    }
 
    function next(fang){
-
+     if (fang == "E") return "S";
+     else if (fang == "S") return "W";
+     else if (fang == "W") return "N";
+     else if (fang == "N") return "E";
    }
 
    function do_bill(sit){
 
    }
 
-   function is_done(array){
+   // ---- side effect free
 
+   function is_hu(p, j){
+     // debug("is_hu(["+p+"],"+j+")");
+     if (p.length == 0) { // 没得剩
+       if (j) return true; // 有将，胡了
+       else return false; // 没将，不成胡
+     }
+     if (p[0] == p[1] && p[0] == p[2] && p[0] == p[3]){ // 有杠
+       var px = clone(p); // 分支，提杠
+       px.shift(); px.shift(); px.shift(); px.shift();
+       if (is_hu(px, j)) return true; // 若成胡，成功
+     }
+     if (p[0] == p[1] && p[0] == p[2]){ // 有刻
+       var px = clone(p); // 分支，提刻
+       px.shift(); px.shift(); px.shift();
+       if (is_hu(px, j)) return true; // 若成胡，成功
+     }
+     if (p[0] == p[1] && !j){ // 有将，且未提
+       var px = clone(p); // 分支，提将
+       px.shift(); px.shift();
+       if (is_hu(px, true)) return true; // 若成胡，成功
+     }
+     if (p[0]<30 && member(p[0]+1, p) && member(p[0]+2, p)){ // 有顺
+       var px = clone(p); // 分支，提顺
+       px = remove(p[0], px); px = remove(p[0]+1, px); px = remove(p[0]+2, px);
+       if (is_hu(px, j)) return true; // 若成胡，成功
+     }
+     return false; // 匹配完毕，失败
    }
 
-   function is_ting(array){
-
+   function is_done(hide, card){
+     var p = clone(hide); p.push(card); p.sort(NF);
+     return is_hu(p);
    }
 
-   function is_gang(array){
-
+   function is_ting(hide){
+     return any(function(e){ return is_done(hide, e); }, Z);
    }
 
-   function is_peng(array){
-
+   function is_gang(hide, card){
+     return (count(card, hide) == 3);
    }
 
-   function is_shun(array){
+   function is_peng(hide, card){
+     return (count(card, hide) >= 2);
+   }
 
+   function is_shun(p1, p2, card){
+     var a = []; a.push(card, p1, p2); a.sort(NF);
+     if (a[0]+1 == a[1] && a[1]+1 == a[2]) return true;
+     return false;
    }
 
 // ****************************************************************
 // * LISTS FUNCTIONS
 // ****************************************************************
+
+   // ** func(e) return true | false
+   function all(func, array){
+     for (var i=0; i<array.length; i++){
+       if (!func(array[i])) return false;
+     }
+     return true;
+   }
+
+   // ** func(e) return true | false
+   function any(func, array){
+     for (var i=0; i<array.length; i++){
+       if (func(array[i])) return true;
+     }
+     return false;
+   }
+
+   function clone(array){
+     var r = [];
+     for (var i=0; i<array.length; i++){
+       r.push(array[i]);
+     }
+     return r;
+   }
+
+   function count(e, array){
+     var c = 0;
+     for (var i=0; i<array.length; i++){
+       if (e == array[i]) c++;
+     }
+     return c;
+   }
+
+   // ** func(e) return true | false
+   function first(func, array){
+     for (var i=0; i<array.length; i++){
+       if (func(array[i])) return array[i];
+     }
+     return undefined;
+   }
+
+   // ** func(e) return void
+   function foreach(func, array){
+     for (var i=0; i<array.length; i++){
+       func(array[i]);
+     }
+   }
 
    function indexof(e, array){
      for (var i=0; i<array.length; i++){
@@ -346,31 +486,7 @@
      return -1;
    }
 
-   function member(e, array){
-     return (indexof(e, array) != -1);
-   }
-
-   function any(func, array){
-     for (var i=0; i<array.length; i++){
-       if (func(array[i])) return true;
-     }
-     return false;
-   }
-
-   function all(func, array){
-     for (var i=0; i<array.length; i++){
-       if (!func(array[i])) return false;
-     }
-     return true;
-   }
-
-   function first(func, array){
-     for (var i=0; i<array.length; i++){
-       if (func(array[i])) return array[i];
-     }
-     return undefined;
-   }
-
+   // ** func(e) return true | false
    function last(func, array){
      for (var i=array.length - 1; i>0; i--){
        if (func(array[i])) return array[i];
@@ -378,17 +494,27 @@
      return undefined;
    }
 
-   function foreach(func, array){
-     for (var i=0; i<array.length; i++){
-       func(array[i]);
-     }
-   }
-
    // ** func(e) return new element
    function map(func, array){
      var r = [];
      for (var i=0; i<array.length; i++){
        r.push(func(array[i]));
+     }
+     return r;
+   }
+
+   function member(e, array){
+     for (var i=0; i<array.length; i++){
+       if (array[i] == e) return true;
+     }
+     return false;
+   }
+
+   function remove(e, array){
+     var r = [], m = false;
+     for (var i=0; i<array.length; i++){
+       if (!m && array[i] == e) m = true;
+       else r.push(array[i]);
      }
      return r;
    }
