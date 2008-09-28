@@ -1,56 +1,30 @@
+load("env.js");
+// test
 (function(){
-  // log functions
-  function _log(level, str){
-    var d = new Date();
-    print("["+
-	  (d.getFullYear()) +'.'+
-	  (d.getMonth() + 1) +'.'+
-          (d.getDate()) +'-'+
-          (d.getHours()) +':'+
-          (d.getMinutes()) +':'+
-          (d.getSeconds()) +
-	  "] "+ level +": "+ str);
-  }
 
-  var cmdline = [];
+  var o = parse();
+  // inner test
+  // o.test();
 
-  // cast function
-  function _args(){
-    var args = [];
-    for (var i = 0; i<arguments.length; i++) args.push(arguments[i]);
-    cmdline.push(args);
-    debug(cmdline[0]+"("+cmdline[1]+")("+cmdline[2]+")("+cmdline[3]+")");
-    cmdline = [];
-  }
-  function _func(func){
-    cmdline.push(func);
-    return _args;
-  }
-  function _cast(who){
-    cmdline.push("cast");
-    cmdline.push(who);
-    return _func;
-  }
+  var tm = {};
+  // outer test
+  void pass(tm);
 
-  var mark = 0;
+  o.enter("a", "a_nick", {});
+  o.enter("b", "b_nick", {});
+  o.enter("c", "c_nick", {});
+  o.enter("d", "d_nick", {});
 
-  function _timepass(){
-    var tx = (new Date()).getTime();
-    var r = tx - mark;
-    mark = tx;
-    return r;
-  }
+  o.sit("a", "sit_down", "E");
+  o.sit("b", "sit_down", "S");
+  o.sit("c", "sit_down", "W");
+  o.sit("d", "sit_down", "N");
 
-  function _assert(b){
-    if(!b) throw new Error("assert fail");
-  }
+  o.sit("a", "ready");
+  o.sit("b", "ready");
+  o.sit("c", "ready");
+  o.sit("d", "ready");
 
-  fatal = function(str){ _log("FATAL",str); };
-  error = function(str){ _log("ERROR",str); };
-  warn  = function(str){ _log(" WARN",str); };
-  info  = function(str){ _log(" INFO",str); };
-  debug = function(str){ _log("DEBUG",str); };
-  tc    = _timepass;
-  assert= _assert;
+  info("flow :: success "+ pass(tm) +"ms");
 
 })();
