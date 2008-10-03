@@ -48,15 +48,19 @@
 
     var runtime = {};
     runtime.cast  = _cast;
-    seal(runtime, true);
+    // seal(runtime, true);
+    seal(runtime);
 
     var l = "", s = "", e = 0;
     do {
       l = readline();
-      if (l.length == 0) e++;
-      else e = 0, s += l+"\n";
-    } while(e < 10);
-    // readline does not wait, nor return an EOF, so just a tricky
+      if (l.length == 0) {
+	e ++ ;
+      } else {
+	e = 0;
+	s += l+"\n"; // realthing
+      }
+    } while(e < 10); // readline does return an EOF, a tricky
 
     try {
       var o = evalcx(s, runtime);

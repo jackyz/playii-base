@@ -98,7 +98,7 @@
 	   throw new Error("{unknown sit command}"); // 异常
        }
      } catch(e) {
-       cast(who)("error")(e.message);
+       cast(who)("error")(e);
      }
    }
 
@@ -120,10 +120,9 @@
        var sit = first(function(x){ return mj.sits[x].id == who; }, F);
        if (!sit)
 	 throw new Error("{not player}"); // 异常 不是玩家
-       // sit 是否被叫牌
-       if ( (mj.game.turn == undefined && sit != mj.game.last) ||
-	    (mj.game.turn != undefined && sit != mj.game.turn) )
-	 throw new Error("{not your turn}"); // 异常 sit非出牌人或叫牌人
+       // 是否轮到 sit 操作
+       if (mj.game.turn != sit)
+	 throw new Error("{not your turn}"); // 异常 并未轮到sit操作
        // 执行命令
        switch(cmd){
 	 case "hule": // ** 胡
@@ -147,7 +146,7 @@
 	   throw new Error("{unknown pai command}"); // 异常
        }
      } catch(e) {
-       cast(who)("error")(e.message);
+       cast(who)("error")(e);
      }
    }
 
@@ -199,31 +198,41 @@
    // ****
    // do_open : 开局
    function do_open(){
-     if (!mj.host) mj.host = F[rand(4)]; // 选庄
+     // if (!mj.host) mj.host = F[rand(4)]; // 选庄
+     // mock
+     mj.host = "E";
      cast(mj.list)("pai")("open", mj.host); // 广播开局
      mj.play = true;
      mj.game = init_game();
-     mj.game.buff = xpai(); // 洗牌
-     foreach(function(x){ // 分牌 // 每人12张
-	       for (var i=0; i<12; i++)
+     // mj.game.buff = xpai(); // 洗牌
+     // mock
+     mj.game.buff = [36, 7, 32, 23, 37, 22, 32, 9, 36, 26, 27, 34, 35, 34, 17, 17, 5, 4, 19, 31, 32, 26, 31, 2, 16, 24, 33, 4, 27, 37, 8, 12, 6, 29, 18, 31, 26, 2, 29, 35, 5, 5, 8, 19, 7, 32, 22, 12, 28, 36, 26, 21, 33, 27, 21, 14, 8, 18, 14, 12, 28, 16, 35, 4, 13, 8, 22, 9, 11, 29, 25, 1, 25, 24, 15, 3, 11, 13, 18, 21, 19, 14, 15, 11, 33, 1, 24, 33, 18, 23, 13, 28, 6, 11, 23, 13, 14, 19, 27, 17, 25, 21, 22, 7, 29, 1, 23, 31, 16, 9, 6, 34, 17, 16, 3, 34, 15, 2, 15, 4, 25, 35, 36, 6, 37, 9, 7, 24, 5, 3, 12, 1, 2, 3, 28, 37];
+     foreach(function(x){
+	       // 分牌 // 每人13张
+	       for (var i=0; i<13; i++)
 		 mj.game[x].hand.push(mj.game.buff.shift());
-	     }, F);
-     mj.game[mj.host].hand.push(mj.game.buff.shift()); // 庄家起牌
-     foreach(function(x){ // 各自拿牌
+	       // 排序(不必要)
+	       mj.game[x].hand.sort(NF);
+	       // 各自拿牌
 	       cast(mj.sits[x].id)("pai")("init", mj.game[x].hand);
 	     }, F);
-     // 轮到庄家出牌
-     mj.game.last = mj.host;
-     // 叫牌
-     jpai();
+     // 向庄家发牌
+     do_deal(mj.host);
    }
 
    // ****
    // do_close : 清盘
-   function do_close(){
-     mj.game = init_game();
+   function do_close(hule, sit){
+     if (hule) {
+       if (sit != mj.host) mj.host = next(mj.host); // 胡牌连庄
+       cast(mj.list)("pai")("hule", sit, mj.game[sit].show); // 广播胡牌
+       // TODO 算番结钱
+     } else {
+       mj.host = next(mj.host); // 轮庄
+       cast(mj.list)("pai")("fail"); // 广播流局
+     }
+     mj.game = init_game(); // 清场
      mj.play = false; // 终局
-     cast(mj.list)("pai")("close", mj.host); // 广播终局
    }
 
    // ****
@@ -231,18 +240,18 @@
    function do_hule(sit){
      if (!has_hule(mj.game[sit].hand, mj.game.card))
        throw new Error("{hule failure}"); // 异常 不能成胡
-     // **** 成功,清算
-     var bill = do_bill(sit); // 算番/结钱 bill 是算番/结钱的结果(object)
-     if (mj.host != sit) mj.host = next(sit); // 轮庄
-     cast(mj.list)("pai")("hule", bill); // 广播胡牌结果
-     do_close(); // 终局
+     // 设置成胡
+     mj.game[sit].show.push(mj.game.card);
+     foreach(function(x){
+	       mj.game[sit].show.push(x);
+	     }, mj.game[sit].hand);
+     mj.game[sit].hand = [];
+     mj.game[sit].show.sort(NF);
+     // debug
+     info(mj.game[sit].toSource());
+     // **** 成功,终局
+     do_close(true, sit); // 终局
      // 不继续叫牌
-   }
-
-   // ****
-   // do_bill : 结帐,用户胡牌之后的资金结算
-   function do_bill(sit){
-
    }
 
    // ****
@@ -259,17 +268,15 @@
      mj.game[sit].show.push(mj.game.card);
      mj.game[sit].show.push(mj.game.card);
      mj.game[sit].show.push(mj.game.card);
-     mj.game.card = 0;
-     // 起杠
-     mj.game[sit].hand.push(mj.game.buff.pop());
-     mj.game.trim++;
-     // 轮到 sit 出牌
-     mj.game.last = sit;
-     mj.game.turn = undefined;
+     // 设置 zhua 牌
+     mj.game[sit].hand.sort(NF);
+     mj.game[sit].zhua = mj.game[sit].hand.pop();
      // 广播杠牌
      cast(mj.list)("pai")("gang", sit, mj.game.card);
-     // 继续叫牌
-     jpai();
+     // 清除打出的牌
+     mj.game.card = 0;
+     // 起杠
+     do_deal(sit, true);
    }
 
    // ****
@@ -283,14 +290,15 @@
      mj.game[sit].show.push(mj.game.card);
      mj.game[sit].show.push(mj.game.card);
      mj.game[sit].show.push(mj.game.card);
-     mj.game.card = 0;
-     // 轮到 sit 出牌
-     mj.game.last = sit;
-     mj.game.turn = undefined;
+     // 设置 zhua 牌
+     mj.game[sit].hand.sort(NF);
+     mj.game[sit].zhua = mj.game[sit].hand.pop();
      // 广播碰牌
      cast(mj.list)("pai")("peng", sit, mj.game.card);
-     // 继续叫牌
-     jpai();
+     // 清除打出的牌
+     mj.game.card = 0;
+     // 叫牌 sit
+     do_call(sit);
    }
 
    // ****
@@ -311,14 +319,15 @@
      mj.game[sit].show.push(ps[0]);
      mj.game[sit].show.push(ps[1]);
      mj.game[sit].show.push(ps[2]);
-     mj.game.card = 0;
-     // 轮到 sit 出牌
-     mj.game.last = sit;
-     mj.game.turn = undefined;
+     // 设置 zhua 牌
+     mj.game[sit].hand.sort(NF);
+     mj.game[sit].zhua = mj.game[sit].hand.pop();
      // 广播吃牌
-     cast(mj.list)("pai")("shun", sit, [p1, p2, mj.game.card]);
-     // 继续叫牌
-     jpai();
+     cast(mj.list)("pai")("shun", sit, ps);
+     // 清除打出的牌
+     mj.game.card = 0;
+     // 叫牌 sit
+     do_call(sit);
    }
 
    // ****
@@ -326,36 +335,92 @@
    function do_hold(sit){
      if (mj.game.turn == undefined)
        throw new Error("{hold failure}"); // 异常 轮到玩家出牌，不能忍
-     // 轮到下家叫牌
-     mj.game.turn = next(sit);
-     // 继续叫牌
-     jpai();
+     // 叫牌 sit 的下家
+     do_call( next(sit) );
    }
 
    // ****
    // do_drop : 打牌
    function do_drop(sit, p, t){
-     // TODO 尚未处理好停牌时的处理：停牌时，只有刚起的那张可打
-     if (mj.game[sit].ting == true && !member(p, mj.game[sit].hand))
-       throw new Error("{hold failure}"); // 异常 停牌时必打手中的牌
      // 设置出牌
-     mj.game[sit].hand = remove(p, mj.game[sit].hand);
+     if (mj.game[sit].ting){
+       if (p != mj.game[sit].zhua)
+	 throw new Error("{drop failure}"); // 异常 停牌时必打手中的牌
+     } else {
+       if (p == mj.game[sit].zhua){ // 打抓牌
+	 // nop
+       } else if (member(p, mj.game[sit].hand)) { // 打手牌
+	 mj.game[sit].hand = remove(p, mj.game[sit].hand);
+	 mj.game[sit].hand.push(mj.game[sit].zhua);
+	 mj.game[sit].hand.sort(NF);
+       } else { // 既不是抓牌，也不是手牌
+	 throw new Error("{drop failure}"); // 异常 必打手牌或抓牌
+       }
+     }
+     // 清除抓牌
+     mj.game[sit].zhua = 0;
+     // 设置出牌
      mj.game.card = p;
-     // 轮到 sit 的下家叫牌
+     // 设置出牌人为自己
      mj.game.last = sit;
-     mj.game.turn = next(sit);
      // 广播出牌
      cast(mj.list)("pai")("drop", sit, p);
-     // 继续叫牌
-     jpai();
+     // 叫牌 sit 的下家
+     do_call( next(sit) );
      // 若要求停牌
      if (t) {
-       if (!is_ting(mj.game[sit]))
-	 throw new Error("{hold failure}"); // 异常，不能停
+       if (!is_ting(mj.game[sit].hand))
+	 throw new Error("{ting failure}"); // 异常，不能停
        // 设置停牌
        mj.game[sit].ting = true;
        // 广播停牌
        cast(mj.list)("pai")("ting", sit);
+     }
+   }
+
+   // ****
+   // do_deal : 发牌
+   function do_deal(sit, tail){
+     var card = 0;
+     if (tail) { // 杠，从尾取
+       card = mj.game.buff.pop(); // 从 buff 尾取新牌
+       mj.game.trim++;
+     } else { // 正常取
+       card = mj.game.buff.shift(); // 从 buff 头取新牌
+     }
+     if (!card) { // 牌已发完，牌局终止(流局)
+       do_close(false); // 终局
+     } else { // 牌未发完，牌局继续
+       mj.game[sit].zhua = card; // 将新牌发给 sit
+       do_call(sit); // 对起牌玩家叫牌
+     }
+   }
+
+   // ****
+   // do_call : 叫牌,用户完成选择之后的流程处理
+   function do_call(sit){
+     mj.game.turn = sit;
+     // info("do_call:: last="+mj.game.last+",turn="+mj.game.turn);
+     if (mj.game[sit].zhua != 0) { // 当前玩家需要出牌
+       // 计算可选项(抓牌)
+       var cmds = spai(mj.game[sit].hand, mj.game[sit].zhua, true);
+       // 要求 sit 作出选择 // 完成叫牌
+       cast(mj.sits[sit].id)("pai")("take", mj.game[sit].hand, mj.game[sit].zhua, cmds);
+     } else if (sit == mj.game.last) { // 已轮询完一周
+       // 设置废牌落地
+       mj.game.desk.push(mj.game.card);
+       mj.game.card = 0;
+       // 向 sit 的下家发牌
+       do_deal( next(sit) );
+     } else { // 轮询中
+       var cmds = spai(mj.game[sit].hand, mj.game.card); // 计算可选项
+       if (cmds.length == 1) { // 只有忍牌选项，跳过
+	 // 跳过，叫牌 sit 的下家
+	 do_call( next(sit) );
+       } else {
+	 // 要求sit选择
+	 cast(mj.sits[sit].id)("pai")("hint", mj.game.card, cmds);
+       }
      }
    }
 
@@ -382,63 +447,17 @@
    }
 
    // ****
-   // jpai : 叫牌,用户完成选择之后的流程处理
-   function jpai(){
-     if (mj.game.turn == undefined) { // 尚未开始轮询,等待打出
-       var sit = mj.game.last; // sit 是 last
-       var cmds = spai(mj.game[sit].hand, mj.game.card); // 计算可选项
-       cmds.push({cmd:"drop"}); // sit 有打牌选项
-       // 要求 sit 作出选择 // 完成叫牌
-       cast(mj.sits[sit].id)("pai")("wait", mj.game[sit].hand, cmds);
-       return;
-     } else if (mj.game.turn == mj.game.last) { // 已轮询一周
-       var sit = next(mj.game.last); // sit 是 last 的下家
-       // 设置废牌落地
-       mj.game.desk.push(mj.game.card);
-       mj.game.card = 0;
-       // 发新牌
-       var p = mj.game.buff.shift();
-       if (!p) {
-	 // 若牌已发完
-	 // **** 失败终局(流局)
-	 mj.host = next(mj.host); // 轮庄
-	 do_close(); // 终局
-	 cast(mj.list)("pai")("fail"); // 广播流局
-	 return; // 没有必要继续叫牌
-       } else {
-	 // 发牌给sit
-	 mj.game[sit].hand.push(p);
-	 // 此时应该轮到sit出牌
-	 mj.game.last = sit;
-	 mj.game.turn = undefined;
-       }
-     } else { // 轮询中
-       var sit = next(mj.game.turn); // sit 是 turn
-       var cmds = spai(mj.game[sit].hand, mj.game.card); // 计算可选项
-       if (cmds.length == 0) {
-	 // 若无项可选项 交给下家
-	 mj.game.turn = next(sit);
-       } else {
-	 // 若有项可选 叫牌人有忍牌选项
-	 cmds.push({cmd:"hold"});
-	 // 要求sit选择
-	 cast(mj.sits[sit].id)("pai")("wait", mj.game[sit].hand, cmds);
-	 return; // 完成叫牌
-       }
-     }
-     // 未完成
-     jpai(); // 继续叫牌
-   }
-
-   // ****
    // spai : 算牌,计算当前牌的可用选项
-   function spai(hand, card){
+   function spai(hand, card, zhua){
      var cmds = [];
-     if (card == 0){
-       // 有胡(起手胡)
-       var p = clone(hand); p.sort(NF);
-       if (is_hu(p)) cmds.push({cmd:"hule"});
+     if (zhua){ // 抓牌
+       // 抓牌时有打牌选项
+       cmds.push({cmd:"drop"});
+       // 有胡
+       if (has_hule(hand, card)) cmds.push({cmd:"hule"});
      } else {
+       // 选牌时有忍牌选项
+       cmds.push({cmd:"hold"});
        // 有胡
        if (has_hule(hand, card)) cmds.push({cmd:"hule"});
        // 有杠
@@ -446,12 +465,14 @@
        // 有碰
        if (has_peng(hand, card)) cmds.push({cmd:"peng"});
        // 有顺
-       var p = clone(hand); p.push(card); p.sort(NF);
-       var r = [], i = indexof(card, p);
-       if (p[i-2] == card-2 && p[i-1] == card-1) r.push([p[i-2], p[i-1]]);
-       if (p[i-1] == card-1 && p[i+1] == card+1) r.push([p[i-1], p[i+1]]);
-       if (p[i+1] == card+1 && p[i+2] == card+2) r.push([p[i+1], p[i+2]]);
-       if (r.length != 0) cmds.push({cmd:"shun", option:r});
+       if (mj.game.card < 30) {
+	 var p = clone(hand); p.push(card); p.sort(NF);
+	 var r = [], i = indexof(card, p);
+	 if (p[i-2] == card-2 && p[i-1] == card-1) r.push([p[i-2], p[i-1]]);
+	 if (p[i-1] == card-1 && p[i+1] == card+1) r.push([p[i-1], p[i+1]]);
+	 if (p[i+1] == card+1 && p[i+2] == card+2) r.push([p[i+1], p[i+2]]);
+	 if (r.length != 0) cmds.push({cmd:"shun", option:r});
+       }
      }
      return cmds;
    }
@@ -651,35 +672,37 @@
 
    function init_game(){
      return {          // ** 游戏状态
-       turn:undefined,    // 发话人
-       last:undefined,    // 上一手
-       card:0,            // 当前牌
-       // cmds:[],           // 可选项
-       // [{cmd:xxx}, {cmd:yyy, option:[]}, ...]
        E:{                // 东
 	 show:[],
          hide:[],
 	 hand:[],
+	 zhua:0,
 	 ting:false
        },
        S:{                // 南
 	 show:[],
          hide:[],
 	 hand:[],
+	 zhua:0,
 	 ting:false
        },
        W:{                // 西
 	 show:[],
          hide:[],
 	 hand:[],
+	 zhua:0,
 	 ting:false
        },
        N:{                // 北
 	 show:[],
          hide:[],
 	 hand:[],
+	 zhua:0,
 	 ting:false
        },
+       last:undefined,    // 上一个出牌人
+       turn:undefined,    // 当前选择人
+       card:0,            // 当前牌
        buff:[],           // 屯牌
        desk:[],           // 废牌
        trim:0             // 牌局杠牌次数
@@ -736,6 +759,7 @@
 
    };
 
+   // trigger change global exception
    // mahjong = mj;
 
    return mj;
