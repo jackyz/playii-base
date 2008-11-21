@@ -285,7 +285,7 @@ if(typeof window.jQuery == "undefined") {
  * Dual licensed under the MIT (MIT-LICENSE.txt)
  * and GPL (GPL-LICENSE.txt) licenses.
  *
- * $Date: 2008/09/09 05:06:01 $
+ * $Date: 2008/11/21 05:31:52 $
  * $Rev: 918 $
  */
 
@@ -1293,7 +1293,7 @@ jQuery.fn = jQuery.prototype = {
 	 * @cat DOM/Attributes
 	 */
 	val: function( val ) {
-		return val == undefined ?			( this.length ? this[0].value : null ) :			this.attr( "value", val );
+		return val == undefined ? ( this.length ? this[0].value : null ) : this.attr( "value", val );
 	},
 
 	/**
@@ -1323,7 +1323,7 @@ jQuery.fn = jQuery.prototype = {
 	 * @cat DOM/Attributes
 	 */
 	html: function( val ) {
-		return val == undefined ?			( this.length ? this[0].innerHTML : null ) :			this.attr( "innerHTML", val );
+		return val == undefined ? ( this.length ? this[0].innerHTML : null ) : this.attr( "innerHTML", val );
 	},
 
 	/**
@@ -5132,9 +5132,13 @@ jQuery.extend({
 // the common functions
 
 function _yield(func, time) { window.setTimeout(func, time ? time : 50); }
-function _log(str){ $('#log').append(str+"<br/>"); }
-function _server_log(str){ $('#server_log').append(str+"<br/>"); }
+
+// function _log(str){ $('#log').append(str+"<br/>"); }
+// function _server_log(str){ $('#server_log').append(str+"<br/>"); }
+function _log(str){ console.debug(str); }
 function _err(str){ _yield( function(){ alert(str); } ); }
+function _server_log(str){ console.debug(str); }
+
 function _cookie(name, val){
   if (val != undefined) { // set cookie
     //alert("set cookie "+val);
@@ -5322,32 +5326,32 @@ con = (function(){
 
 
 
-// playii js i8n object
-if(!this.i8n) {
-i8n = (function(){
+// playii js ui object
+if(!this.ui) {
+ui = (function(){
 
   // ******** model
-  var objs = {};
+  var i8ns = {};
 
   // usage: i8n.bind("/chat/room/1234", {"text":"translated text"})
   function bind(sn, obj){
-    objs[sn] = obj;
+    i8ns[sn] = obj;
   }
 
   // usage: i8n.unbind("/chat/room/1234")
   function unbind(sn){
-    delete objs[sn];
+    delete i8ns[sn];
   }
 
   // usage: i8n.tran("/chat/room/1234", "hello, {text1}, {welcome to} name");
-  // transfer the text, using the sn dict
+  // transfer the text, using the i8n dict
   // {{xxx}} -> {xxx} the escape
   // {xxx} -> yyy if has {xxx : yyy} perform the mapping
   // {xxx} -> xxx if has not xxx using the text itself
   function tran(sn, s){
     // _log("_tran:"+sn+","+s);
     function map(s){
-      var x = objs[sn][s];
+      var x = i8ns[sn][s];
       return x ? x : s;
     }
     function part(h, t){
@@ -5383,27 +5387,16 @@ i8n = (function(){
     return part("", (s ? s : ""));
   }
 
-  // API EXPORT
-  return {
-    bind:bind, unbind:unbind,
-    tran:tran, escp:escp
-  };
-
-})();
-} // close: if(!this.i8n) {
-
-// playii js boot object
-if(!this.boot) {
-boot = (function(){
-  // the ui file of scene
-  function ui(sn){
+  // the face html url of scene
+  function face(sn){
     var a = sn.split('/');
     if (a.length == 2)      a[2] = "index.html";  // /chat -> /chat/index.html
     else if (a.length == 3) a[3] = "index.html";  // /chat/room -> /chat/room/index.html
     else if (a.length == 4) a[3] = "scene.html";  // /chat/room/1234 -> /chat/room/scene.html
     return a.join('/');
   }
-  // the lang file of scene
+
+  // the lang json url of scene
   function lang(sn){
     var lang = "zh_CN"; // TODO get from cookie or http header
     var a = sn.split('/');
@@ -5412,14 +5405,29 @@ boot = (function(){
     else if (a.length == 4) a[3] = "scene-"+lang+".js";  // /chat/room/1234 -> /chat/room/scene-zh_CN.js
     return a.join('/');
   }
+
   // load process
   function load(name, sn){
-    $(name).load(ui(sn));
-    $.getJSON(lang(sn), function(json){ i8n.bind(sn, json); });
-    $(name).insertBefore("#foot").show();
-    // $.getScript(js(sn));
+    // todo a deep unbind
+    $(name).unbind();
+    $(name).empty();
+    // if (name.endWith(".html"))
+    if (sn.lastIndexOf(".html") == (sn.length - ".html".length)){
+      $(name).load(sn);
+    } else {
+      $.getJSON(lang(sn), function(json){ bind(sn, json); });
+      $(name).load(face(sn));
+    }
   }
-  return {load:load};
-})();
-} // close: if(!this.boot) {
 
+  // API EXPORT
+  return {
+    load:load,
+    // bind:bind,
+    unbind:unbind,
+    tran:tran,
+    escp:escp
+  };
+
+})();
+} // close: if(!this.ui) {

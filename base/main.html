@@ -1,0 +1,230 @@
+<div id="side" style="display:none;"></div>
+<div id="main" style="display:none;"></div>
+<div id="debug" style="display:none;"></div>
+
+<div id="tool">
+  <ul>
+    <li>iphone</li>
+    <ul>
+      <li id="landscape">landscape</li>
+      <li id="portscape">portscape</li>
+    </ul>
+    <li id="web">web</li>
+    <ul>
+      <li>debug</li>
+      <li>...</li>
+    </ul>
+  </ul>
+</div>
+
+<style type="text/css">
+* {
+  margin:0; padding:0;
+}
+
+#side {
+  position:absolute;
+  top:0px; left:0px;
+  width:320px; height:480px;
+  background:#222;
+}
+#main {
+  position:absolute;
+  top:0px; left:320px;
+  width:480px; height:320px;
+  background:#333;
+}
+#debug {
+  position:absolute;
+  top:320px; left:320px;
+  width:480px; height:160px;
+  background:#444;
+  font: normal normal 88% "Courier";
+}
+#tool {
+  position:absolute;
+  top:0px; right:0px;
+}
+</style>
+
+<script language="javascript">
+
+// **** the lib
+
+if (!this.LIST) LIST = function(){
+
+  // ** func(e) return true | false
+  function all(func, array){
+    for (var i=0; i<array.length; i++){
+      if (!func(array[i])) return false;
+    }
+    return true;
+  }
+
+  // ** func(e) return true | false
+  function any(func, array){
+    for (var i=0; i<array.length; i++){
+      if (func(array[i])) return true;
+    }
+    return false;
+  }
+
+  function clone(array){
+    var r = [];
+    for (var i=0; i<array.length; i++){
+      r.push(array[i]);
+    }
+    return r;
+  }
+
+  function count(e, array){
+    var c = 0;
+    for (var i=0; i<array.length; i++){
+      if (e == array[i]) c++;
+    }
+    return c;
+  }
+
+  // ** func(e) return true | false
+  function first(func, array){
+    for (var i=0; i<array.length; i++){
+      if (func(array[i])) return array[i];
+    }
+    return undefined;
+  }
+
+  // ** func(e) return void
+  function foreach(func, array){
+    if(!array) return;
+    for (var i=0; i<array.length; i++){
+      func(array[i]);
+    }
+  }
+
+  function indexof(e, array){
+    for (var i=0; i<array.length; i++){
+      if (array[i] == e) return i;
+    }
+    return -1;
+  }
+
+  // ** func(e) return true | false
+  function last(func, array){
+    for (var i=array.length - 1; i>0; i--){
+      if (func(array[i])) return array[i];
+    }
+    return undefined;
+  }
+
+  // ** func(e) return new element
+  function map(func, array){
+    var r = [];
+    for (var i=0; i<array.length; i++){
+      r.push(func(array[i]));
+    }
+    return r;
+  }
+
+  function member(e, array){
+    for (var i=0; i<array.length; i++){
+      if (array[i] == e) return true;
+    }
+    return false;
+  }
+
+  function remove(e, array){
+    var r = [], m = false;
+    for (var i=0; i<array.length; i++){
+      if (!m && array[i] == e) m = true;
+      else r.push(array[i]);
+    }
+    return r;
+  }
+
+  return {
+    count:count, member:member, indexof:indexof, remove:remove,
+    clone:clone, map:map, foreach:foreach,
+    all:all, any:any, first:first, last:last
+  };
+
+}();
+
+if (!this.DICT) DICT = function(){
+
+  function foreach(func, dict){
+    for(var i in dict){
+      func(dict[i]);
+    }
+  }
+
+  return {
+    foreach:foreach
+  };
+
+}();
+
+if (!this.getScene) getScene = function(){
+  var url = window.location.hash.split('#')[1];
+  return (url) ? url : undefined;
+};
+
+// mock console if not avaliable
+if (!this.console) console = (function(){
+  $("#debug").show();
+  function log(lvl, str){
+    $("#debug").append("["+lvl+"]"+str+"<br>");
+  }
+  return {
+    debug: function(s){ log("DEBUG", s); },
+    info:  function(s){ log("INFO ", s); },
+    error: function(s){ log("ERROR", s); },
+    warn:  function(s){ log("WARN ", s); },
+    fatal: function(s){ log("FATAL", s); }
+  };				 
+})();
+
+// the boot loader :: load everything
+$(function(){
+
+  // current device orient
+  // iphone : landscape/portscape
+  // web : undefined
+  var currentDirect = "landscape"; // undefined;
+
+  // iphone ui // for iphone
+  function iphone_ui(){
+    var x = undefined;
+    if (window.outerWidth == 480) x = "landscape";
+    else if (window.outerWidth == 320) x = "portscape";
+    else x = undefined;
+    if (x != currentDirect) switch_ui(x);
+    // window.setTimeout(function(){ iphone_ui(); }, 400); // iphone detect
+  }
+  function switch_ui(direct){
+    switch(direct){
+      case "landscape" :
+        $("#side").hide();
+        $("#main").css({top:'0px', left:'0px'}).show();
+        break;
+      case "portscape" :
+        $("#side").css({top:'0px', left:'0px'}).show();
+        $("#main").hide();
+        break;
+      default :
+        $("#main").css({top:'0px', left:'320px'}).show();
+        $("#side").css({top:'0px', left:'0px'}).show();
+        break;
+    }
+    currentDirect = direct;
+  }
+  iphone_ui();
+
+  $("#tool #landscape").click(function(){ switch_ui("landscape"); });
+  $("#tool #portscape").click(function(){ switch_ui("portscape"); });
+  $("#tool #web").click(function(){ switch_ui(); });
+
+  ui.load("#side", "/side");
+  ui.load("#main", getScene() ? getScene() : "/home" );
+
+});
+</script>

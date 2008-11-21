@@ -1,100 +1,43 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
 <html>
 
 <head>
-<title>Test</title>
+<title>Playii</title>
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
-<link rel="stylesheet" type="text/css" href="/base/playii.css"/>
+<script language="javascript" src="/base/playii.js"></script>
 </head>
 
-<body id="root">
+<body>
 
-<!-- the framework -->
-<div id="head">HEAD</div>
-<div id="foot">FOOT</div>
-
-<!-- the components -->
-<div id="info" style="display:none;">INFO</div>
-<div id="side" style="display:none;">SIDE</div>
-<div id="main" style="display:none;">MAIN</div>
-
-<!-- identify panel -->
-<div id="identify_form" style="display:none;">
-  name yourself.(anonymous mode)
-  <form>
-    id:<input type="text" name="id" value="12345"/>
-    nick:<input type="text" name="nick" value="nickname"/>
-    <input type="submit" value="guest"/>
-    <!-- 
-    id:<input type="text" name="id" value=""/><br/>
-    -->
-    <!--
-	about the user identify logic, there are tables:
-          record(user, {id, nick})
-	  record(auth, {key, user_id, email, password}) key={user_id, email}
-          record(conn, {key, user_id, type, key}) key={user_id, type}
-        a user could be identified by any conn or auth provider, for example:
-	  #user{id=12345, nick="username"}
-          #auth{user_id=12345, email="username@163.com", password="pass"}
-          #conn{user_id=12345, type=facebook, key="6123513"}
-          #conn{user_id=12345, type=openid, key="username@openid.org"}
-        user could verify himself via:
-          facebook(conn) (againest the facebook connect api)
-          openid(conn)   (againest the openid api)
-          or by auth     (againest the data in auth tab)
-        after any verify process, the user should be identify as the same one
-        who is #user{id=12345, nick="username"}
-	after any flow, the key concept is the #user
-        for a guest user, who is #user{id=undefined, nick="nickname"}
-    -->
-  </form>
-</div>
-
-<!-- debug panel -->
-<div id="debug" style="display:none;">
-  <a href="javascript:(function(){ $('#log').empty(); $('#server_log').empty(); })()">clean</a>
-  <a href="javascript:(function(){ _cookie('token', ''); })()">clean_cookie</a>
-  <div id="log"></div>
-  <div id="server_log"></div>
-</div>
+  <div id="root"> </div>
 
 </body>
 
-<script language="javascript" src="/base/playii.js"></script>
+<style type="text/css">
+body {
+}
+* {
+  margin:0; padding:0;
+}
+</style>
+
 <script language="javascript">
-
-// current scene name
-var currentScene = undefined;
-currentScene = window.location.hash.split('#')[1];
-currentScene = (currentScene) ? currentScene : "/home";
-
-// the boot loader :: load everything
 $(function(){
+
+  // identify logic
   var callback = {
+    success:function(){
+      ui.load("#root", "/base/main.html");
+    },
     go_identify:function(){
-      $("#identify_form > form").bind("submit", function(event){
-        var param = $("input:text", this).serialize();
-        //{
-        //  identify:$("input:text", this).val(),
-        //  provider:$("input:radio:checked", this).val()
-        //};
-        //alert("param="+param.toSource());
-        con.open(param, callback);
-        return false;
-      });
-      $("#identify_form").insertBefore("#foot").show();
+      ui.load("#root", "/base/auth.html");
     },
     failure:function(error){
-      $("#root").html("sorry, we got error:<hr/>"+error+"<hr/>");
-    },
-    success:function(){
-      $("#identify_form").insertAfter("#foot").hide();
-      $("#identify_form > form").unbind();
-      // the real enter point wrapped after identify flow
-      boot.load("#side", "/side");
-      boot.load("#main", currentScene);
+      $("#root").empty().html("sorry, we got error:<hr/>"+error+"<hr/>");
     }
   };
   con.open({}, callback);
+
 });
 </script>
 
