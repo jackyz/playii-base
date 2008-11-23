@@ -112,6 +112,7 @@ $(function(){
   function _ui(n){ return $('#main #game'+(n?" "+n:"")); }
 
   // **** ui logic
+  var last_info_time = 0; // 上次显示的info信息，保留其时间戳，以避免重复显示
 
   // 画出当前牌局
   function redraw(u, v){
@@ -161,7 +162,42 @@ $(function(){
       }
     }, F);
 
-    // desk
+    // info 有新的info信息需要显示
+    if (v.sits[f] && v.sits[f].ready == true) return;
+    if (!v.info || !v.info.time || v.info.time <= last_info_time) return;
+
+    _ui().append("<ul id='info'></ul>");
+    if (v.info.done === false) { // 流局
+      _ui("#info").text("流局");
+    }else{ // 胡牌
+      // v.info.side,
+      // _ui("#info").text("胡牌");
+      // v.info.hule,
+      _ui("#info").append("<ul id='hu'></ul>");
+      LIST.foreach(function(x){
+	_ui("#info #hu").append("<li class='o'><div id='m"+x+"'></div></li>");
+      }, v.info.hule);
+      _ui("#info").append("<ul id='cmd'></ul>");
+      if(f){
+	_ui("#info #cmd").append("<li id='continue'>continue</li>");
+	_ui("#info #cmd").append("<li id='leave'>leave</li>");
+      }else{
+	_ui("#info #cmd").append("<li id='ok'>ok</li>");
+      }
+      var info_time = v.info.time;
+      var func_next = function(){
+	var id = $(this).attr("id");
+	console.debug("id:"+id+" !!!");
+	switch(id){
+	  case "continue": _sit("ready"); break;
+	  case "leave": _sit("stand_up"); break;
+	}
+	last_info_time = info_time;
+	_ui("#info").remove();
+      };
+      _ui("#info #cmd li").click(func_next);
+    }
+
     // _ui().append("<ul id='desk'>pick your sit.</ul>");
 
   }

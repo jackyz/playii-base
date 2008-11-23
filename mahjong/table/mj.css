@@ -39,16 +39,6 @@ screen size: 480px * 320px
 	width:288px; height:23px;
 	top:297px; left:96px;
 }
-#game #info {
-	display:none;
-	width:232px; height:128px;
-	top:70px; left:44px;
-	border:1px dotted #8a8;
-	background:#999;
-}
-#game #info.on {
-	display:show;
-}
 
 /**** containers: layout of elements ***/
 
@@ -140,8 +130,33 @@ screen size: 480px * 320px
 	background:url(s_b.gif) no-repeat -29px -2px;
 }
 
+
+#game #info {
+      width:480px; height:320px;
+      top:0px; left:0px;
+      background:#333;
+}
+#game #info #cmd{
+      top:150px; left:96px;
+}
+#game #info #cmd li{
+      margin-left:11px;
+      float:left;
+}
+#game #info #hu {
+      width:288px; height:23px;
+      top:120px; left:96px;
+}
+#game #info #hu li{
+      float:left;
+}
+#game #info #hu .o {
+	width:11px; height:15px; padding:1px 3px 7px 2px;
+	background:url(s_b.gif) no-repeat -29px -27px;
+}
+
 /* small icon size */
-#game #self .o div, #game #north .o div, #game #self .h div, #game #desk div {
+#game #self .o div, #game #north .o div, #game #self .h div, #game #desk div, #game #info .o div {
 	width:11px; height:15px;
 }
 #game #west .o div, #game #east .o div {
@@ -151,40 +166,40 @@ screen size: 480px * 320px
 /**** elements: the small size face images ***/
 
 /* small size [00:00] 34 icons (self hold, self close, self open, desk) */
-#game #self .o #m1, #game #self .h #m1, #game #desk #m1 {background:url(s_p.gif) no-repeat 0px 0px;}
-#game #self .o #m2, #game #self .h #m2, #game #desk #m2 {background:url(s_p.gif) no-repeat -11px 0px;}
-#game #self .o #m3, #game #self .h #m3, #game #desk #m3 {background:url(s_p.gif) no-repeat -22px 0px;}
-#game #self .o #m4, #game #self .h #m4, #game #desk #m4 {background:url(s_p.gif) no-repeat -33px 0px;}
-#game #self .o #m5, #game #self .h #m5, #game #desk #m5 {background:url(s_p.gif) no-repeat -44px 0px;}
-#game #self .o #m6, #game #self .h #m6, #game #desk #m6 {background:url(s_p.gif) no-repeat -55px 0px;}
-#game #self .o #m7, #game #self .h #m7, #game #desk #m7 {background:url(s_p.gif) no-repeat -66px 0px;}
-#game #self .o #m8, #game #self .h #m8, #game #desk #m8 {background:url(s_p.gif) no-repeat -77px 0px;}
-#game #self .o #m9, #game #self .h #m9, #game #desk #m9 {background:url(s_p.gif) no-repeat -88px 0px;}
-#game #self .o #m11, #game #self .h #m11, #game #desk #m11 {background:url(s_p.gif) no-repeat 0px -15px;}
-#game #self .o #m12, #game #self .h #m12, #game #desk #m12 {background:url(s_p.gif) no-repeat -11px -15px;}
-#game #self .o #m13, #game #self .h #m13, #game #desk #m13 {background:url(s_p.gif) no-repeat -22px -15px;}
-#game #self .o #m14, #game #self .h #m14, #game #desk #m14 {background:url(s_p.gif) no-repeat -33px -15px;}
-#game #self .o #m15, #game #self .h #m15, #game #desk #m15 {background:url(s_p.gif) no-repeat -44px -15px;}
-#game #self .o #m16, #game #self .h #m16, #game #desk #m16 {background:url(s_p.gif) no-repeat -55px -15px;}
-#game #self .o #m17, #game #self .h #m17, #game #desk #m17 {background:url(s_p.gif) no-repeat -66px -15px;}
-#game #self .o #m18, #game #self .h #m18, #game #desk #m18 {background:url(s_p.gif) no-repeat -77px -15px;}
-#game #self .o #m19, #game #self .h #m19, #game #desk #m19 {background:url(s_p.gif) no-repeat -88px -15px;}
-#game #self .o #m21, #game #self .h #m21, #game #desk #m21 {background:url(s_p.gif) no-repeat 0px -30px;}
-#game #self .o #m22, #game #self .h #m22, #game #desk #m22 {background:url(s_p.gif) no-repeat -11px -30px;}
-#game #self .o #m23, #game #self .h #m23, #game #desk #m23 {background:url(s_p.gif) no-repeat -22px -30px;}
-#game #self .o #m24, #game #self .h #m24, #game #desk #m24 {background:url(s_p.gif) no-repeat -33px -30px;}
-#game #self .o #m25, #game #self .h #m25, #game #desk #m25 {background:url(s_p.gif) no-repeat -44px -30px;}
-#game #self .o #m26, #game #self .h #m26, #game #desk #m26 {background:url(s_p.gif) no-repeat -55px -30px;}
-#game #self .o #m27, #game #self .h #m27, #game #desk #m27 {background:url(s_p.gif) no-repeat -66px -30px;}
-#game #self .o #m28, #game #self .h #m28, #game #desk #m28 {background:url(s_p.gif) no-repeat -77px -30px;}
-#game #self .o #m29, #game #self .h #m29, #game #desk #m29 {background:url(s_p.gif) no-repeat -88px -30px;}
-#game #self .o #m31, #game #self .h #m31, #game #desk #m31 {background:url(s_p.gif) no-repeat 0px -45px;}
-#game #self .o #m32, #game #self .h #m32, #game #desk #m32 {background:url(s_p.gif) no-repeat -11px -45px;}
-#game #self .o #m33, #game #self .h #m33, #game #desk #m33 {background:url(s_p.gif) no-repeat -22px -45px;}
-#game #self .o #m34, #game #self .h #m34, #game #desk #m34 {background:url(s_p.gif) no-repeat -33px -45px;}
-#game #self .o #m35, #game #self .h #m35, #game #desk #m35 {background:url(s_p.gif) no-repeat -44px -45px;}
-#game #self .o #m36, #game #self .h #m36, #game #desk #m36 {background:url(s_p.gif) no-repeat -55px -45px;}
-#game #self .o #m37, #game #self .h #m37, #game #desk #m37 {background:url(s_p.gif) no-repeat -66px -45px;}
+#game #self .o #m1, #game #self .h #m1, #game #desk #m1, #game #info #m1 {background:url(s_p.gif) no-repeat 0px 0px;}
+#game #self .o #m2, #game #self .h #m2, #game #desk #m2, #game #info #m2 {background:url(s_p.gif) no-repeat -11px 0px;}
+#game #self .o #m3, #game #self .h #m3, #game #desk #m3, #game #info #m3 {background:url(s_p.gif) no-repeat -22px 0px;}
+#game #self .o #m4, #game #self .h #m4, #game #desk #m4, #game #info #m4 {background:url(s_p.gif) no-repeat -33px 0px;}
+#game #self .o #m5, #game #self .h #m5, #game #desk #m5, #game #info #m5 {background:url(s_p.gif) no-repeat -44px 0px;}
+#game #self .o #m6, #game #self .h #m6, #game #desk #m6, #game #info #m6 {background:url(s_p.gif) no-repeat -55px 0px;}
+#game #self .o #m7, #game #self .h #m7, #game #desk #m7, #game #info #m7 {background:url(s_p.gif) no-repeat -66px 0px;}
+#game #self .o #m8, #game #self .h #m8, #game #desk #m8, #game #info #m8 {background:url(s_p.gif) no-repeat -77px 0px;}
+#game #self .o #m9, #game #self .h #m9, #game #desk #m9, #game #info #m9 {background:url(s_p.gif) no-repeat -88px 0px;}
+#game #self .o #m11, #game #self .h #m11, #game #desk #m11, #game #info #m11 {background:url(s_p.gif) no-repeat 0px -15px;}
+#game #self .o #m12, #game #self .h #m12, #game #desk #m12, #game #info #m12 {background:url(s_p.gif) no-repeat -11px -15px;}
+#game #self .o #m13, #game #self .h #m13, #game #desk #m13, #game #info #m13 {background:url(s_p.gif) no-repeat -22px -15px;}
+#game #self .o #m14, #game #self .h #m14, #game #desk #m14, #game #info #m14 {background:url(s_p.gif) no-repeat -33px -15px;}
+#game #self .o #m15, #game #self .h #m15, #game #desk #m15, #game #info #m15 {background:url(s_p.gif) no-repeat -44px -15px;}
+#game #self .o #m16, #game #self .h #m16, #game #desk #m16, #game #info #m16 {background:url(s_p.gif) no-repeat -55px -15px;}
+#game #self .o #m17, #game #self .h #m17, #game #desk #m17, #game #info #m17 {background:url(s_p.gif) no-repeat -66px -15px;}
+#game #self .o #m18, #game #self .h #m18, #game #desk #m18, #game #info #m18 {background:url(s_p.gif) no-repeat -77px -15px;}
+#game #self .o #m19, #game #self .h #m19, #game #desk #m19, #game #info #m19 {background:url(s_p.gif) no-repeat -88px -15px;}
+#game #self .o #m21, #game #self .h #m21, #game #desk #m21, #game #info #m21 {background:url(s_p.gif) no-repeat 0px -30px;}
+#game #self .o #m22, #game #self .h #m22, #game #desk #m22, #game #info #m22 {background:url(s_p.gif) no-repeat -11px -30px;}
+#game #self .o #m23, #game #self .h #m23, #game #desk #m23, #game #info #m23 {background:url(s_p.gif) no-repeat -22px -30px;}
+#game #self .o #m24, #game #self .h #m24, #game #desk #m24, #game #info #m24 {background:url(s_p.gif) no-repeat -33px -30px;}
+#game #self .o #m25, #game #self .h #m25, #game #desk #m25, #game #info #m25 {background:url(s_p.gif) no-repeat -44px -30px;}
+#game #self .o #m26, #game #self .h #m26, #game #desk #m26, #game #info #m26 {background:url(s_p.gif) no-repeat -55px -30px;}
+#game #self .o #m27, #game #self .h #m27, #game #desk #m27, #game #info #m27 {background:url(s_p.gif) no-repeat -66px -30px;}
+#game #self .o #m28, #game #self .h #m28, #game #desk #m28, #game #info #m28 {background:url(s_p.gif) no-repeat -77px -30px;}
+#game #self .o #m29, #game #self .h #m29, #game #desk #m29, #game #info #m29 {background:url(s_p.gif) no-repeat -88px -30px;}
+#game #self .o #m31, #game #self .h #m31, #game #desk #m31, #game #info #m31 {background:url(s_p.gif) no-repeat 0px -45px;}
+#game #self .o #m32, #game #self .h #m32, #game #desk #m32, #game #info #m32 {background:url(s_p.gif) no-repeat -11px -45px;}
+#game #self .o #m33, #game #self .h #m33, #game #desk #m33, #game #info #m33 {background:url(s_p.gif) no-repeat -22px -45px;}
+#game #self .o #m34, #game #self .h #m34, #game #desk #m34, #game #info #m34 {background:url(s_p.gif) no-repeat -33px -45px;}
+#game #self .o #m35, #game #self .h #m35, #game #desk #m35, #game #info #m35 {background:url(s_p.gif) no-repeat -44px -45px;}
+#game #self .o #m36, #game #self .h #m36, #game #desk #m36, #game #info #m36 {background:url(s_p.gif) no-repeat -55px -45px;}
+#game #self .o #m37, #game #self .h #m37, #game #desk #m37, #game #info #m37 {background:url(s_p.gif) no-repeat -66px -45px;}
 
 /* small size [03:00] 34 icons (west open) */
 #game #west .o #m1 {background:url(s_p.gif) no-repeat -144px 0px;}

@@ -316,6 +316,7 @@
      if (!p) { // 牌已发完，牌局终止(流局)
        mj.host = next(mj.host); // 未胡轮庄
        mj.info = { // 设置流局信息
+	 time : (new Date()).getTime(),
 	 done : false
        };
        do_close.call(mj); // 终局
@@ -428,6 +429,7 @@
      p = p.concat(mj.game[sit].hand, mj.game.card);
      p.sort(NF);
      mj.info = { // 设置胡牌信息
+       time : (new Date()).getTime(),
        done : true,
        hule : p,
        side : sit
