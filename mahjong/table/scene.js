@@ -13,6 +13,8 @@
      31,32,33,34,35,36,37            // 字
    ];
 
+   var M = 3000;                     // 最长选择时间 3 秒
+
    var NF = function(a,b){return a-b;};
 
 // ****************************************************************
@@ -54,6 +56,21 @@
 // * EVENT FUNCTIONS
 // ****************************************************************
 
+  // **** 系统时间事件
+
+   // ****
+   // idle()
+   function idle(){
+     var mj = this;
+     var t = now();
+     if (mj.play && (t - mj.game.time > M)) { // 设置离线
+       mj.game.time = -1;
+       do_call.call(mj);
+     }
+     // else if (t - mj.start_time > M) end_up();
+   }
+
+
   // **** 用户列表管理
 
    // ****
@@ -62,6 +79,15 @@
      var mj = this;
      //// cast(mj.list)("user")("enter", who, nick); // 广播
      mj.list[who] = {id:who, nick:nick, data:data}; // 设置进入
+     // 得到 who 对应的 sit
+     var sit = first(function(x){ return mj.sits[x].id == who; }, F);
+     if (sit){ // 如果有坐
+       if (mj.play){ // 游戏中，设置 ready 为 true 以便不再跳过
+	 mj.sits[sit].ready = true;
+       } else { // 不在游戏中，设置离座
+	 mj.sits[sit] = {ready:false};
+       }
+     }
      broadcast.call(mj); // mock
      // refresh.call(this, who); // 发送当前视图 // need change
    }
@@ -71,6 +97,13 @@
    function leave(who){
      var mj = this;
      delete mj.list[who]; // 设置离开
+     // 得到 who 对应的 sit
+     var sit = first(function(x){ return mj.sits[x].id == who; }, F);
+     if (sit){ // 如果有坐
+       if (mj.play){ // 游戏中，设置 ready 为 false 以便跳过
+	 mj.sits[sit].ready = false;
+       }
+     }
      //// cast(mj.list)("user")("leave", who); // 广播
      broadcast.call(mj); // mock
    }
@@ -292,8 +325,9 @@
        S:{ show:[], hide:[], hand:fpai(b, 13), ting:false }, // 南
        W:{ show:[], hide:[], hand:fpai(b, 13), ting:false }, // 西
        N:{ show:[], hide:[], hand:fpai(b, 13), ting:false }, // 北
-       last:mj.host,      // 上一个出牌人
+       last:undefined,    // 上一个出牌人
        turn:undefined,    // 当前选择人
+       time:now(),        // 当前选择开始时间
        card:0,            // 当前牌
        zhua:false,        // 抓牌标记(当前牌是抓来的)
        cmds:[]            // 可用命令(对当前牌的)
@@ -316,7 +350,7 @@
      if (!p) { // 牌已发完，牌局终止(流局)
        mj.host = next(mj.host); // 未胡轮庄
        mj.info = { // 设置流局信息
-	 time : (new Date()).getTime(),
+	 time : now(),
 	 done : false
        };
        do_close.call(mj); // 终局
@@ -354,14 +388,14 @@
 	 // cmds.push({cmd:"drop"});
 	 // 有胡
 	 if (has_hule(hand, card)) cmds.push({cmd:"hule"});
-	 // 有停 TODO calculate so much need think again
+	 // 有停 TODO calculate so much, need think again
 	 // if (has_ting(hand)) cmds.push({cmd:"ting"});
        } else {
 	 // 选牌时有忍牌选项
 	 // cmds.push({cmd:"hold"}); // 默认有
 	 // 有胡
 	 if (has_hule(hand, card)) cmds.push({cmd:"hule"});
-	 // 有停 TODO calculate so much need think again
+	 // 有停 TODO calculate so much, need think again
 	 // if (has_ting(hand)) cmds.push({cmd:"ting"});
 	 // 有杠
 	 if (has_gang(hand, card)) cmds.push({cmd:"gang"});
@@ -376,28 +410,27 @@
      }
      // ****
      var mj = this;
-     if (mj.game.zhua == true) { // 是抓牌，需要当前玩家出牌
-       // info("do_call :: zhua "+mj.game.turn);
-       // 计算可选项(抓牌)
-       mj.game.cmds = spai(mj.game[mj.game.turn].hand, mj.game.card, true);
-       // 要求 turn 作出选择 // 完成叫牌
-       //// cast(mj.sits[turn].id)("pai")("take", mj.game[turn].hand, mj.game.card, cmds);
-       broadcast.call(mj); // mock
-     } else if (mj.game.turn == mj.game.last) { // 已轮询完一周
-       // info("do_call :: deal");
-       // 设置废牌落地
-       mj.game.desk.push(mj.game.card);
-       // 向 turn 的下家发牌
-       do_deal.call(mj, next(mj.game.turn), false);
-     } else { // 轮询中
-       // 计算可选项
-       mj.game.cmds = spai(mj.game[mj.game.turn].hand, mj.game.card);
-       if (mj.game.cmds.length > 0) { // 若有可选项
-	 // info("do_call :: wait "+mj.game.turn);
+     if (mj.game.turn == mj.game.last) {
+       // 已轮询完一周
+       mj.game.desk.push(mj.game.card); // 设置废牌落地
+       do_deal.call(mj, next(mj.game.turn), false); // 向 turn 的下家发牌
+     } else if (mj.sits[mj.game.turn].ready == false || mj.game.time == -1) {
+       // 离线或超时，自动处理
+       mj.game.time = now(); // 重设超时
+       if (mj.game.zhua) { // 抓牌，直接打出
+	 do_drop.call(mj, mj.game.turn, mj.game.card, false);
+       } else { // 非抓牌，直接跳过
+	 mj.game.turn = next(mj.game.turn);
+	 do_call.call(mj);
+       }
+     } else { // 在线，计算可选项
+       mj.game.cmds = spai(mj.game[mj.game.turn].hand,
+			   mj.game.card,
+			   mj.game.zhua);
+       mj.game.time = now(); // 重设超时
+       if (mj.game.zhua || mj.game.cmds.length > 0) { // 抓牌，或有可选项
 	 broadcast.call(mj); // mock
-       }else{
-	 // info("do_call :: skip "+mj.game.turn);
-	 // 跳过，叫牌 turn 的下家
+       } else { // 无可选项：跳过，叫牌 turn 的下家
 	 mj.game.turn = next(mj.game.turn);
 	 do_call.call(mj);
        }
@@ -429,7 +462,7 @@
      p = p.concat(mj.game[sit].hand, mj.game.card);
      p.sort(NF);
      mj.info = { // 设置胡牌信息
-       time : (new Date()).getTime(),
+       time : now(),
        done : true,
        hule : p,
        side : sit
@@ -578,35 +611,39 @@
      // is_hu : 判断胡牌,p是牌数组,j是有将标志
      function is_hu(p, j){
        // debug("is_hu(["+p+"],"+j+")");
-       if (p.length == 0) { // 没得剩
-	 if (j) return true; // 有将，胡了
-	 else return false; // 没将，不成胡
-       }
-       if (p[0] == p[1] && p[0] == p[2] && p[0] == p[3]){ // 有杠
-	 var px = clone(p); // 分支，提杠
+       // 没得剩，且有将，则胡
+       if (p.length == 0 && j === true) return true;
+       // 有杠
+       if (p[0] == p[1] && p[0] == p[2] && p[0] == p[3]){
+	 var px = clone(p);
 	 px.shift(); px.shift(); px.shift(); px.shift();
-	 if (is_hu(px, j)) return true; // 若成胡，成功
+	 if (is_hu(px, j)) return true;
        }
-       if (p[0] == p[1] && p[0] == p[2]){ // 有刻
-	 var px = clone(p); // 分支，提刻
+       // 有刻
+       if (p[0] == p[1] && p[0] == p[2]){
+	 var px = clone(p);
 	 px.shift(); px.shift(); px.shift();
-	 if (is_hu(px, j)) return true; // 若成胡，成功
+	 if (is_hu(px, j)) return true;
        }
-       if (p[0] == p[1] && !j){ // 有将，且未提
-	 var px = clone(p); // 分支，提将
+       // 有将，且未提
+       if (p[0] == p[1] && j === false){
+	 var px = clone(p);
 	 px.shift(); px.shift();
-	 if (is_hu(px, true)) return true; // 若成胡，成功
+	 if (is_hu(px, true)) return true;
        }
-       if (p[0]-0<30 && member(p[0]-0+1, p) && member(p[0]-0+2, p)){ // 有顺
-	 var px = clone(p); // 分支，提顺
-	 px = remove(p[0], px); px = remove(p[0]-0+1, px); px = remove(p[0]-0+2, px);
-	 if (is_hu(px, j)) return true; // 若成胡，成功
+       // 有顺
+       if (p[0]-0<30 && member(p[0]-0+1, p) && member(p[0]-0+2, p)){
+	 var px = clone(p);
+	 px = remove(p[0], px);
+	 px = remove(p[0]-0+1, px);
+	 px = remove(p[0]-0+2, px);
+	 if (is_hu(px, j)) return true;
        }
-       return false; // 匹配完毕，失败
+       return false; // 无法匹配，失败
      }
      // ****
      var p = clone(hand); p.push(card); p.sort(NF);
-     return is_hu(p);
+     return is_hu(p, false);
    }
 
    // ****
@@ -628,6 +665,10 @@
    }
 
    // -- utility
+
+   function now(){
+     return (new Date()).getTime();
+   }
 
    function rand(max) {
      return Math.floor(Math.random() * max);
@@ -770,6 +811,9 @@
 
      // ******** 事件
 
+     // ** 系统事件
+     idle:idle,           // 时间函数
+
      // ** 所有人可用
      enter:enter,         // 进入
      leave:leave,         // 离开
@@ -795,7 +839,7 @@
      // ******** 测试
      echo:function(who, what){
        debug("echo("+who+", "+what+")");
-       cast(who)("echo")(what, (new Date()).getTime());
+       cast(who)("echo")(what, now());
      },
 
      // **** unit test

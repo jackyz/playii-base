@@ -142,6 +142,10 @@ screen size: 480px * 320px
 #game #info #cmd li{
       margin-left:11px;
       float:left;
+      background:#888;
+      border:1px #aaa outset;
+      padding:2px 8px;
+      cursor:pointer;
 }
 #game #info #hu {
       width:288px; height:23px;

@@ -165,14 +165,24 @@ $(function(){
     // info 有新的info信息需要显示
     if (v.sits[f] && v.sits[f].ready == true) return;
     if (!v.info || !v.info.time || v.info.time <= last_info_time) return;
+    var info_time = v.info.time;
+
+    // 显示 info 信息的继续函数
+    var func_next = function(){
+      var id = $(this).attr("id");
+      switch(id){
+	case "continue": _sit("ready"); break;
+	case "leave": _sit("stand_up"); break;
+      }
+      last_info_time = info_time;
+      _ui("#info").remove();
+    };
 
     _ui().append("<ul id='info'></ul>");
     if (v.info.done === false) { // 流局
-      _ui("#info").text("流局");
+      _ui("#info").append("<ul id='hu'>流局</ul>");
+      _ui("#info").append("<ul id='cmd'><li id='ok'>ok</li></ul>");
     }else{ // 胡牌
-      // v.info.side,
-      // _ui("#info").text("胡牌");
-      // v.info.hule,
       _ui("#info").append("<ul id='hu'></ul>");
       LIST.foreach(function(x){
 	_ui("#info #hu").append("<li class='o'><div id='m"+x+"'></div></li>");
@@ -184,22 +194,8 @@ $(function(){
       }else{
 	_ui("#info #cmd").append("<li id='ok'>ok</li>");
       }
-      var info_time = v.info.time;
-      var func_next = function(){
-	var id = $(this).attr("id");
-	console.debug("id:"+id+" !!!");
-	switch(id){
-	  case "continue": _sit("ready"); break;
-	  case "leave": _sit("stand_up"); break;
-	}
-	last_info_time = info_time;
-	_ui("#info").remove();
-      };
-      _ui("#info #cmd li").click(func_next);
     }
-
-    // _ui().append("<ul id='desk'>pick your sit.</ul>");
-
+    _ui("#info #cmd li").click(func_next);
   }
 
   function draw_play(f, v){
