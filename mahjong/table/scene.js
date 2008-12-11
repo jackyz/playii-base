@@ -84,8 +84,6 @@
      if (sit){ // 如果有坐
        if (mj.play){ // 游戏中，设置 ready 为 true 以便不再跳过
 	 mj.sits[sit].ready = true;
-       } else { // 不在游戏中，设置离座
-	 mj.sits[sit] = {ready:false};
        }
      }
      broadcast.call(mj); // mock
@@ -102,6 +100,8 @@
      if (sit){ // 如果有坐
        if (mj.play){ // 游戏中，设置 ready 为 false 以便跳过
 	 mj.sits[sit].ready = false;
+       } else { // 不在游戏中，设置离座
+	 mj.sits[sit] = {ready:false};
        }
      }
      //// cast(mj.list)("user")("leave", who); // 广播
@@ -443,7 +443,10 @@
      var mj = this;
      mj.play = false; // 终局
      mj.game = {}; // 清场
-     foreach(function(x){ mj.sits[x].ready = false; },F); // 设置待开始
+     foreach(function(x){
+	       if (mj.sits[x].ready == false) mj.sits[x] = {ready:false};
+	       else mj.sits[x].ready = false;
+	     }, F); // 设置待开始
      broadcast.call(mj); // mock
    }
 

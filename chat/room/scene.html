@@ -1,17 +1,19 @@
 <link rel="stylesheet" type="text/css" href="/chat/room/chat.css"/>
 <script language="javascript" src="/chat/room/chat.js"></script>
 
+<div id="chat">
 <div id="users"> users list here... </div>
 
 <input id="refresh" type="button" value="refresh"/>
 <input id="clean" type="button" value="clean"/>
-<a href="javascript:con.cast(currentScene)('echo')((new Date()).getTime())">echo()</a>
-<a href="javascript:(function(){for(var i=0; i<10; i++){ con.cast(currentScene)('say')('test '+i+' !'); }})()">flood</a>
+<a href="javascript:con.cast(getScene())('echo')((new Date()).getTime())">echo()</a>
+<a href="javascript:(function(){for(var i=0; i<10; i++){ con.cast(getScene())('say')('test '+i+' !'); }})()">flood</a>
 <br/>
 
 <input id="what" type="text"/>
 <input id="rename" type="button" value="rename" style="display:none;"/>
 <!-- <input id="send" type="button" value="send"> -->
 <span id="who_nick"></span>
-
 <div id="words"> words list here... <br/></div>
+
+</div>

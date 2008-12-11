@@ -1,6 +1,10 @@
-#words {
-  overflow:auto;
-  max-height:40%;
+#chat #users {
+      
 }
-.user {
+#chat #words {
+      overflow:auto;
+      max-height:40%;
+}
+#chat li.user {
+      
 }
