@@ -1,9 +1,26 @@
-#chat #users {
-      
+#chat {
+      background:#BBB;
+      width:480px;
+      height:320px;
 }
 #chat #words {
+      float:left;
+      white-space: pre-line;
       overflow:auto;
-      max-height:40%;
+      width:380px;
+      height:290px;
+}
+#chat #users {
+      float:right;      
+      overflow:auto;
+      width:100px;
+      height:290px;
+}
+#chat #tool {
+      width:480px;
+      height:30px;
+      top:290px;
+      left:0px;
 }
 #chat li.user {
       

@@ -9,7 +9,7 @@
   var _sn = getScene();
 
   function user_welcome(u, ul){
-    _info("{Welcome},{your nickname are}:"+_span(u, ul[u].nick)+",{you can click and rename yourself}.");
+    _info("{Welcome},{your nickname are}:"+_span(u, ul[u])+",{you can click and rename yourself}.");
     users_refresh(u, ul);
   }
 
@@ -75,7 +75,7 @@
   }
 
   function debug(str){
-      _server_log(str);
+    _server_log(str);
   }
 
   // bind scene callbacks
@@ -134,6 +134,10 @@
     // $('#words').append(text+"<br/>");
     _ui('#words').append(_tran(text)+"<br/>");
     _highlight(users);
+    // auto scroll to bottom
+    var t = _ui('#words').get(0).scrollHeight;
+    var v = _ui('#words').get(0).offsetHeight;
+    _ui("#words").get(0).scrollTop = t - v;
   }
   // _info('text to info')
   function _info(text){
@@ -168,7 +172,7 @@
     for(var u in users) len++;
     _ui('#users').append(_tran("{total}:"+len+"{person}")+"<br/>");
     if (self != undefined && users[self] != undefined) {
-      _ui('#users').append("<li>"+_span(self, users[self].nick)+"</li>");
+      _ui('#users').append("<li>"+_span(self, users[self])+"</li>");
     }
     _ui('#users').append("<li>"+_span('any', '{every one}')+"</li>");
     for(var u in users) {

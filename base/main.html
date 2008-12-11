@@ -2,7 +2,7 @@
 <div id="main" style="display:none;"></div>
 <div id="debug" style="display:none;"></div>
 
-<div id="tool">
+<div id="tool" style="display:none;">
   <ul>
     <li>iphone</li>
     <ul>
@@ -38,6 +38,7 @@
   position:absolute;
   top:320px; left:320px;
   width:480px; height:160px;
+  overflow:auto;
   background:#444;
   font: normal normal 88% "Courier";
 }
@@ -49,130 +50,15 @@
 
 <script language="javascript">
 
-// **** the lib
-
-if (!this.LIST) LIST = function(){
-
-  // ** func(e) return true | false
-  function all(func, array){
-    for (var i=0; i<array.length; i++){
-      if (!func(array[i])) return false;
-    }
-    return true;
-  }
-
-  // ** func(e) return true | false
-  function any(func, array){
-    for (var i=0; i<array.length; i++){
-      if (func(array[i])) return true;
-    }
-    return false;
-  }
-
-  function clone(array){
-    var r = [];
-    for (var i=0; i<array.length; i++){
-      r.push(array[i]);
-    }
-    return r;
-  }
-
-  function count(e, array){
-    var c = 0;
-    for (var i=0; i<array.length; i++){
-      if (e == array[i]) c++;
-    }
-    return c;
-  }
-
-  // ** func(e) return true | false
-  function first(func, array){
-    for (var i=0; i<array.length; i++){
-      if (func(array[i])) return array[i];
-    }
-    return undefined;
-  }
-
-  // ** func(e) return void
-  function foreach(func, array){
-    if(!array) return;
-    for (var i=0; i<array.length; i++){
-      func(array[i]);
-    }
-  }
-
-  function indexof(e, array){
-    for (var i=0; i<array.length; i++){
-      if (array[i] == e) return i;
-    }
-    return -1;
-  }
-
-  // ** func(e) return true | false
-  function last(func, array){
-    for (var i=array.length - 1; i>0; i--){
-      if (func(array[i])) return array[i];
-    }
-    return undefined;
-  }
-
-  // ** func(e) return new element
-  function map(func, array){
-    var r = [];
-    for (var i=0; i<array.length; i++){
-      r.push(func(array[i]));
-    }
-    return r;
-  }
-
-  function member(e, array){
-    for (var i=0; i<array.length; i++){
-      if (array[i] == e) return true;
-    }
-    return false;
-  }
-
-  function remove(e, array){
-    var r = [], m = false;
-    for (var i=0; i<array.length; i++){
-      if (!m && array[i] == e) m = true;
-      else r.push(array[i]);
-    }
-    return r;
-  }
-
-  return {
-    count:count, member:member, indexof:indexof, remove:remove,
-    clone:clone, map:map, foreach:foreach,
-    all:all, any:any, first:first, last:last
-  };
-
-}();
-
-if (!this.DICT) DICT = function(){
-
-  function foreach(func, dict){
-    for(var i in dict){
-      func(dict[i]);
-    }
-  }
-
-  return {
-    foreach:foreach
-  };
-
-}();
-
-if (!this.getScene) getScene = function(){
-  var url = window.location.hash.split('#')[1];
-  return (url) ? url : undefined;
-};
-
-// mock console if not avaliable
-if (!this.console) console = (function(){
+// **** mock console if not avaliable
+if (!console) console = (function(){
   $("#debug").show();
   function log(lvl, str){
     $("#debug").append("["+lvl+"]"+str+"<br>");
+    // auto scroll to bottom
+    var t = $("#debug").get(0).scrollHeight;
+    var v = $("#debug").get(0).offsetHeight;
+    $("#debug").get(0).scrollTop = t - v;
   }
   return {
     debug: function(s){ log("DEBUG", s); },
@@ -180,10 +66,16 @@ if (!this.console) console = (function(){
     error: function(s){ log("ERROR", s); },
     warn:  function(s){ log("WARN ", s); },
     fatal: function(s){ log("FATAL", s); }
-  };				 
+  };
 })();
 
-// the boot loader :: load everything
+// **** the scene nameing
+if (!this.getScene) getScene = function(){
+  var url = window.location.hash.split('#')[1];
+  return (url) ? url : undefined;
+};
+
+// **** the boot loader :: load everything
 $(function(){
 
   // current device orient
@@ -227,4 +119,5 @@ $(function(){
   ui.load("#main", getScene() ? getScene() : "/home" );
 
 });
+
 </script>

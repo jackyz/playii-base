@@ -36,7 +36,7 @@
 	 if (name == "fuck"){
 	   cast(who)("error")("{dirty name}");
 	 } else {
-	   this.ul[who] = name;
+	   this.ul[who].nick = name;
 	   for (var u in this.ul) cast(u)("user_rename")(who, name);
 	 }
        },
