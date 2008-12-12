@@ -1,21 +1,5 @@
 <div id="side" style="display:none;"></div>
 <div id="main" style="display:none;"></div>
-<div id="debug" style="display:none;"></div>
-
-<div id="tool" style="display:none;">
-  <ul>
-    <li>iphone</li>
-    <ul>
-      <li id="landscape">landscape</li>
-      <li id="portscape">portscape</li>
-    </ul>
-    <li id="web">web</li>
-    <ul>
-      <li>debug</li>
-      <li>...</li>
-    </ul>
-  </ul>
-</div>
 
 <style type="text/css">
 * {
@@ -34,40 +18,9 @@
   width:480px; height:320px;
   background:#333;
 }
-#debug {
-  position:absolute;
-  top:320px; left:320px;
-  width:480px; height:160px;
-  overflow:auto;
-  background:#444;
-  font: normal normal 88% "Courier";
-}
-#tool {
-  position:absolute;
-  top:0px; right:0px;
-}
 </style>
 
 <script language="javascript">
-
-// **** mock console if not avaliable
-if (!console) console = (function(){
-  $("#debug").show();
-  function log(lvl, str){
-    $("#debug").append("["+lvl+"]"+str+"<br>");
-    // auto scroll to bottom
-    var t = $("#debug").get(0).scrollHeight;
-    var v = $("#debug").get(0).offsetHeight;
-    $("#debug").get(0).scrollTop = t - v;
-  }
-  return {
-    debug: function(s){ log("DEBUG", s); },
-    info:  function(s){ log("INFO ", s); },
-    error: function(s){ log("ERROR", s); },
-    warn:  function(s){ log("WARN ", s); },
-    fatal: function(s){ log("FATAL", s); }
-  };
-})();
 
 // **** the scene nameing
 if (!this.getScene) getScene = function(){
@@ -92,6 +45,7 @@ $(function(){
     if (x != currentDirect) switch_ui(x);
     // window.setTimeout(function(){ iphone_ui(); }, 400); // iphone detect
   }
+
   function switch_ui(direct){
     switch(direct){
       case "landscape" :
@@ -109,6 +63,7 @@ $(function(){
     }
     currentDirect = direct;
   }
+
   iphone_ui();
 
   $("#tool #landscape").click(function(){ switch_ui("landscape"); });
@@ -117,7 +72,6 @@ $(function(){
 
   ui.load("#side", "/side");
   ui.load("#main", getScene() ? getScene() : "/home" );
-
 });
 
 </script>

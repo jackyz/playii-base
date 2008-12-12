@@ -1,30 +1,183 @@
 (function(){
 
-// ****************************************************************
-// * CONSTS
-// ****************************************************************
+// ***************** LAYER 1 :: SCENE INTERFACE
 
-   var F = ["E", "S", "W", "N"];     // 方：东南西北
+   // ** 系统事件，自动调用
+   // create(args) : 构造函数，定义数据结构，此处的 this 即为实例(数据)
+   function create(args) {
+     // 用户列表，所有在此房间的用户数据
+     // {id:{id:id, nick:nick, data:data}, ...}
+     // id: 玩家，nick: 昵称，data: 玩家-游戏数据
+     this.list = {};
+     // 座位状态
+     // id: 玩家，ready: 就绪
+     // 游戏中ready为false意味着用户离线
+     // 未游戏中ready为false意味着用户还未准备开始游戏(比如，在看结果)
+     this.sits = {
+       E:{ id:undefined, ready:false },// 东
+       S:{ id:undefined, ready:false },// 南
+       W:{ id:undefined, ready:false },// 西
+       N:{ id:undefined, ready:false } // 北
+     };
+     // 游戏中标志，true : 进行中
+     this.play = false;
+     // 消息，比如，胡牌结果
+     this.info = undefined;
+     // 庄家，哪一方玩家坐庄
+     this.host = undefined;
+     // 游戏数据，开局时初始化
+     this.game = {};
+   }
 
-   var Z = [                         // 字
-     1,2,3,4,5,6,7,8,9,              // 万
-     11,12,13,14,15,16,17,18,19,     // 饼
-     21,22,23,24,25,26,27,28,29,     // 索
-     31,32,33,34,35,36,37            // 字
-   ];
+   // ** 系统事件，自动调用
+   // idle() : 系统超时事件处理函数，
+   function idle(){
+     var t = now();
+     if (this.play && (t - this.game.time > M)) { // 设置离线
+       this.game.time = -1;
+       do_call.call(this);
+     }
+     // else if (t - this.start_time > M) end_up();
+   }
 
-   var M = 3000;                     // 最长选择时间 3 秒
+   // ** 系统事件，所有人可用
+   // enter(who, nick, data) : 用户进入事件处理函数
+   function enter(who, nick, data){
+     //// cast(this.list)("user")("enter", who, nick); // 广播
+     this.list[who] = {id:who, nick:nick, data:data}; // 设置进入
+     var sit = get_sit(this, who);
+     if (sit){ // 如果有坐
+       if (this.play){ // 游戏中，设置 ready 为 true 以便不再跳过
+	 this.sits[sit].ready = true;
+       }
+     }
+     broadcast.call(this); // mock
+     // refresh.call(this, who); // 发送当前视图 // need change
+   }
 
-   var NF = function(a,b){return a-b;};
+   // ** 系统事件，所有人可用
+   // leave(who) : 用户离开事件处理函数
+   function leave(who){
+     delete this.list[who]; // 设置离开
+     var sit = get_sit(this, who);
+     if (sit){ // 如果有坐
+       if (this.play){ // 游戏中，设置 ready 为 false 以便跳过
+	 this.sits[sit].ready = false;
+       } else { // 不在游戏中，设置离座
+	 this.sits[sit] = {ready:false};
+       }
+     }
+     //// cast(this.list)("user")("leave", who); // 广播
+     broadcast.call(this); // mock
+   }
 
-// ****************************************************************
-// * TEST FUNCTIONS
-// ****************************************************************
+   // ** 系统事件，场景内玩家可用
+   // refresh(who) : 用户刷新事件处理函数
+   function refresh(who){
+     try {
+       if (!this.list[who])
+	 throw "{not in room}"; // 异常 不在场景内
+       var sit = get_sit(this, who);
+       var view = get_view(this, sit);
+       cast(who)("refresh")(who, view); // 向用户发送
+     } catch(e) {
+       cast(who)("error")(e);
+     }
+   }
 
+   // ** 游戏事件，场景内玩家可用
+   // 对座位的可用操作
+   // sit(who, "sit_down", arg);  坐下
+   // sit(who, "stand_up");       起立
+   // sit(who, "ready");          就绪
+   function sit(who, cmd, arg){
+     try {
+       if (!this.list[who])
+	 throw "{not in room}"; // 异常 不在房间
+       if (this.play)
+	 throw "{is playing}"; // 异常 游戏已开始
+       // 执行命令
+       switch(cmd){
+	 case "sit_down": // ** 就座
+  	   do_sit_down.call(this, who, arg); break;
+	 case "stand_up": // ** 离座
+  	   do_stand_up.call(this, who); break;
+	 case "ready":    // ** 就绪
+  	   do_ready.call(this, who); break;
+	 default:
+	   log("unknown sit command:"+cmd);
+	   throw "{unknown sit command}"; // 异常
+       }
+     } catch(e) {
+       cast(who)("error")(e);
+     }
+   }
+
+   // ** 游戏事件，参与游戏的玩家可用
+   // 对牌的可用操作
+   // pai(who, "hule");           胡(完成)
+   // pai(who, "gang");           杠
+   // pai(who, "peng");           碰
+   // pai(who, "shun", p1, p2);   吃(顺)
+   // pai(who, "hold");           忍(扛)
+   // pai(who, "drop", p, t);     打/停
+   function pai(who, cmd, a1, a2){
+     // bad(p) : 是否非法的牌，非法返回true
+     function bad(p){
+       return (p < 1 || p > 37 || p == 10 || p == 20 || p == 30);
+     }
+     // ****
+     try {
+       if (!this.list[who])
+	 throw "{not in room}"; // 异常 不在房间
+       if (!this.play)
+	 throw "{not playing}"; // 异常 未开始
+       var sit = get_sit(this, who);
+       if (!sit)
+	 throw "{not player}"; // 异常 不是玩家
+       // 是否轮到 sit 操作
+       if (this.game.turn != sit)
+	 throw "{not your turn}"; // 异常 并未轮到
+       // 执行命令
+       switch(cmd){
+	 case "hule": // ** 胡
+	   do_hule.call(this, sit); break;
+	 case "gang": // ** 杠
+	   do_gang.call(this, sit); break;
+	 case "peng": // ** 碰
+	   do_peng.call(this, sit); break;
+	 case "shun": // ** 吃(牌1,牌2)
+	   var p1 = (isNaN(a1 - 0) ? 0 : a1 - 0).toFixed();
+	   var p2 = (isNaN(a2 - 0) ? 0 : a2 - 0).toFixed();
+	   if (bad(p1) || bad(p2))
+	     throw "{invalidate arguments}";
+	   do_shun.call(this, sit, p1, p2); break;
+	 case "hold": // ** 忍
+	   do_hold.call(this, sit); break;
+	 case "drop": // ** 出牌(牌,停)
+	   var p = (isNaN(a1 - 0) ? 0 : a1 - 0).toFixed();
+	   var t = (a2 == "true" ? true : false);
+	   if (bad(p))
+	     throw "{invalidate arguments}";
+	   do_drop.call(this, sit, p, t); break;
+	 default:
+	   log("unknown pai command:"+cmd);
+	   throw "{unknown pai command}"; // 异常
+       }
+     } catch(e) {
+       cast(who)("error")(e);
+     }
+   }
+
+   // **** 测试事件
+   function echo(who, what){
+     debug("echo("+who+", "+what+")");
+     cast(who)("echo")(what, now());
+   }
+
+   // **** 单元测试
    function test() {
-
      var tm = {};
-
      void pass(tm);
 
      assert( has_gang([1,1,1], 1));
@@ -40,254 +193,206 @@
 
      assert( has_ting([1,2,2, 2,2,3, 21,21,21, 31,31,31, 37]) );
      info("has_ting :: success "+ pass(tm) +"ms");
-
    }
 
-// ****************************************************************
-// * BROADCAST
-// ****************************************************************
+// ***************** CONSTS
 
-   function broadcast(){
-     var mj = this;
-     for(var x in mj.list) refresh.call(mj, x);
-   }
+   var F = ["E", "S", "W", "N"];     // 方位：东南西北
 
-// ****************************************************************
-// * EVENT FUNCTIONS
-// ****************************************************************
+   var Z = [                         // 牌面
+     1,2,3,4,5,6,7,8,9,              // 万
+     11,12,13,14,15,16,17,18,19,     // 饼
+     21,22,23,24,25,26,27,28,29,     // 索
+     31,32,33,34,35,36,37            // 字
+   ];
 
-  // **** 系统时间事件
+   var M = 3000;                     // 超时时间 3 秒
 
-   // ****
-   // idle()
-   function idle(){
-     var mj = this;
-     var t = now();
-     if (mj.play && (t - mj.game.time > M)) { // 设置离线
-       mj.game.time = -1;
-       do_call.call(mj);
-     }
-     // else if (t - mj.start_time > M) end_up();
-   }
+   var NF = function(a,b){return a-b;};
 
+// ***************** LAYER 2 :: ACTIONS
 
-  // **** 用户列表管理
-
-   // ****
-   // enter(who, nick, data);
-   function enter(who, nick, data){
-     var mj = this;
-     //// cast(mj.list)("user")("enter", who, nick); // 广播
-     mj.list[who] = {id:who, nick:nick, data:data}; // 设置进入
-     // 得到 who 对应的 sit
-     var sit = first(function(x){ return mj.sits[x].id == who; }, F);
-     if (sit){ // 如果有坐
-       if (mj.play){ // 游戏中，设置 ready 为 true 以便不再跳过
-	 mj.sits[sit].ready = true;
-       }
-     }
-     broadcast.call(mj); // mock
-     // refresh.call(this, who); // 发送当前视图 // need change
-   }
-
-   // ****
-   // leave(who);
-   function leave(who){
-     var mj = this;
-     delete mj.list[who]; // 设置离开
-     // 得到 who 对应的 sit
-     var sit = first(function(x){ return mj.sits[x].id == who; }, F);
-     if (sit){ // 如果有坐
-       if (mj.play){ // 游戏中，设置 ready 为 false 以便跳过
-	 mj.sits[sit].ready = false;
-       } else { // 不在游戏中，设置离座
-	 mj.sits[sit] = {ready:false};
-       }
-     }
-     //// cast(mj.list)("user")("leave", who); // 广播
-     broadcast.call(mj); // mock
-   }
-
-   // ****
-   // refresh(who);
-   function refresh(who){
-     // ****
-     // mask(obj);
-     function mask(obj){
-       return {
-	 show: obj.show,
-	 hide: map(function(x){ return 0; }, obj.hide),
-	 hand: map(function(x){ return 0; }, obj.hand),
-	 ting: obj.ting
-       };
-     }
-     // ****
-     var mj = this;
-     try {
-       if (!mj.list[who])
-	 throw "{not in room}"; // 异常 不在房间
-       // 获取 who 对应的 sit
-       var sit = first(function(x){ return mj.sits[x].id == who; }, F);
-       // 获取用户在场景中的可视部分
-       var view = {
-	 list: mj.list,
-	 sits: mj.sits,
-	 play: mj.play,
-	 info: mj.info,
-	 host: mj.host,
-	 game: mj.play == true ? {
-	   desk: mj.game.desk,
-	   trim: mj.game.trim,
-	   E: "E" == sit ? mj.game["E"] : mask(mj.game["E"]),
-	   S: "S" == sit ? mj.game["S"] : mask(mj.game["S"]),
-	   W: "W" == sit ? mj.game["W"] : mask(mj.game["W"]),
-	   N: "N" == sit ? mj.game["N"] : mask(mj.game["N"]),
-	   turn: mj.game.turn,
-	   last: mj.game.last,
-	   zhua: mj.game.turn == sit ? mj.game.zhua : false,
-	   card: mj.game.turn == sit ? mj.game.card : 0,
-	   cmds: mj.game.turn == sit ? mj.game.cmds : []
-	 } : {}
-       };
-       cast(who)("refresh")(who, view); // 向用户发送
-     } catch(e) {
-       cast(who)("error")(e);
-     }
-   }
-
-   // ****
-   // sit(who, "sit_down", arg);
-   // sit(who, "stand_up");
-   // sit(who, "ready");
-   function sit(who, cmd, arg){
-     // debug("sit("+who+","+cmd+")");
-     var mj = this;
-     try {
-       if (!mj.list[who])
-	 throw "{not in room}"; // 异常 不在房间
-       if (mj.play)
-	 throw "{is playing}"; // 异常 游戏已开始
-       // 执行命令
-       switch(cmd){
-	 case "sit_down": // ** 就座
-  	   do_sit_down.call(mj, who, arg); break;
-	 case "stand_up": // ** 离座
-  	   do_stand_up.call(mj, who); break;
-	 case "ready":    // ** 就绪
-  	   do_ready.call(mj, who); break;
-	 default:
-	   log("unknown sit command:"+cmd);
-	   throw "{unknown sit command}"; // 异常
-       }
-     } catch(e) {
-       cast(who)("error")(e);
-     }
-   }
-
-   // ****
-   // pai : 打牌,被叫用户发来的选择消息
-   // pai(who, "hule");
-   // pai(who, "gang");
-   // pai(who, "peng");
-   // pai(who, "shun", p1, p2);
-   // pai(who, "hold");
-   // pai(who, "drop", p, t);
-   function pai(who, cmd, a1, a2){
-     // ****
-     // bad(p);
-     function bad(p){
-       return (p < 1 || p > 37 || p == 10 || p == 20 || p == 30);
-     }
-     // ****
-     var mj = this;
-     try {
-       if (!mj.list[who]) throw "{not in room}"; // 异常 不在房间
-       if (!mj.play) throw "{not playing}"; // 异常 未开始
-       // 获取 who 对应的 sit
-       var sit = first(function(x){ return mj.sits[x].id == who; }, F);
-       if (!sit) throw "{not player}"; // 异常 不是玩家
-       // 是否轮到 sit 操作
-       if (mj.game.turn != sit) throw "{not your turn}"; // 异常 并未轮到
-       // 执行命令
-       switch(cmd){
-	 case "hule": // ** 胡
-	   do_hule.call(mj, sit); break;
-	 case "gang": // ** 杠
-	   do_gang.call(mj, sit); break;
-	 case "peng": // ** 碰
-	   do_peng.call(mj, sit); break;
-	 case "shun": // ** 吃(牌1,牌2)
-	   var p1 = (isNaN(a1 - 0) ? 0 : a1 - 0).toFixed();
-	   var p2 = (isNaN(a2 - 0) ? 0 : a2 - 0).toFixed();
-	   if (bad(p1) || bad(p2)) throw "{invalidate arguments}";
-	   do_shun.call(mj, sit, p1, p2); break;
-	 case "hold": // ** 忍
-	   do_hold.call(mj, sit); break;
-	 case "drop": // ** 出牌(牌,停)
-	   var p = (isNaN(a1 - 0) ? 0 : a1 - 0).toFixed();
-	   var t = (a2 == "true" ? true : false);
-	   if (bad(p)) throw "{invalidate arguments}";
-	   do_drop.call(mj, sit, p, t); break;
-	 default:
-	   log("unknown pai command:"+cmd);
-	   throw "{unknown pai command}"; // 异常
-       }
-     } catch(e) {
-       cast(who)("error")(e);
-     }
-   }
-
-// ****************************************************************
-// * ACTION FUNCTIONS
-// ****************************************************************
-
-   // ****
-   // do_sit_down : 就座
+   // do_sit_down(who, sit) : 就座
    function do_sit_down(who, s){
-     var mj = this;
-     // 得到 who 对应的 sit
-     var sits = mj.sits;
-     var sit = first(function(x){ return sits[x].id == who; }, F);
-     if (sit) throw "{had sit already}"; // 异常 已经就座
-     if (!member(s, F)) throw "{sit not exist}"; // 异常 座位不合法
-     if (mj.sits[s].id) throw "{sit unavaliable}"; // 异常 座位有人
-     mj.sits[s] = {id:who, ready:false};  // 设置就坐
-     //// cast(mj.list)("sit")("sit_down", who, s); // 广播
-     do_ready.call(mj, who); // mock 直接 ready
+     var sit = get_sit(this, who);
+     if (sit)
+       throw "{had sit already}"; // 异常 已经就座
+     if (!member(s, F))
+       throw "{sit not exist}"; // 异常 座位不合法
+     if (this.sits[s].id)
+       throw "{sit unavaliable}"; // 异常 座位有人
+     this.sits[s] = {id:who, ready:false};  // 设置就坐
+     //// cast(this.list)("sit")("sit_down", who, s); // 广播
+     do_ready.call(this, who); // mock 直接 ready
    }
 
-   // ****
-   // do_stand_up : 离座
+   // do_stand_up(who) : 离座
    function do_stand_up(who){
-     var mj = this;
-     // 得到 who 对应的 sit
-     var sit = first(function(x){ return mj.sits[x].id == who; }, F);
-     if (!sit) throw "{not sit yet}"; // 异常 尚未就座
-     mj.sits[sit] = {ready:false};  // 设置起身
-     //// cast(mj.list)("sit")("stand_up", who, sit); // 广播
-     broadcast.call(mj); // mock
+     var sit = get_sit(this, who);
+     if (!sit)
+       throw "{not sit yet}"; // 异常 尚未就座
+     this.sits[sit] = {ready:false};  // 设置起身
+     //// cast(this.list)("sit")("stand_up", who, sit); // 广播
+     broadcast.call(this); // mock
    }
 
-   // ****
-   // do_ready : 就绪
+   // do_ready(who) : 就绪
    function do_ready(who){
-     var mj = this;
-     // 得到 who 对应的 sit
-     var sit = first(function(x){ return mj.sits[x].id == who; }, F);
-     if (!sit) throw "{not sit yet}"; // 异常 尚未就座
-     mj.sits[sit].ready = true;  // 设置就绪
-     //// cast(mj.list)("sit")("ready", who, sit); // 广播
-     if(all(function(x){ return mj.sits[x].ready == true; }, F)) {
-       do_open.call(mj); // 若都已就绪，则开局
+     var sit = get_sit(this, who);
+     if (!sit)
+       throw "{not sit yet}"; // 异常 尚未就座
+     this.sits[sit].ready = true;  // 设置就绪
+     //// cast(this.list)("sit")("ready", who, sit); // 广播
+     if(has_ready(this)) {
+       do_open.call(this); // 若都已就绪，则开局
      }else{
-       broadcast.call(mj); // mock
+       broadcast.call(this); // mock
      }
    }
 
-   // ****
-   // do_open : 开局
-   function do_open(){
+   // do_hule(sit) : 胡了
+   function do_hule(sit){
+     if (!has_hule(this.game[sit].hand, this.game.card))
+       throw "{hule failure}"; // 异常，未能成胡
+     // info(this.game[sit].toSource()); // debug
+     // TODO 算番结钱
+     // 设置胡牌信息
+     var p = [];
+     p = p.concat(this.game[sit].show, this.game[sit].hide);
+     p = p.concat(this.game[sit].hand, this.game.card);
+     p.sort(NF);
+     this.info = {
+       time : now(),
+       done : true,
+       hule : p,
+       side : sit
+     };
+     // 胡牌连庄，未胡轮庄
+     this.host = (sit == this.host) ? sit : next(this.host);
+     do_close.call(this); // 终局
+   }
+
+   // do_gang(sit) : 杠牌
+   function do_gang(sit){
+     // TODO 明杠，暗杠
+     if (!has_gang(this.game[sit].hand, this.game.card))
+       throw "{gang failure}"; // 异常 不能成杠
+     // 设置杠牌
+     this.game[sit].hand = remove(this.game.card, this.game[sit].hand);
+     this.game[sit].hand = remove(this.game.card, this.game[sit].hand);
+     this.game[sit].hand = remove(this.game.card, this.game[sit].hand);
+     this.game[sit].show.push(this.game.card);
+     this.game[sit].show.push(this.game.card);
+     this.game[sit].show.push(this.game.card);
+     this.game[sit].show.push(this.game.card);
+     //// cast(this.list)("pai")("gang", sit, this.game.card); // 广播
+     // 给 sit 发牌
+     do_deal.call(this, sit, true);
+   }
+
+   // do_peng(sit) : 碰牌
+   function do_peng(sit){
+     if (!has_peng(this.game[sit].hand, this.game.card))
+       throw "{peng failure}"; // 异常 不能成碰
+     // 设置碰牌
+     this.game[sit].hand = remove(this.game.card, this.game[sit].hand);
+     this.game[sit].hand = remove(this.game.card, this.game[sit].hand);
+     this.game[sit].show.push(this.game.card);
+     this.game[sit].show.push(this.game.card);
+     this.game[sit].show.push(this.game.card);
+     // 设置 zhua 牌
+     this.game[sit].hand.sort(NF);
+     this.game.card = this.game[sit].hand.pop();
+     this.game.zhua = true;
+     this.game.turn = sit;
+     //// cast(this.list)("pai")("peng", sit, this.game.card); // 广播
+     // 叫牌
+     do_call.call(this);
+   }
+
+   // do_shun(sit, p1, p2) : 吃牌
+   function do_shun(sit, p1, p2){
+     // is_shun : 是否成顺
+     function is_shun(p1, p2, card){
+       var a = []; a.push(card, p1, p2); a.sort(NF);
+       if (a[0]-0+1 == a[1] && a[1]-0+1 == a[2]) return true;
+       return false;
+     }
      // ****
+     if (this.game.card > 30)
+       throw "{shun failure}"; // 异常 字牌
+     if (!member(p1, this.game[sit].hand))
+       throw "{shun failure}"; // 异常 没有此牌
+     if (!member(p2, this.game[sit].hand))
+       throw "{shun failure}"; // 异常 没有此牌
+     if (!is_shun(p1, p2, this.game.card))
+       throw "{shun failure}"; // 异常 不成顺
+     // 设置吃牌
+     this.game[sit].hand = remove(p1, this.game[sit].hand);
+     this.game[sit].hand = remove(p2, this.game[sit].hand);
+     var ps = []; ps.push(p1, p2, this.game.card); ps.sort();
+     this.game[sit].show.push(ps[0]);
+     this.game[sit].show.push(ps[1]);
+     this.game[sit].show.push(ps[2]);
+     // 设置 zhua 牌
+     this.game[sit].hand.sort(NF);
+     this.game.card = this.game[sit].hand.pop();
+     this.game.zhua = true;
+     this.game.turn = sit;
+     //// cast(this.list)("pai")("shun", sit, ps); // 广播
+     // 叫牌
+     do_call.call(this);
+   }
+
+   // do_hold(sit) : 忍牌
+   function do_hold(sit){
+     if (this.game.zhua == true && this.game.turn == sit)
+       throw "{hold failure}"; // 异常 轮到玩家出牌，不能忍
+     // 叫牌 sit 的下家
+     this.game.turn = next(sit);
+     // 叫牌
+     do_call.call(this);
+   }
+
+   // do_drop(sit, p, t) : 打牌，打出p，t === true 则意味着要求停牌
+   function do_drop(sit, p, t){
+     // 设置出牌
+     if (this.game[sit].ting){
+       if (p != this.game.card)
+	 throw "{drop failure}"; // 异常 停牌时必打手中的牌
+     } else {
+       if (p == this.game.card){ // 打抓牌
+	 // nop
+       } else if (member(p, this.game[sit].hand)) { // 打手牌
+	 this.game[sit].hand = remove(p, this.game[sit].hand);
+	 this.game[sit].hand.push(this.game.card);
+	 this.game[sit].hand.sort(NF);
+       } else { // 既不是抓牌，也不是手牌
+	 throw "{drop failure}"; // 异常 必打手牌或抓牌
+       }
+     }
+     // 设置出牌
+     this.game.last = sit;
+     this.game.zhua = false;
+     this.game.card = p;
+     this.game.turn = next(sit);
+     // 若要求停牌
+     if (t === true) {
+       if (!has_ting(this.game[sit].hand))
+	 throw "{ting failure}"; // 异常，不能停
+       // 设置停牌
+       this.game[sit].ting = true;
+       //// cast(this.list)("pai")("ting", sit); // 广播
+     }
+     //// cast(this.list)("pai")("drop", sit, p); // 广播
+     // 叫牌
+     do_call.call(this);
+   }
+
+// ***************** LAYER 3 :: GAME FLOW
+
+   // do_open() : 开局
+   function do_open(){
      // xpai : 洗牌,生成一副麻将牌的随机组合
      function xpai() {
        var p = [];
@@ -302,7 +407,6 @@
        }
        return p;
      }
-     // ****
      // fpai : 分牌，从b中拿出c张牌
      function fpai(b, c){ // b : buff, c : count
        var p = [];
@@ -311,13 +415,12 @@
        return p;
      }
      // ****
-     var mj = this;
-     mj.play = true;
-     mj.info = undefined; // 清除消息
-     mj.host = (!mj.host) ? F[rand(4)] : mj.host ; // 选庄
-     //// cast(mj.list)("pai")("open", mj.host); // 广播
+     this.play = true;
+     this.info = undefined; // 清除消息
+     this.host = (!this.host) ? F[rand(4)] : this.host ; // 选庄
+     //// cast(this.list)("pai")("open", this.host); // 广播
      var b = xpai();   // 洗牌
-     mj.game = {       // ** 游戏状态
+     this.game = {       // ** 游戏状态
        buff:b,            // 余牌
        desk:[],           // 废牌
        trim:0,            // 牌局杠牌次数
@@ -333,40 +436,36 @@
        cmds:[]            // 可用命令(对当前牌的)
      };
      // 向庄家发牌
-     do_deal.call(mj, mj.host, false);
+     do_deal.call(this, this.host, false);
    }
 
-   // ****
-   // do_deal : 发牌
+   // do_deal(sit, tail) : 发牌，tail === true 杠牌发牌
    function do_deal(sit, tail){
-     var mj = this;
      var p = 0;
      if (tail === true) { // 杠，从尾取
-       p = mj.game.buff.pop(); // 从 buff 尾取新牌
-       mj.game.trim++;
+       p = this.game.buff.pop(); // 从 buff 尾取新牌
+       this.game.trim++;
      } else { // 正常取
-       p = mj.game.buff.shift(); // 从 buff 头取新牌
+       p = this.game.buff.shift(); // 从 buff 头取新牌
      }
      if (!p) { // 牌已发完，牌局终止(流局)
-       mj.host = next(mj.host); // 未胡轮庄
-       mj.info = { // 设置流局信息
+       this.host = next(this.host); // 未胡轮庄
+       this.info = { // 设置流局信息
 	 time : now(),
 	 done : false
        };
-       do_close.call(mj); // 终局
+       do_close.call(this); // 终局
      } else { // 牌未发完，牌局继续
-       mj.game.card = p;    // 设置牌面
-       mj.game.zhua = true; // 设置抓牌
-       mj.game.turn = sit;
+       this.game.card = p;    // 设置牌面
+       this.game.zhua = true; // 设置抓牌
+       this.game.turn = sit;
        // 叫牌
-       do_call.call(mj);
+       do_call.call(this);
      }
    }
 
-   // ****
-   // do_call : 叫牌,用户完成选择之后的流程处理
+   // do_call() : 叫牌，用户完成选择之后的流程处理
    function do_call(){
-     // ****
      // find_shun : 寻找顺牌
      // result: 顺牌组合
      function find_shun(hand, card){
@@ -379,7 +478,6 @@
        }
        return r;
      }
-     // ****
      // spai : 算牌,计算当前牌的可用选项
      function spai(hand, card, zhua){
        var cmds = [];
@@ -409,206 +507,57 @@
        return cmds;
      }
      // ****
-     var mj = this;
-     if (mj.game.turn == mj.game.last) {
+     if (this.game.turn == this.game.last) {
        // 已轮询完一周
-       mj.game.desk.push(mj.game.card); // 设置废牌落地
-       do_deal.call(mj, next(mj.game.turn), false); // 向 turn 的下家发牌
-     } else if (mj.sits[mj.game.turn].ready == false || mj.game.time == -1) {
+       this.game.desk.push(this.game.card); // 设置废牌落地
+       do_deal.call(this, next(this.game.turn), false); // 向 turn 的下家发牌
+     } else if (this.sits[this.game.turn].ready == false
+		|| this.game.time == -1) {
        // 离线或超时，自动处理
-       mj.game.time = now(); // 重设超时
-       if (mj.game.zhua) { // 抓牌，直接打出
-	 do_drop.call(mj, mj.game.turn, mj.game.card, false);
+       this.game.time = now(); // 重设超时
+       if (this.game.zhua) { // 抓牌，直接打出
+	 do_drop.call(this, this.game.turn, this.game.card, false);
        } else { // 非抓牌，直接跳过
-	 mj.game.turn = next(mj.game.turn);
-	 do_call.call(mj);
+	 this.game.turn = next(this.game.turn);
+	 do_call.call(this);
        }
      } else { // 在线，计算可选项
-       mj.game.cmds = spai(mj.game[mj.game.turn].hand,
-			   mj.game.card,
-			   mj.game.zhua);
-       mj.game.time = now(); // 重设超时
-       if (mj.game.zhua || mj.game.cmds.length > 0) { // 抓牌，或有可选项
-	 broadcast.call(mj); // mock
+       this.game.cmds = spai(this.game[this.game.turn].hand,
+			   this.game.card,
+			   this.game.zhua);
+       this.game.time = now(); // 重设超时
+       if (this.game.zhua || this.game.cmds.length > 0) { // 抓牌，或有可选项
+	 broadcast.call(this); // mock
        } else { // 无可选项：跳过，叫牌 turn 的下家
-	 mj.game.turn = next(mj.game.turn);
-	 do_call.call(mj);
+	 this.game.turn = next(this.game.turn);
+	 do_call.call(this);
        }
      }
    }
 
-   // ****
-   // do_close : 清盘
+   // do_close() : 清盘
    function do_close(){
-     var mj = this;
-     mj.play = false; // 终局
-     mj.game = {}; // 清场
-     foreach(function(x){
-	       if (mj.sits[x].ready == false) mj.sits[x] = {ready:false};
-	       else mj.sits[x].ready = false;
-	     }, F); // 设置待开始
-     broadcast.call(mj); // mock
+     this.play = false; // 终局
+     this.game = {}; // 清场
+     reset_sits(this); // 重置座位
+     broadcast.call(this); // mock
    }
 
-   // **** **** **** ****
+// ***************** LAYER 3 :: GAME FLOW :: BROADCAST
 
-   // ****
-   // do_hule : 胡了
-   function do_hule(sit){
-     var mj = this;
-     if (!has_hule(mj.game[sit].hand, mj.game.card))
-       throw "{hule failure}"; // 异常 不能成胡
-     // info(mj.game[sit].toSource()); // debug
-     // TODO 算番结钱
-     var p = [];
-     p = p.concat(mj.game[sit].show, mj.game[sit].hide);
-     p = p.concat(mj.game[sit].hand, mj.game.card);
-     p.sort(NF);
-     mj.info = { // 设置胡牌信息
-       time : now(),
-       done : true,
-       hule : p,
-       side : sit
-     };
-     // 胡牌连庄，未胡轮庄
-     mj.host = (sit == mj.host) ? sit : next(mj.host);
-     do_close.call(mj); // 终局
-   }
-
-   // ****
-   // do_gang : 杠牌
-   function do_gang(sit){
-     var mj = this;
-     // TODO 明杠，暗杠
-     if (!has_gang(mj.game[sit].hand, mj.game.card))
-       throw "{gang failure}"; // 异常 不能成杠
-     // 设置杠牌
-     mj.game[sit].hand = remove(mj.game.card, mj.game[sit].hand);
-     mj.game[sit].hand = remove(mj.game.card, mj.game[sit].hand);
-     mj.game[sit].hand = remove(mj.game.card, mj.game[sit].hand);
-     mj.game[sit].show.push(mj.game.card);
-     mj.game[sit].show.push(mj.game.card);
-     mj.game[sit].show.push(mj.game.card);
-     mj.game[sit].show.push(mj.game.card);
-     //// cast(mj.list)("pai")("gang", sit, mj.game.card); // 广播
-     // 给 sit 发牌
-     do_deal.call(mj, sit, true);
-   }
-
-   // ****
-   // do_peng : 碰牌
-   function do_peng(sit){
-     var mj = this;
-     if (!has_peng(mj.game[sit].hand, mj.game.card))
-       throw "{peng failure}"; // 异常 不能成碰
-     // 设置碰牌
-     mj.game[sit].hand = remove(mj.game.card, mj.game[sit].hand);
-     mj.game[sit].hand = remove(mj.game.card, mj.game[sit].hand);
-     mj.game[sit].show.push(mj.game.card);
-     mj.game[sit].show.push(mj.game.card);
-     mj.game[sit].show.push(mj.game.card);
-     // 设置 zhua 牌
-     mj.game[sit].hand.sort(NF);
-     mj.game.card = mj.game[sit].hand.pop();
-     mj.game.zhua = true;
-     mj.game.turn = sit;
-     //// cast(mj.list)("pai")("peng", sit, mj.game.card); // 广播
-     // 叫牌
-     do_call.call(mj);
-   }
-
-   // ****
-   // do_shun : 吃牌
-   function do_shun(sit, p1, p2){
-     // ****
-     // is_shun : 是否成顺
-     function is_shun(p1, p2, card){
-       var a = []; a.push(card, p1, p2); a.sort(NF);
-       if (a[0]-0+1 == a[1] && a[1]-0+1 == a[2]) return true;
-       return false;
+   // broadcast() : 向玩家广播
+   function broadcast(){
+     for(var who in this.list) {
+       // 获取 who 对应的 sit
+       var sit = get_sit(this, who);
+       var view = get_view(this, sit);
+       cast(who)("refresh")(who, view); // 向用户发送
      }
-     // ****
-     var mj = this;
-     if (mj.game.card > 30)
-       throw "{shun failure}"; // 异常 字牌
-     if (!member(p1, mj.game[sit].hand))
-       throw "{shun failure}"; // 异常 没有此牌
-     if (!member(p2, mj.game[sit].hand))
-       throw "{shun failure}"; // 异常 没有此牌
-     if (!is_shun(p1, p2, mj.game.card))
-       throw "{shun failure}"; // 异常 不成顺
-     // 设置吃牌
-     mj.game[sit].hand = remove(p1, mj.game[sit].hand);
-     mj.game[sit].hand = remove(p2, mj.game[sit].hand);
-     var ps = []; ps.push(p1, p2, mj.game.card); ps.sort();
-     mj.game[sit].show.push(ps[0]);
-     mj.game[sit].show.push(ps[1]);
-     mj.game[sit].show.push(ps[2]);
-     // 设置 zhua 牌
-     mj.game[sit].hand.sort(NF);
-     mj.game.card = mj.game[sit].hand.pop();
-     mj.game.zhua = true;
-     mj.game.turn = sit;
-     //// cast(mj.list)("pai")("shun", sit, ps); // 广播
-     // 叫牌
-     do_call.call(mj);
    }
 
-   // ****
-   // do_hold : 忍牌
-   function do_hold(sit){
-     var mj = this;
-     if (mj.game.zhua == true && mj.game.turn == sit)
-       throw "{hold failure}"; // 异常 轮到玩家出牌，不能忍
-     // 叫牌 sit 的下家
-     mj.game.turn = next(sit);
-     // 叫牌
-     do_call.call(mj);
-   }
+// ***************** LAYER 4 :: GAME LOGIC
 
-   // ****
-   // do_drop : 打牌
-   function do_drop(sit, p, t){
-     var mj = this;
-     // 设置出牌
-     if (mj.game[sit].ting){
-       if (p != mj.game.card)
-	 throw "{drop failure}"; // 异常 停牌时必打手中的牌
-     } else {
-       if (p == mj.game.card){ // 打抓牌
-	 // nop
-       } else if (member(p, mj.game[sit].hand)) { // 打手牌
-	 mj.game[sit].hand = remove(p, mj.game[sit].hand);
-	 mj.game[sit].hand.push(mj.game.card);
-	 mj.game[sit].hand.sort(NF);
-       } else { // 既不是抓牌，也不是手牌
-	 throw "{drop failure}"; // 异常 必打手牌或抓牌
-       }
-     }
-     // 设置出牌
-     mj.game.last = sit;
-     mj.game.zhua = false;
-     mj.game.card = p;
-     mj.game.turn = next(sit);
-     // 若要求停牌
-     if (t === true) {
-       if (!has_ting(mj.game[sit].hand))
-	 throw "{ting failure}"; // 异常，不能停
-       // 设置停牌
-       mj.game[sit].ting = true;
-       //// cast(mj.list)("pai")("ting", sit); // 广播
-     }
-     //// cast(mj.list)("pai")("drop", sit, p); // 广播
-     // 叫牌
-     do_call.call(mj);
-   }
-
-// ****************************************************************
-// * PRIVATE FUNCTIONS
-// ****************************************************************
-
-   // ****
-   // has_hule : 是否胡了
+   // has_hule(hand, card) : 是否胡了
    function has_hule(hand, card){
      // ****
      // is_hu : 判断胡牌,p是牌数组,j是有将标志
@@ -649,34 +598,89 @@
      return is_hu(p, false);
    }
 
-   // ****
-   // has_gang : 是否有杠
+   // has_gang(hand, card) : 是否有杠
    function has_gang(hand, card){
      return (count(card, hand) == 3);
    }
 
-   // ****
-   // has_peng : 是否有碰
+   // has_peng(hand, card) : 是否有碰
    function has_peng(hand, card){
      return (count(card, hand) >= 2);
    }
 
-   // ****
-   // has_ting : 是否成停
+   // has_ting(hand) : 是否成停
    function has_ting(hand){
      return any(function(e){ return has_hule(hand, e); }, Z);
    }
 
-   // -- utility
+   // has_ready(self)
+   function has_ready(self){
+     return all(function(x){ return self.sits[x].ready == true; }, F);
+   }
 
+   // get_sit(self, who) : 获取用户所在的座位
+   function get_sit(self, who){
+     return first(function(x){ return self.sits[x].id == who; }, F);
+   }
+
+   // reset_sits(self) : 重置座位
+   function reset_sits(self){
+     foreach(function(x){
+	       if (self.sits[x].ready == false){ // 如果座位离线
+		 self.sits[x] = {ready:false};  // 设为无人
+	       } else { // 如果座位在线
+		 self.sits[x].ready = false; // 设为待开始
+	       }
+	     }, F);
+   }
+
+   // get_view(self, sit) : 获取用户的可视数据
+   function get_view(self, sit){
+     // mask(obj) : 加码处理
+     function mask(obj){
+       return {
+	 show: obj.show,
+	 hide: map(function(x){ return 0; }, obj.hide),
+	 hand: map(function(x){ return 0; }, obj.hand),
+	 ting: obj.ting
+       };
+     }
+     // ****
+     return {
+       list: self.list,
+       sits: self.sits,
+       play: self.play,
+       info: self.info,
+       host: self.host,
+       game: self.play == true ? {
+	 desk: self.game.desk,
+	 trim: self.game.trim,
+	 E: "E" == sit ? self.game["E"] : mask(self.game["E"]),
+	 S: "S" == sit ? self.game["S"] : mask(self.game["S"]),
+	 W: "W" == sit ? self.game["W"] : mask(self.game["W"]),
+	 N: "N" == sit ? self.game["N"] : mask(self.game["N"]),
+	 turn: self.game.turn,
+	 last: self.game.last,
+	 zhua: self.game.turn == sit ? self.game.zhua : false,
+	 card: self.game.turn == sit ? self.game.card : 0,
+	 cmds: self.game.turn == sit ? self.game.cmds : []
+       } : {}
+     };
+   }
+
+// ***************** LAYER 5 :: UTILITY
+
+   // now() : 获取当前时间戳
    function now(){
      return (new Date()).getTime();
    }
 
+   // rand(max) : 生成不大于 max 的随机数
    function rand(max) {
      return Math.floor(Math.random() * max);
    }
 
+   // next(fang) : 获取某个方位的顺位
    function next(fang){
      switch(fang){
        case "E": return "S";
@@ -687,9 +691,9 @@
      }
    }
 
-// ****************************************************************
-// * LISTS FUNCTIONS
-// ****************************************************************
+// ***************** LAYER 5 :: UTILITY :: SHORTCUT
+
+// ***************** LAYER 5 :: UTILITY :: LISTS FUNCTIONS
 
    // ** func(e) return true | false
    function all(func, array){
@@ -726,7 +730,7 @@
    // ** func(e) return true | false
    function first(func, array){
      for (var i=0; i<array.length; i++){
-       if (func.call(this, array[i])) return array[i];
+       if (func(array[i])) return array[i];
      }
      return undefined;
    }
@@ -778,76 +782,20 @@
      return r;
    }
 
-// ****************************************************************
-// * EXPORT
-// ****************************************************************
+// ***************** INTERFACE EXPORT
+
+   return mixin (create, {
+       idle: idle,
+       enter: enter,
+       leave: leave,
+       refresh: refresh,
+       sit: sit,
+       pai: pai,
+       echo: echo,
+       test: test
+   });
 
    // trigger change global exception
-   // mahjong = mj;
-
-   return {
-     // ******** 状态
-
-     // 用户列表
-     list : {},          // ** 所有在此房间的用户数据
-     // {id:{id:id, nick:nick, data:data}, ...}
-
-     // 座位状态
-     sits : {          // ** 座位状态
-       E:{ id:undefined, ready:false },// 东
-       S:{ id:undefined, ready:false },// 南
-       W:{ id:undefined, ready:false },// 西
-       N:{ id:undefined, ready:false } // 北
-     },
-
-     // 运行标志
-     play : false,       // ** 游戏中
-
-     // 消息
-     info : undefined,   // ** 消息，比如，胡牌结果
-
-     // 庄家
-     host : undefined,    // 坐庄
-
-     // 游戏数据
-     game : {},           // 游戏数据
-
-     // ******** 事件
-
-     // ** 系统事件
-     idle:idle,           // 时间函数
-
-     // ** 所有人可用
-     enter:enter,         // 进入
-     leave:leave,         // 离开
-     refresh:refresh,     // 刷新
-
-     // ** 看客可用
-     sit:sit,             // 对座位
-     // **** 可用操作
-     // sit_down    坐下
-     // stand_up    起立
-     // ready       就绪
-
-     // ** 玩家可用
-     pai:pai,             // 对牌
-     // **** 可用操作
-     // hule        胡(完成)
-     // gang        杠
-     // peng        碰
-     // shun        吃(顺)
-     // hold        忍(扛)
-     // drop        打/停
-
-     // ******** 测试
-     echo:function(who, what){
-       debug("echo("+who+", "+what+")");
-       cast(who)("echo")(what, now());
-     },
-
-     // **** unit test
-     test:test
-
-   };
+   // mahjong = ....;
 
 })();

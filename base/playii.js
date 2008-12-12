@@ -3,8 +3,8 @@
 
 // function _log(str){ $('#log').append(str+"<br/>"); }
 // function _server_log(str){ $('#server_log').append(str+"<br/>"); }
-function _log(str){ console.debug(str); }
-function _server_log(str){ console.debug(str); }
+function _log(str){ if(console) console.debug(str); }
+function _server_log(str){ if(console) console.debug(str); }
 
 function _yield(func, time) { window.setTimeout(func, time ? time : 50); }
 function _err(str){ _yield( function(){ alert(str); } ); }
