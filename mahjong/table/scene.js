@@ -1,4 +1,70 @@
+/*
+ **** Big picture
+ -----------------------------------------------------------------------------
+
+ (where, arg1, arg2, ...)       <-- spawn(name, [arg1, arg2, ...]) // dad
+ idle()                         <-- timeout // timer
+ func(who, arg1, arg2, ...)     <-- cast(where)(func)(arg1, arg2, ...) //player
+   * enter(who, nick, data)
+   - enter_debug(who)
+   * leave(who)
+   - leave_debug(who)
+   * refresh(who)
+     any(who, arg1, arg2, ...)
+ __func(where, arg1, arg2, ...) <-- async(where)(func)(arg1, arg2, ...) //scene
+   * __end(where)               <-- end() // son
+
+ -----------------------------------------------------------------------------
+
+ **** APIs that scene should export
+
+ return mixin(func, obj)
+ idle()
+ enter(who, nick, data)
+ leave(who)
+ refresh(who)
+ any(who, arg1, arg2)
+ _any(where, arg1, arg2)
+
+ **** APIs that scene should use
+
+ // 生成 func 和 object 的混合对象(用于定义"实例模版")
+ mixin(func, object)
+
+ // 发送调试信息，调用过 enter_debug 的用户能够收到
+ debug(string), warn(string), info(string), error(string), fatal(string)
+
+ // 调用 who(player) 的 func 函数，参数为 arg1, arg2, ...
+ cast(who)(func)(arg1, arg2, ...)
+
+ ** TODO **
+ // 建立 where(scene)
+ spawn(where, [arg1, arg2, ...])
+
+ // 调用 where(scene) 的 func 函数，参数为 arg1, arg2, ...
+ async(where)(func)(arg1, arg2, ...)
+
+ // 退出(自身)
+ end()
+
+ */
+
 (function(){
+
+// ***************** CONSTS
+
+   var F = ["E", "S", "W", "N"];     // 方位：东南西北
+
+   var Z = [                         // 牌面
+     1,2,3,4,5,6,7,8,9,              // 万
+     11,12,13,14,15,16,17,18,19,     // 饼
+     21,22,23,24,25,26,27,28,29,     // 索
+     31,32,33,34,35,36,37            // 字
+   ];
+
+   var M = 3000;                     // 超时时间 3 秒
+
+   var NF = function(a,b){return a-b;};
 
 // ***************** LAYER 1 :: SCENE INTERFACE
 
@@ -51,7 +117,7 @@
 	 this.sits[sit].ready = true;
        }
      }
-     broadcast.call(this); // mock
+     // broadcast.call(this); // mock
      // refresh.call(this, who); // 发送当前视图 // need change
    }
 
@@ -194,21 +260,6 @@
      assert( has_ting([1,2,2, 2,2,3, 21,21,21, 31,31,31, 37]) );
      info("has_ting :: success "+ pass(tm) +"ms");
    }
-
-// ***************** CONSTS
-
-   var F = ["E", "S", "W", "N"];     // 方位：东南西北
-
-   var Z = [                         // 牌面
-     1,2,3,4,5,6,7,8,9,              // 万
-     11,12,13,14,15,16,17,18,19,     // 饼
-     21,22,23,24,25,26,27,28,29,     // 索
-     31,32,33,34,35,36,37            // 字
-   ];
-
-   var M = 3000;                     // 超时时间 3 秒
-
-   var NF = function(a,b){return a-b;};
 
 // ***************** LAYER 2 :: ACTIONS
 
@@ -389,7 +440,7 @@
      do_call.call(this);
    }
 
-// ***************** LAYER 3 :: GAME FLOW
+// ***************** LAYER 2 :: ACTIONS :: GAME FLOW
 
    // do_open() : 开局
    function do_open(){
@@ -543,7 +594,7 @@
      broadcast.call(this); // mock
    }
 
-// ***************** LAYER 3 :: GAME FLOW :: BROADCAST
+// ***************** LAYER 2 :: ACTIONS :: BROADCAST
 
    // broadcast() : 向玩家广播
    function broadcast(){
@@ -555,7 +606,7 @@
      }
    }
 
-// ***************** LAYER 4 :: GAME LOGIC
+// ***************** LAYER 3 :: GAME LOGIC
 
    // has_hule(hand, card) : 是否胡了
    function has_hule(hand, card){
@@ -668,7 +719,7 @@
      };
    }
 
-// ***************** LAYER 5 :: UTILITY
+// ***************** LAYER 4 :: UTILITY
 
    // now() : 获取当前时间戳
    function now(){
@@ -691,9 +742,7 @@
      }
    }
 
-// ***************** LAYER 5 :: UTILITY :: SHORTCUT
-
-// ***************** LAYER 5 :: UTILITY :: LISTS FUNCTIONS
+// ***************** LAYER 4 :: UTILITY :: LIST
 
    // ** func(e) return true | false
    function all(func, array){
