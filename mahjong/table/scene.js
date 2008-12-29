@@ -1,54 +1,3 @@
-/*
- **** Big picture
- -----------------------------------------------------------------------------
-
- (where, arg1, arg2, ...)       <-- spawn(name, [arg1, arg2, ...]) // dad
- idle()                         <-- timeout // timer
- func(who, arg1, arg2, ...)     <-- cast(where)(func)(arg1, arg2, ...) //player
-   * enter(who, nick, data)
-   - enter_debug(who)
-   * leave(who)
-   - leave_debug(who)
-   * refresh(who)
-     any(who, arg1, arg2, ...)
- __func(where, arg1, arg2, ...) <-- async(where)(func)(arg1, arg2, ...) //scene
-   * __end(where)               <-- end() // son
-
- -----------------------------------------------------------------------------
-
- **** APIs that scene should export
-
- return mixin(func, obj)
- idle()
- enter(who, nick, data)
- leave(who)
- refresh(who)
- any(who, arg1, arg2)
- _any(where, arg1, arg2)
-
- **** APIs that scene should use
-
- // 生成 func 和 object 的混合对象(用于定义"实例模版")
- mixin(func, object)
-
- // 发送调试信息，调用过 enter_debug 的用户能够收到
- debug(string), warn(string), info(string), error(string), fatal(string)
-
- // 调用 who(player) 的 func 函数，参数为 arg1, arg2, ...
- cast(who)(func)(arg1, arg2, ...)
-
- ** TODO **
- // 建立 where(scene)
- spawn(where, [arg1, arg2, ...])
-
- // 调用 where(scene) 的 func 函数，参数为 arg1, arg2, ...
- async(where)(func)(arg1, arg2, ...)
-
- // 退出(自身)
- end()
-
- */
-
 (function(){
 
 // ***************** CONSTS
@@ -70,7 +19,10 @@
 
    // ** 系统事件，自动调用
    // create(args) : 构造函数，定义数据结构，此处的 this 即为实例(数据)
-   function create(args) {
+   function create(parent, self, args) {
+     this.parent = parent,
+     this.self = self,
+     this.args = args,
      // 用户列表，所有在此房间的用户数据
      // {id:{id:id, nick:nick, data:data}, ...}
      // id: 玩家，nick: 昵称，data: 玩家-游戏数据

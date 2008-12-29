@@ -28,6 +28,15 @@ if (!this.getScene) getScene = function(){
   return (url) ? url : undefined;
 };
 
+// **** the scene changing
+if (!this.goUrl) goUrl = function(url){
+  _log("goUrl('"+url+"')");
+  con.unbind(getScene());
+  window.location = "/#"+url;
+  window.location.reload();
+  // ui.load("#main", url);
+};
+
 // **** the boot loader :: load everything
 $(function(){
 

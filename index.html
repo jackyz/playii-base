@@ -82,8 +82,10 @@ $(function(){
     }
     $(document).keypress(function(k){
       // alert(k.keyCode);
-      if(k.keyCode == 119) $("#log").toggle(); // bind F8 key as log mode
-      return false;
+      if(k.keyCode == 119){
+        $("#log").toggle(); // bind F8 key as log mode
+        return false;
+      }
     });
     return {
       debug: function(s){ log("DEBUG", s); },

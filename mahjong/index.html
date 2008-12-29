@@ -1,27 +1,3 @@
-<ul>
-  <li>public room <br/> level: 10</li>
-  <li>private room <br/> gold: 20210</li>
-  <li>charge</li>
-  <li>about</li>
-</ul>
-
-<a href="#/mahjong/table/1234">table 1234</a>
-
-<style type="text/css">
-#main {
-  color:gold;
-}
-</style>
-
-<script language="javascript">
-(function(){
-  $("#main a").one("click", function(){
-    var url = $(this).attr("href");
-    if (url.indexOf("#") == 0) {
-      url = url.substring(1, url.length);
-      console.debug("click on:"+url);
-      ui.load("#main", url);
-    }
-  });
-})();
-</script>
+<link rel="stylesheet" class="text/css" href="/mahjong/hall.css"/>
+<script language="javascript" src="/mahjong/hall.js"></script>
+<div id="hall"></div>
