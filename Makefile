@@ -5,6 +5,6 @@ clean:
 
 dist: all
 	find . -type f \
-	| grep -v "~" | grep -v .gitignore | grep -v .git | grep -v Makefile \
+	| egrep ".html$$|.css$$|.js$$|.gif$$|.jpg$$|.png$$"	\
 	| xargs tar -cvzf playii-base.tar.gz
 
