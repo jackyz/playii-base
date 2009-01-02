@@ -6,7 +6,7 @@
   var current = 'any';
 
   // **** the current Scene
-  var _sn = getScene();
+  var _sn = "/side";
 
   function user_welcome(u, ul){
     _info("{Welcome},{your nickname are}:"+_span(u, ul[u])+",{you can click and rename yourself}.");
@@ -93,7 +93,7 @@
   });
 
   // scene api wrap functions
-  function _cast(f){ return con.cast(_sn)(f); }
+  function _cast(f){ alert("sn:"+_sn); return con.cast(_sn)(f); }
   function _refresh(){  _cast('refresh')();  }
   function _enter(){    _cast('enter')();    }
   function _leave(){    _cast('leave')();    }
