@@ -1,11 +1,17 @@
-<div id="auth">
-  name yourself.(anonymous mode)
+<style type="text/css">
+#auth #error {
+  color:red;
+}
+</style>
+
+<div id="auth" title="give a nickname">
   <form>
-    id:<input type="text" name="id" value="12345"/><br/>
-    nick:<input type="text" name="nick" value="nickname"/><br/>
-    <input type="submit" value="guest"/><br/>
+    <!-- id:<input type="text" name="id" value="12345"/><br/> -->
+    <input type="text" name="nick" value="nickname" size="8" />
+    <input type="hidden" name="id" value="guest"/>
+    <input type="submit" value="continue"/>
   </form>
-  <span id="error"></span>
+  <span id="error">some error info...</span>
 </div>
 
 <!-- 
@@ -29,15 +35,14 @@
         #user{id=12345, nick="username"}
 -->
 
-<style type="text/css">
-</style>
-
 <script language="javascript">
 $(function(){
   // identify logic
   var callback = {
     success:function(){
       $("#auth form").unbind();
+      // $("#auth").dialog("close");
+      $("#auth").dialog("destroy");
       ui.load("#root", "/base/main.html");
     },
     go_identify:function(){
@@ -50,8 +55,19 @@ $(function(){
   };
   $("#auth form").bind("submit", function(event){
     $("input:submit", this).attr("disabled", true);
-    con.open($("input:text", this).serialize(), callback);
+    con.open($("input", this).serialize(), callback);
     return false;
+  });
+  $("#auth").dialog({
+    minHeight: 100, // tricky, the height would change if not exist
+    modal: true,
+    overlay: {
+      backgroundColor: '#000',
+      opacity: 0.5
+    },
+    close: function(e){ // prevent close
+      _yield(function(){ $("#auth").dialog("open"); });
+    }
   });
 });
 </script>

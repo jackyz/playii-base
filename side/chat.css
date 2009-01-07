@@ -22,7 +22,7 @@
 #chat #tool {
     width:320px;
     height:50px;
-    top:430px;
+    bottom:0px;
     left:0px;
 }
 #chat li.user {

@@ -4,60 +4,167 @@
 <head>
 <title>Playii</title>
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
-<script language="javascript" src="/base/jquery.js"></script>
-<script language="javascript" src="/base/json.js"></script>
-<script language="javascript" src="/base/playii.js"></script>
-
+<!-- script type="text/javascript" src="/lib/json.js"></script -->
+<script type="text/javascript" src="/base/jquery.js"></script>
+<script type="text/javascript" src="/base/jquery.ui.js"></script>
+<script type="text/javascript" src="/base/playii.js"></script>
 </head>
 
-<body>
-
-  <div id="root"> </div>
-  
-  <div id="tool" style="display:none;">
-    <ul>
-      <li>iphone</li>
-      <ul>
-	<li id="landscape">landscape</li>
-	<li id="portscape">portscape</li>
-      </ul>
-      <li id="web">web</li>
-      <ul>
-	<li id="debug">debug</li>
-	<li>...</li>
-      </ul>
-    </ul>
-  </div>
-
-  <div id="log" style="display:none;"></div>
-
-</body>
-
 <style type="text/css">
-body {
-}
+@import url("/base/jquery.ui.css");
+
+/* @import url("/base/index.css"); */
+
 * {
   margin:0; padding:0;
 }
-#tool {
-  position:absolute;
-  top:0px; right:0px;
+body {
+  /* background:#777; */
+  /* font-size:62.5%; */
 }
-#log {
-  position:absolute;
-  top:320px; left:320px;
-  width:480px; height:160px;
+#head {
+  height:60px;
+  border-bottom:5px solid #DDDDDD;
+  background:#FCFCFC url(header_bg.png) repeat-x scroll 0 100%;
+}
+#head .logo {
+  float:left;
+  padding-top:1em;
+}
+#head .actions {
+  float:right;
+  padding-top:1em;
+}
+#head .actions a {
+  margin-left:1.5em;
+  padding: .4em;
+  text-decoration:none;
+  color:#444;
+}
+#head .actions a:hover {
+  background:#dcdcdc;
+}
+#body {
+  height:480px;
+  background:#f9f9f9;
+}
+#body #root {
+  float:left;
+  width:800px; height:480px;
+}
+#body #ad1 {
+  float:right;
+  width:160px; height:480px;
+  font-size:67%;
+  background:#fff;
+}
+#foot {
+  border-top:5px solid #DDDDDD;
+  font-size:80%;
+  /*  background:#BBCCD9 url(footer_bg.png) repeat-x scroll 0 0; */
+}
+#foot #log {
+  border-top:5px solid #DDD;
+  height:160px;
   overflow:auto;
-  background:#444;
+  background:#EEE;
   font: normal normal 88% "Courier";
+}
+#foot .links {
+  padding-top:0.1em;
+}
+#foot .links a {
+  color:#444;
+}
+.site {
+  /* margin:0 auto; */
+  width:960px;
 }
 </style>
 
+<body>
+
+  <div id="head">
+    <div class="site">
+      <div class="logo">
+	<a href="/"><img src="/base/logo.png" alt="playii" /></a>
+      </div>
+      <div class="actions">
+	<a href="/">Home</a>
+	<a href="http://code.google.com/p/playii/wiki/Guide" target=_blank>Guide</a>
+	<a href="http://code.google.com/p/playii/wiki/Roadmap" target=_blank>Roadmap</a>
+	<a href="http://playii.blogspot.com/" target=_blank>Blog</a>
+      </div>
+    </div>
+  </div>
+  
+  <div id="body">
+    <div class="site">
+      <div id="root"></div>
+      <div id="ad1"> ad1 </div>
+    </div>
+  </div>
+
+  <div id="foot">
+    <div class="site">
+      <div class="links">
+	<a href="http://playii.blogspot.com/" target=_blank>Blog</a>
+	<a href="http://groups.google.com/group/playii" target=_blank>Group</a>
+	<a href="http://code.google.com/p/playii/" target=_blank>Project</a>
+	<a href="mailto:playii@gmail.com" target=_blank>Contact</a>
+      </div>
+    </div>
+    <div id="log" style=""></div>
+  </div>
+
+</body>
+
+
 <script language="javascript">
 
+// **** the scene nameing
+if (!this.getScene) getScene = function(){
+  var url = window.location.hash.split('#')[1];
+  return (url) ? url : undefined;
+};
+
+// **** the scene changing
+if (!this.goUrl) goUrl = function(url){
+  _log("goUrl('"+url+"')");
+  con.unbind(getScene());
+  window.location = "/#"+url;
+  window.location.reload();
+  // ui.load("#main", url);
+};
+
+// **** mock console if not avaliable
+if (window.console === undefined) console = (function(){
+  function log(lvl, str){
+    $("#log").append("["+lvl+"]"+str+"<br>");
+    // auto scroll to bottom
+    var t = $("#log").get(0).scrollHeight;
+    var v = $("#log").get(0).offsetHeight;
+    $("#log").get(0).scrollTop = t - v;
+  }
+  $(document).keypress(function(k){
+    // alert(k.keyCode);
+    if(k.keyCode == 119){ // bind F8 key as log mode
+      $("#log").toggle();
+      return false;
+    }
+  });
+  return {
+    debug: function(s){ log("DEBUG", s); },
+    info:  function(s){ log("INFO ", s); },
+    error: function(s){ log("ERROR", s); },
+    warn:  function(s){ log("WARN ", s); },
+    fatal: function(s){ log("FATAL", s); }
+  };
+})();
+
+// **** the identify logic
 $(function(){
 
-  // identify logic
   var callback = {
     success:function(){
       ui.load("#root", "/base/main.html");
@@ -69,32 +176,12 @@ $(function(){
       $("#root").empty().html("sorry, we got error:<hr/>"+error+"<hr/>");
     }
   };
-  con.open({}, callback);
 
-  // **** mock console if not avaliable
-  if (window.console === undefined) console = (function(){
-    function log(lvl, str){
-      $("#log").append("["+lvl+"]"+str+"<br>");
-      // auto scroll to bottom
-      var t = $("#log").get(0).scrollHeight;
-      var v = $("#log").get(0).offsetHeight;
-      $("#log").get(0).scrollTop = t - v;
-    }
-    $(document).keypress(function(k){
-      // alert(k.keyCode);
-      if(k.keyCode == 119){ // bind F8 key as log mode
-        $("#log").toggle();
-        return false;
-      }
-    });
-    return {
-      debug: function(s){ log("DEBUG", s); },
-      info:  function(s){ log("INFO ", s); },
-      error: function(s){ log("ERROR", s); },
-      warn:  function(s){ log("WARN ", s); },
-      fatal: function(s){ log("FATAL", s); }
-    };
-  })();
+  if (getScene()) {
+    con.open({}, callback);
+  }else{
+    ui.load("#root", "/base/list.html");
+  }
 
 });
 </script>
