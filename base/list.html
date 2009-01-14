@@ -9,9 +9,14 @@
 </style>
 
 <div id="list">
-  <a href="/#/mahjong"><img src="/mahjong/icon.png" alt="mahjong" /></a>
-  <a href="/#/lordwar"><img src="/lordwar/icon.png" alt="lordwar" /></a>
+  <a href="#/mahjong"><img src="/mahjong/icon.png" alt="mahjong" /></a>
+  <a href="#/lordwar"><img src="/lordwar/icon.png" alt="lordwar" /></a>
 </div>
 
 <script language="javascript">
+$(function(){
+  $("#list a").click(function(event){
+    _goto($(this).attr("href")); return false;
+  });
+});
 </script>

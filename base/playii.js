@@ -3,12 +3,6 @@
 
 function _yield(func, time) { window.setTimeout(func, time ? time : 50); }
 
-// function _log(str){ $('#log').append(str+"<br/>"); }
-// function _server_log(str){ $('#server_log').append(str+"<br/>"); }
-function _log(str){ if(console) console.debug(str); }
-function _server_log(str){ if(console) console.debug(str); }
-function _err(str){ _yield( function(){ alert(str); } ); }
-
 function _cookie(name, val){
   if (val != undefined) { // set cookie
     //alert("set cookie "+val);
@@ -22,6 +16,51 @@ function _cookie(name, val){
     return v;
   }
 }
+
+// **** mock console if not avaliable
+if (window.console === undefined) console = (function(){
+  function log(lvl, str){
+    $("#log").append("["+lvl+"]"+str+"<br>");
+    // auto scroll to bottom
+    var t = $("#log").get(0).scrollHeight;
+    var v = $("#log").get(0).offsetHeight;
+    $("#log").get(0).scrollTop = t - v;
+  }
+  $(document).keypress(function(k){
+    // alert(k.keyCode);
+    if(k.keyCode == 119){ // bind F8 key as log mode
+      $("#log").toggle();
+      return false;
+    }
+  });
+  return {
+    debug: function(s){ log("DEBUG", s); },
+    info:  function(s){ log("INFO ", s); },
+    error: function(s){ log("ERROR", s); },
+    warn:  function(s){ log("WARN ", s); },
+    fatal: function(s){ log("FATAL", s); }
+  };
+})();
+
+function _log(str){ console.debug(str); }
+function _err(str){ _yield( function(){ alert(str); } ); }
+
+// ***** playii special
+
+// **** the scene nameing
+function _scene(){
+  var url = window.location.hash.split('#')[1];
+  return (url) ? url : undefined;
+};
+
+// **** the scene changing
+function _goto(url){
+  var u = url.charAt(0) == "#" ? url.substring(1, url.length) : url;
+  // _log("goto('"+u+"')");
+  con.unbind(_scene()); // extra clean-up
+  window.location.hash = u;
+  window.location.reload(); // reload to trigger load fake href
+};
 
 // playii js connection object
 if(!this.con) con = (function(){

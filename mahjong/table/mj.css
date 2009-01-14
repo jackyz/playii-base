@@ -2,134 +2,84 @@
 screen size: 480px * 320px
 *****************************************************************************/
 
-/**** containers: size and position ***/
-
+/**** canvas ***/
 #game {
-	position:absolute; top:0px; left:0px;
+	position:absolute; top:65px; left:0px;
 	width:480px; height:320px;
 	background:#3a6ea5;
 }
 
-#game ul {
-	position:absolute;
-	display:block;
-	list-style-type:none;
-}
+/**** face ***/
+#game #face li {position:absolute;}
+#game #face #n {top:55px; left:224px;}
+#game #face #w {top:144px; left:67px;}
+#game #face #e {top:144px; left:380px;}
+#game #face #s {top:228px; left:224px;}
 
+/**** icon ****/
+#game #icon li {position:absolute;}
+#game #icon #n {top:55px; left:208px;}
+#game #icon #w {top:176px; left:67px;}
+#game #icon #e {top:128px; left:397px;}
+#game #icon #s {top:244px; left:256px;}
+
+#game #icon #hn {top:71px; left:208px;}
+#game #icon #hw {top:176px; left:83px;}
+#game #icon #he {top:128px; left:381px;}
+#game #icon #hs {top:228px; left:256px;}
+
+
+/**** desk ***/
 #game #desk { /* w:16*16 h:8*(23-5) */
 	width:256px; height:114px;
 	top:103px; left:112px;
 	background:#3a7eb5;/*#3aa6a6;*/
 	/* border:1px #777 inset; */
 }
-#game #north { /* w:18*16 h:1*23 */
+#game #desk li {
+	float:left;
+	margin-top:-5px;
+}
+
+/**** side ***/
+#game #side #n { /* w:18*16 h:1*23 */
 	width:288px; height:23px;
 	top:0px; left:96px;
 }
-#game #west { /* w:1*20 h:18*(19-5) */
+#game #side #n li { float:right; }
+
+#game #side #w { /* w:1*20 h:18*(19-5) */
 	width:20px; height:252px;
 	top:34px; left:0px;
 }
-#game #east { /* w:1*20 h:18*(19-5) */
+#game #side #w li { float:none; margin-top:-5px; }
+#game #side #w li.h { margin-top:-12px; }
+
+#game #side #e { /* w:1*20 h:18*(19-5) */
 	width:20px; height:252px;
 	top:34px; left:460px;
 }
-#game #self { /* w:18*16 h:1*23 */
+#game #side #e li { float:none; margin-top:-5px; }
+#game #side #e li.h { margin-top:-12px;	margin-left:11px; }
+
+#game #side #s { /* w:18*16 h:1*23 */
 	width:288px; height:23px;
 	top:297px; left:96px;
 }
+#game #side #s li { float:left; }
+#game #side #s li.active:hover { margin-top:-5px; }
 
-/**** containers: layout of elements ***/
-
-#game #north li {
-	float:right;
+/**** cmds ***/
+#game #cmds {
+	width:146px; /* height:45px; */
+	top:228px; left:280px;
 }
-#game #west li, #game #east li {
-	float:none;
-}
-#game #self li, #game #desk li {
+#game #cmds li {
 	float:left;
+	margin-left:1px;
 }
 
-/**** containers: tweak the layout of elements ***/
-
-#game #desk li, #game #west li, #game #east li, #game #self li.active:hover {
-	margin-top:-5px;
-}
-#game #west .h {
-	margin-top:-12px;
-}
-#game #east .h {
-	margin-top:-12px;
-	margin-left:11px;
-}
-
-/**** elements: the spacer element ***/
-
-#game ul li.e {
-	width:2px; height:12px;
-}
-
-/**** elements: the small size background with images ***/
-
-#game #desk li { /*width:16px; height:23px;*/
-	width:11px; height:15px; padding:1px 3px 7px 2px;
-	background:url(s_b.gif) no-repeat -29px -27px;
-}
-
-#game #north .o { /*width:16px; height:23px;*/
-	width:11px; height:15px; padding:1px 2px 7px 3px;
-	background:url(s_b.gif) no-repeat -29px -27px;
-}
-#game #north .c {
-	width:16px; height:23px;
-	background:url(s_b.gif) no-repeat -29px -2px;
-}
-#game #north .h {
-	width:16px; height:23px;
-	background:url(s_b.gif) no-repeat -44px -2px;
-}
-
-#game #west .o { /* width:20px; height:19px; */
-	width:15px; height:11px; padding:1px 2px 7px 3px;
-	background:url(s_b.gif) no-repeat -9px -31px;
-}
-#game #west .c {
-	width:20px; height:19px;
-	background:url(s_b.gif) no-repeat -9px -6px;
-}
-#game #west .h {
-	width:9px; height:25px;
-	background:url(s_b.gif) no-repeat 0px 0px;
-}
-
-#game #east .o { /*width:20px; height:19px;*/
-	width:15px; height:11px; padding:1px 3px 7px 2px;
-	background:url(s_b.gif) no-repeat -9px -31px;
-}
-#game #east .c {
-	width:20px; height:19px;
-	background:url(s_b.gif) no-repeat -9px -6px;
-}
-#game #east .h {
-	width:9px; height:25px;
-	background:url(s_b.gif) no-repeat 0px -25px;
-}
-
-#game #self .o { /*width:16px; height:23px;*/
-	width:11px; height:15px; padding:1px 3px 7px 2px;
-	background:url(s_b.gif) no-repeat -29px -27px;
-}
-#game #self .h { /*width:16px; height:23px;*/
-	width:11px; height:15px; padding:7px 3px 1px 2px;
-	background:url(s_b.gif) no-repeat -44px -27px;
-}
-#game #self .c {
-	width:16px; height:23px;
-	background:url(s_b.gif) no-repeat -29px -2px;
-}
-
-
+/**** info ***/
 #game #info {
       width:480px; height:320px;
       top:0px; left:0px;
@@ -153,288 +103,14 @@ screen size: 480px * 320px
 #game #info #hu li{
       float:left;
 }
-#game #info #hu .o {
-	width:11px; height:15px; padding:1px 3px 7px 2px;
-	background:url(s_b.gif) no-repeat -29px -27px;
+
+/**** common list ***/
+#game ul {
+	position:absolute;
+	display:block;
+	list-style-type:none;
 }
-
-/* small icon size */
-#game #self .o div, #game #north .o div, #game #self .h div, #game #desk div, #game #info .o div {
-	width:11px; height:15px;
-}
-#game #west .o div, #game #east .o div {
-	width:15px; height:11px;
-}
-
-/**** elements: the small size face images ***/
-
-/* small size [00:00] 34 icons (self hold, self close, self open, desk) */
-#game #self .o #m1, #game #self .h #m1, #game #desk #m1, #game #info #m1 {background:url(s_p.gif) no-repeat 0px 0px;}
-#game #self .o #m2, #game #self .h #m2, #game #desk #m2, #game #info #m2 {background:url(s_p.gif) no-repeat -11px 0px;}
-#game #self .o #m3, #game #self .h #m3, #game #desk #m3, #game #info #m3 {background:url(s_p.gif) no-repeat -22px 0px;}
-#game #self .o #m4, #game #self .h #m4, #game #desk #m4, #game #info #m4 {background:url(s_p.gif) no-repeat -33px 0px;}
-#game #self .o #m5, #game #self .h #m5, #game #desk #m5, #game #info #m5 {background:url(s_p.gif) no-repeat -44px 0px;}
-#game #self .o #m6, #game #self .h #m6, #game #desk #m6, #game #info #m6 {background:url(s_p.gif) no-repeat -55px 0px;}
-#game #self .o #m7, #game #self .h #m7, #game #desk #m7, #game #info #m7 {background:url(s_p.gif) no-repeat -66px 0px;}
-#game #self .o #m8, #game #self .h #m8, #game #desk #m8, #game #info #m8 {background:url(s_p.gif) no-repeat -77px 0px;}
-#game #self .o #m9, #game #self .h #m9, #game #desk #m9, #game #info #m9 {background:url(s_p.gif) no-repeat -88px 0px;}
-#game #self .o #m11, #game #self .h #m11, #game #desk #m11, #game #info #m11 {background:url(s_p.gif) no-repeat 0px -15px;}
-#game #self .o #m12, #game #self .h #m12, #game #desk #m12, #game #info #m12 {background:url(s_p.gif) no-repeat -11px -15px;}
-#game #self .o #m13, #game #self .h #m13, #game #desk #m13, #game #info #m13 {background:url(s_p.gif) no-repeat -22px -15px;}
-#game #self .o #m14, #game #self .h #m14, #game #desk #m14, #game #info #m14 {background:url(s_p.gif) no-repeat -33px -15px;}
-#game #self .o #m15, #game #self .h #m15, #game #desk #m15, #game #info #m15 {background:url(s_p.gif) no-repeat -44px -15px;}
-#game #self .o #m16, #game #self .h #m16, #game #desk #m16, #game #info #m16 {background:url(s_p.gif) no-repeat -55px -15px;}
-#game #self .o #m17, #game #self .h #m17, #game #desk #m17, #game #info #m17 {background:url(s_p.gif) no-repeat -66px -15px;}
-#game #self .o #m18, #game #self .h #m18, #game #desk #m18, #game #info #m18 {background:url(s_p.gif) no-repeat -77px -15px;}
-#game #self .o #m19, #game #self .h #m19, #game #desk #m19, #game #info #m19 {background:url(s_p.gif) no-repeat -88px -15px;}
-#game #self .o #m21, #game #self .h #m21, #game #desk #m21, #game #info #m21 {background:url(s_p.gif) no-repeat 0px -30px;}
-#game #self .o #m22, #game #self .h #m22, #game #desk #m22, #game #info #m22 {background:url(s_p.gif) no-repeat -11px -30px;}
-#game #self .o #m23, #game #self .h #m23, #game #desk #m23, #game #info #m23 {background:url(s_p.gif) no-repeat -22px -30px;}
-#game #self .o #m24, #game #self .h #m24, #game #desk #m24, #game #info #m24 {background:url(s_p.gif) no-repeat -33px -30px;}
-#game #self .o #m25, #game #self .h #m25, #game #desk #m25, #game #info #m25 {background:url(s_p.gif) no-repeat -44px -30px;}
-#game #self .o #m26, #game #self .h #m26, #game #desk #m26, #game #info #m26 {background:url(s_p.gif) no-repeat -55px -30px;}
-#game #self .o #m27, #game #self .h #m27, #game #desk #m27, #game #info #m27 {background:url(s_p.gif) no-repeat -66px -30px;}
-#game #self .o #m28, #game #self .h #m28, #game #desk #m28, #game #info #m28 {background:url(s_p.gif) no-repeat -77px -30px;}
-#game #self .o #m29, #game #self .h #m29, #game #desk #m29, #game #info #m29 {background:url(s_p.gif) no-repeat -88px -30px;}
-#game #self .o #m31, #game #self .h #m31, #game #desk #m31, #game #info #m31 {background:url(s_p.gif) no-repeat 0px -45px;}
-#game #self .o #m32, #game #self .h #m32, #game #desk #m32, #game #info #m32 {background:url(s_p.gif) no-repeat -11px -45px;}
-#game #self .o #m33, #game #self .h #m33, #game #desk #m33, #game #info #m33 {background:url(s_p.gif) no-repeat -22px -45px;}
-#game #self .o #m34, #game #self .h #m34, #game #desk #m34, #game #info #m34 {background:url(s_p.gif) no-repeat -33px -45px;}
-#game #self .o #m35, #game #self .h #m35, #game #desk #m35, #game #info #m35 {background:url(s_p.gif) no-repeat -44px -45px;}
-#game #self .o #m36, #game #self .h #m36, #game #desk #m36, #game #info #m36 {background:url(s_p.gif) no-repeat -55px -45px;}
-#game #self .o #m37, #game #self .h #m37, #game #desk #m37, #game #info #m37 {background:url(s_p.gif) no-repeat -66px -45px;}
-
-/* small size [03:00] 34 icons (west open) */
-#game #west .o #m1 {background:url(s_p.gif) no-repeat -144px 0px;}
-#game #west .o #m2 {background:url(s_p.gif) no-repeat -144px -11px;}
-#game #west .o #m3 {background:url(s_p.gif) no-repeat -144px -22px;}
-#game #west .o #m4 {background:url(s_p.gif) no-repeat -144px -33px;}
-#game #west .o #m5 {background:url(s_p.gif) no-repeat -144px -44px;}
-#game #west .o #m6 {background:url(s_p.gif) no-repeat -144px -55px;}
-#game #west .o #m7 {background:url(s_p.gif) no-repeat -144px -66px;}
-#game #west .o #m8 {background:url(s_p.gif) no-repeat -144px -77px;}
-#game #west .o #m9 {background:url(s_p.gif) no-repeat -144px -88px;}
-#game #west .o #m11 {background:url(s_p.gif) no-repeat -129px 0px;}
-#game #west .o #m12 {background:url(s_p.gif) no-repeat -129px -11px;}
-#game #west .o #m13 {background:url(s_p.gif) no-repeat -129px -22px;}
-#game #west .o #m14 {background:url(s_p.gif) no-repeat -129px -33px;}
-#game #west .o #m15 {background:url(s_p.gif) no-repeat -129px -44px;}
-#game #west .o #m16 {background:url(s_p.gif) no-repeat -129px -55px;}
-#game #west .o #m17 {background:url(s_p.gif) no-repeat -129px -66px;}
-#game #west .o #m18 {background:url(s_p.gif) no-repeat -129px -77px;}
-#game #west .o #m19 {background:url(s_p.gif) no-repeat -129px -88px;}
-#game #west .o #m21 {background:url(s_p.gif) no-repeat -114px 0px;}
-#game #west .o #m22 {background:url(s_p.gif) no-repeat -114px -11px;}
-#game #west .o #m23 {background:url(s_p.gif) no-repeat -114px -22px;}
-#game #west .o #m24 {background:url(s_p.gif) no-repeat -114px -33px;}
-#game #west .o #m25 {background:url(s_p.gif) no-repeat -114px -44px;}
-#game #west .o #m26 {background:url(s_p.gif) no-repeat -114px -55px;}
-#game #west .o #m27 {background:url(s_p.gif) no-repeat -114px -66px;}
-#game #west .o #m28 {background:url(s_p.gif) no-repeat -114px -77px;}
-#game #west .o #m29 {background:url(s_p.gif) no-repeat -114px -88px;}
-#game #west .o #m31 {background:url(s_p.gif) no-repeat -99px 0px;}
-#game #west .o #m32 {background:url(s_p.gif) no-repeat -99px -11px;}
-#game #west .o #m33 {background:url(s_p.gif) no-repeat -99px -22px;}
-#game #west .o #m34 {background:url(s_p.gif) no-repeat -99px -33px;}
-#game #west .o #m35 {background:url(s_p.gif) no-repeat -99px -44px;}
-#game #west .o #m36 {background:url(s_p.gif) no-repeat -99px -55px;}
-#game #west .o #m37 {background:url(s_p.gif) no-repeat -99px -66px;}
-
-/* small size [06:00] 34 icons (north open) */
-#game #north .o #m1 {background:url(s_p.gif) no-repeat -148px -144px;}
-#game #north .o #m2 {background:url(s_p.gif) no-repeat -137px -144px;}
-#game #north .o #m3 {background:url(s_p.gif) no-repeat -126px -144px;}
-#game #north .o #m4 {background:url(s_p.gif) no-repeat -115px -144px;}
-#game #north .o #m5 {background:url(s_p.gif) no-repeat -104px -144px;}
-#game #north .o #m6 {background:url(s_p.gif) no-repeat -93px -144px;}
-#game #north .o #m7 {background:url(s_p.gif) no-repeat -82px -144px;}
-#game #north .o #m8 {background:url(s_p.gif) no-repeat -71px -144px;}
-#game #north .o #m9 {background:url(s_p.gif) no-repeat -60px -144px;}
-#game #north .o #m11 {background:url(s_p.gif) no-repeat -148px -129px;}
-#game #north .o #m12 {background:url(s_p.gif) no-repeat -137px -129px;}
-#game #north .o #m13 {background:url(s_p.gif) no-repeat -126px -129px;}
-#game #north .o #m14 {background:url(s_p.gif) no-repeat -115px -129px;}
-#game #north .o #m15 {background:url(s_p.gif) no-repeat -104px -129px;}
-#game #north .o #m16 {background:url(s_p.gif) no-repeat -93px -129px;}
-#game #north .o #m17 {background:url(s_p.gif) no-repeat -82px -129px;}
-#game #north .o #m18 {background:url(s_p.gif) no-repeat -71px -129px;}
-#game #north .o #m19 {background:url(s_p.gif) no-repeat -60px -129px;}
-#game #north .o #m21 {background:url(s_p.gif) no-repeat -148px -114px;}
-#game #north .o #m22 {background:url(s_p.gif) no-repeat -137px -114px;}
-#game #north .o #m23 {background:url(s_p.gif) no-repeat -126px -114px;}
-#game #north .o #m24 {background:url(s_p.gif) no-repeat -115px -114px;}
-#game #north .o #m25 {background:url(s_p.gif) no-repeat -104px -114px;}
-#game #north .o #m26 {background:url(s_p.gif) no-repeat -93px -114px;}
-#game #north .o #m27 {background:url(s_p.gif) no-repeat -82px -114px;}
-#game #north .o #m28 {background:url(s_p.gif) no-repeat -71px -114px;}
-#game #north .o #m29 {background:url(s_p.gif) no-repeat -60px -114px;}
-#game #north .o #m31 {background:url(s_p.gif) no-repeat -148px -99px;}
-#game #north .o #m32 {background:url(s_p.gif) no-repeat -137px -99px;}
-#game #north .o #m33 {background:url(s_p.gif) no-repeat -126px -99px;}
-#game #north .o #m34 {background:url(s_p.gif) no-repeat -115px -99px;}
-#game #north .o #m35 {background:url(s_p.gif) no-repeat -104px -99px;}
-#game #north .o #m36 {background:url(s_p.gif) no-repeat -93px -99px;}
-#game #north .o #m37 {background:url(s_p.gif) no-repeat -82px -99px;}
-
-/* small size [09:00] icons (east open) */
-#game #east .o #m1 {background:url(s_p.gif) no-repeat 0px -148px;}
-#game #east .o #m2 {background:url(s_p.gif) no-repeat 0px -137px;}
-#game #east .o #m3 {background:url(s_p.gif) no-repeat 0px -126px;}
-#game #east .o #m4 {background:url(s_p.gif) no-repeat 0px -115px;}
-#game #east .o #m5 {background:url(s_p.gif) no-repeat 0px -104px;}
-#game #east .o #m6 {background:url(s_p.gif) no-repeat 0px -93px;}
-#game #east .o #m7 {background:url(s_p.gif) no-repeat 0px -82px;}
-#game #east .o #m8 {background:url(s_p.gif) no-repeat 0px -71px;}
-#game #east .o #m9 {background:url(s_p.gif) no-repeat 0px -60px;}
-#game #east .o #m11 {background:url(s_p.gif) no-repeat -15px -148px;}
-#game #east .o #m12 {background:url(s_p.gif) no-repeat -15px -137px;}
-#game #east .o #m13 {background:url(s_p.gif) no-repeat -15px -126px;}
-#game #east .o #m14 {background:url(s_p.gif) no-repeat -15px -115px;}
-#game #east .o #m15 {background:url(s_p.gif) no-repeat -15px -104px;}
-#game #east .o #m16 {background:url(s_p.gif) no-repeat -15px -93px;}
-#game #east .o #m17 {background:url(s_p.gif) no-repeat -15px -82px;}
-#game #east .o #m18 {background:url(s_p.gif) no-repeat -15px -71px;}
-#game #east .o #m19 {background:url(s_p.gif) no-repeat -15px -60px;}
-#game #east .o #m21 {background:url(s_p.gif) no-repeat -30px -148px;}
-#game #east .o #m22 {background:url(s_p.gif) no-repeat -30px -137px;}
-#game #east .o #m23 {background:url(s_p.gif) no-repeat -30px -126px;}
-#game #east .o #m24 {background:url(s_p.gif) no-repeat -30px -115px;}
-#game #east .o #m25 {background:url(s_p.gif) no-repeat -30px -104px;}
-#game #east .o #m26 {background:url(s_p.gif) no-repeat -30px -93px;}
-#game #east .o #m27 {background:url(s_p.gif) no-repeat -30px -82px;}
-#game #east .o #m28 {background:url(s_p.gif) no-repeat -30px -71px;}
-#game #east .o #m29 {background:url(s_p.gif) no-repeat -30px -60px;}
-#game #east .o #m31 {background:url(s_p.gif) no-repeat -45px -148px;}
-#game #east .o #m32 {background:url(s_p.gif) no-repeat -45px -137px;}
-#game #east .o #m33 {background:url(s_p.gif) no-repeat -45px -126px;}
-#game #east .o #m34 {background:url(s_p.gif) no-repeat -45px -115px;}
-#game #east .o #m35 {background:url(s_p.gif) no-repeat -45px -104px;}
-#game #east .o #m36 {background:url(s_p.gif) no-repeat -45px -93px;}
-#game #east .o #m37 {background:url(s_p.gif) no-repeat -45px -82px;}
-
-/**** indicaters: the ting flag ***/
-
-#game #north li.t, #game #self li.t {
-	width:4px; height:22px;
-	background:url(bt.gif) no-repeat -0px -44px;
-}
-#game #west li.t, #game #east li.t {
-	width:20px; height:4px;
-	background:url(bt.gif) no-repeat -4px -44px;
-}
-
-/**** indicaters: position and size with image ***/
-
-#game #face li {position:absolute;}
-#game #face li {width:32px; height:32px; background:#bbb;}
-#game #face li.north {top:55px; left:224px;}
-#game #face li.west {top:144px; left:67px;}
-#game #face li.east {top:144px; left:380px;}
-#game #face li.self {top:228px; left:224px;}
-
-#game #icon li {position:absolute;}
-#game #icon li {width:16px; height:16px;}
-#game #icon li.north {top:55px; left:208px;}
-#game #icon li.west {top:176px; left:67px;}
-#game #icon li.east {top:128px; left:397px;}
-#game #icon li.self {top:244px; left:256px;}
-#game #icon #host.north {top:71px; left:208px;}
-#game #icon #host.west {top:176px; left:83px;}
-#game #icon #host.east {top:128px; left:381px;}
-#game #icon #host.self {top:228px; left:256px;}
-
-#game #icon #N {background:url(bt.gif) no-repeat -126px -16px;}
-#game #icon #N.on {background:url(bt.gif) no-repeat -126px -48px;}
-#game #icon #W {background:url(bt.gif) no-repeat -110px -16px;}
-#game #icon #W.on {background:url(bt.gif) no-repeat -110px -48px;}
-#game #icon #E {background:url(bt.gif) no-repeat -110px -0px;}
-#game #icon #E.on {background:url(bt.gif) no-repeat -110px -32px;}
-#game #icon #S {background:url(bt.gif) no-repeat -126px -0px;}
-#game #icon #S.on {background:url(bt.gif) no-repeat -126px -32px;}
-#game #icon #host {background:url(bt.gif) no-repeat -110px -64px;}
-
-/**** commands: position and size with image ***/
-
-#game #cmds {
-	width:146px; /* height:45px; */
-	top:228px; left:280px;
-}
-
-#game #cmds li {
-	float:left;
-	margin-left:1px;
-}
-
-#game #cmds #h { /* width:30px; height:45px; */
-	width:22px; height:30px; padding:13px 4px 2px 4px;
-	background:url(m_b.gif) no-repeat -87px -53px;
-}
-#game #cmds #o { /* width:30px; height:45px; */
-	width:22px; height:30px; padding:2px 4px 13px 4px;
-	background:url(m_b.gif) no-repeat -57px -53px;
-}
-
-#game li.active:hover {
+#game ul li.active:hover {
 	margin-top:-5px;
 }
-
-#game #cmds #gang, #game #cmds #peng, #game #cmds #shun, #game #cmds #hule, #game #cmds #ting {
-	width:22px; height:22px;
-}
-#game #cmds #gang {background:url(bt.gif) no-repeat -0px -0px;}
-#game #cmds #gang:hover {background:url(bt.gif) no-repeat -0px -22px;}
-#game #cmds #peng {background:url(bt.gif) no-repeat -22px -0px;}
-#game #cmds #peng:hover {background:url(bt.gif) no-repeat -22px -22px;}
-#game #cmds #shun {background:url(bt.gif) no-repeat -44px -0px;}
-#game #cmds #shun:hover {background:url(bt.gif) no-repeat -44px -22px;}
-#game #cmds #shun.on {background:url(bt.gif) no-repeat -44px -44px;}
-#game #cmds #hule {background:url(bt.gif) no-repeat -66px -0px;}
-#game #cmds #hule:hover {background:url(bt.gif) no-repeat -66px -22px;}
-#game #cmds #ting {background:url(bt.gif) no-repeat -88px -0px;}
-#game #cmds #ting:hover {background:url(bt.gif) no-repeat -88px -22px;}
-#game #cmds #ting.on {background:url(bt.gif) no-repeat -88px -44px;}
-
-/* middle icon size */
-#game #cmds #o div, #game #cmds #h div {
-	width:22px; height:30px;
-}
-
-/**** elements: the middle size face images ***/
-
-/* middle size [00:00] 34 icons (card open, card hold)  */
-#game #cmds #m1 {background:url(m_p.gif) no-repeat 0px 0px;}
-#game #cmds #m2 {background:url(m_p.gif) no-repeat -22px 0px;}
-#game #cmds #m3 {background:url(m_p.gif) no-repeat -44px 0px;}
-#game #cmds #m4 {background:url(m_p.gif) no-repeat -66px 0px;}
-#game #cmds #m5 {background:url(m_p.gif) no-repeat -88px 0px;}
-#game #cmds #m6 {background:url(m_p.gif) no-repeat -110px 0px;}
-#game #cmds #m7 {background:url(m_p.gif) no-repeat -132px 0px;}
-#game #cmds #m8 {background:url(m_p.gif) no-repeat -154px 0px;}
-#game #cmds #m9 {background:url(m_p.gif) no-repeat -176px 0px;}
-#game #cmds #m11 {background:url(m_p.gif) no-repeat 0px -30px;}
-#game #cmds #m12 {background:url(m_p.gif) no-repeat -22px -30px;}
-#game #cmds #m13 {background:url(m_p.gif) no-repeat -44px -30px;}
-#game #cmds #m14 {background:url(m_p.gif) no-repeat -66px -30px;}
-#game #cmds #m15 {background:url(m_p.gif) no-repeat -88px -30px;}
-#game #cmds #m16 {background:url(m_p.gif) no-repeat -110px -30px;}
-#game #cmds #m17 {background:url(m_p.gif) no-repeat -132px -30px;}
-#game #cmds #m18 {background:url(m_p.gif) no-repeat -154px -30px;}
-#game #cmds #m19 {background:url(m_p.gif) no-repeat -176px -30px;}
-#game #cmds #m21 {background:url(m_p.gif) no-repeat 0px -60px;}
-#game #cmds #m22 {background:url(m_p.gif) no-repeat -22px -60px;}
-#game #cmds #m23 {background:url(m_p.gif) no-repeat -44px -60px;}
-#game #cmds #m24 {background:url(m_p.gif) no-repeat -66px -60px;}
-#game #cmds #m25 {background:url(m_p.gif) no-repeat -88px -60px;}
-#game #cmds #m26 {background:url(m_p.gif) no-repeat -110px -60px;}
-#game #cmds #m27 {background:url(m_p.gif) no-repeat -132px -60px;}
-#game #cmds #m28 {background:url(m_p.gif) no-repeat -154px -60px;}
-#game #cmds #m29 {background:url(m_p.gif) no-repeat -176px -60px;}
-#game #cmds #m31 {background:url(m_p.gif) no-repeat 0px -90px;}
-#game #cmds #m32 {background:url(m_p.gif) no-repeat -22px -90px;}
-#game #cmds #m33 {background:url(m_p.gif) no-repeat -44px -90px;}
-#game #cmds #m34 {background:url(m_p.gif) no-repeat -66px -90px;}
-#game #cmds #m35 {background:url(m_p.gif) no-repeat -88px -90px;}
-#game #cmds #m36 {background:url(m_p.gif) no-repeat -110px -90px;}
-#game #cmds #m37 {background:url(m_p.gif) no-repeat -132px -90px;}
-
 

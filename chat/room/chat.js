@@ -75,7 +75,7 @@
   }
 
   function debug(str){
-    _server_log(str);
+    _log(str);
   }
 
   // bind scene callbacks

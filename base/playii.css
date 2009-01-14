@@ -1,0 +1,70 @@
+* {
+  margin:0; padding:0;
+}
+
+body {
+  /* background:#777; */
+  /* font-size:62.5%; */
+}
+
+.site {
+  width:960px; /* margin:0 auto; */
+}
+
+#head {
+  height:60px;
+  border-bottom:5px solid #DDDDDD;
+  background:#FCFCFC url(header_bg.png) repeat-x scroll 0 100%;
+}
+#head .logo {
+  float:left;
+  padding-top:1em;
+}
+#head .actions {
+  float:right;
+  padding-top:1em;
+}
+#head .actions a {
+  margin-left:1.5em;
+  padding: .4em;
+  text-decoration:none;
+  color:#444;
+}
+#head .actions a:hover {
+  background:#dcdcdc;
+}
+
+#body {
+  height:480px;
+  background:#f9f9f9;
+}
+#body #root {
+  float:left;
+  width:800px; height:480px;
+}
+#body #ad {
+  float:right;
+  width:160px; height:480px;
+  font-size:67%;
+  background:#fff;
+}
+
+#foot {
+  border-top:5px solid #DDDDDD;
+  font-size:80%;
+  /*  background:#BBCCD9 url(footer_bg.png) repeat-x scroll 0 0; */
+}
+#foot #log {
+  border-top:5px solid #DDD;
+  height:160px;
+  overflow:auto;
+  background:#EEE;
+  font: normal normal 88% "Courier";
+}
+#foot .links {
+  padding-top:0.1em;
+}
+#foot .links a {
+  color:#444;
+}
+

@@ -1,0 +1,91 @@
+/*****************************************************************************
+mahjong icons
+*****************************************************************************/
+
+.mj-i-n {
+    width:16px; height:16px;
+    background:url(mj-icon.gif) no-repeat -126px -16px;
+}
+.mj-i-n.on {
+    width:16px; height:16px;
+    background:url(mj-icon.gif) no-repeat -126px -48px;
+}
+.mj-i-w {
+    width:16px; height:16px;
+    background:url(mj-icon.gif) no-repeat -110px -16px;
+}
+.mj-i-w.on {
+    width:16px; height:16px; 
+    background:url(mj-icon.gif) no-repeat -110px -48px;
+}
+.mj-i-e {
+    width:16px; height:16px; 
+    background:url(mj-icon.gif) no-repeat -110px -0px;
+}
+.mj-i-e.on {
+    width:16px; height:16px; 
+    background:url(mj-icon.gif) no-repeat -110px -32px;
+}
+.mj-i-s {
+    width:16px; height:16px; 
+    background:url(mj-icon.gif) no-repeat -126px -0px;
+}
+.mj-i-s.on {
+    width:16px; height:16px; 
+    background:url(mj-icon.gif) no-repeat -126px -32px;
+}
+.mj-i-h {
+    width:16px; height:16px; 
+    background:url(mj-icon.gif) no-repeat -110px -64px;
+}
+
+
+.mj-i-gang {
+    width:22px; height:22px; 
+    background:url(mj-icon.gif) no-repeat -0px -0px;
+}
+li.mj-i-gang:hover {
+    width:22px; height:22px;
+    background:url(mj-icon.gif) no-repeat -0px -22px;
+}
+.mj-i-peng {
+    width:22px; height:22px; 
+    background:url(mj-icon.gif) no-repeat -22px -0px;
+}
+li.mj-i-peng:hover {
+    width:22px; height:22px; 
+    background:url(mj-icon.gif) no-repeat -22px -22px;
+}
+.mj-i-shun {
+    width:22px; height:22px; 
+    background:url(mj-icon.gif) no-repeat -44px -0px;
+}
+li.mj-i-shun:hover {
+    width:22px; height:22px; 
+    background:url(mj-icon.gif) no-repeat -44px -22px;
+}
+.mj-i-shun.on {
+    width:22px; height:22px; 
+    background:url(mj-icon.gif) no-repeat -44px -44px;
+}
+.mj-i-hu {
+    width:22px; height:22px; 
+    background:url(mj-icon.gif) no-repeat -66px -0px;
+}
+li.mj-i-hu:hover {
+    width:22px; height:22px; 
+    background:url(mj-icon.gif) no-repeat -66px -22px;
+}
+.mj-i-ting {
+    width:22px; height:22px; 
+    background:url(mj-icon.gif) no-repeat -88px -0px;
+}
+li.mj-i-ting:hover {
+    width:22px; height:22px; 
+    background:url(mj-icon.gif) no-repeat -88px -22px;
+}
+.mj-i-ting.on {
+    width:22px; height:22px; 
+    background:url(mj-icon.gif) no-repeat -88px -44px;
+}
+

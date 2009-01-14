@@ -87,7 +87,7 @@ $(function(){
   $("#tool #web").click(function(){ switch_ui(); });
   */
   ui.load("#side", "/side");
-  ui.load("#main", getScene() ? getScene() : "/home" );
+  ui.load("#main", _scene() ? _scene() : "/base/list.html" );
 });
 
 </script>

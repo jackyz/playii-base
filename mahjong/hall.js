@@ -1,12 +1,12 @@
 $(function(){
 
-  var _sn = getScene();
+  var _sn = _scene();
 
   // **** scene callback
 
   function debug(){
     var a=[]; for(var i=0; i<arguments.length; i++) a.push(arguments[i]);
-    _server_log("debug("+a.join(",")+")");
+    _log("debug("+a.join(",")+")");
   }
 
   function error(){
@@ -24,7 +24,7 @@ $(function(){
   }
 
   function go(url){
-    goUrl(url);
+    _goto(url);
   }
 
   con.bind(_sn, {
@@ -48,7 +48,7 @@ $(function(){
 
   function _tran(s){ return ui.tran(_sn, s); }
   function _escp(s){ return ui.escp(s);      }
-  function _ui(n){ return $("#main #hall"+(n?" "+n:"")); }
+  function _ui(n){ return $("#root #hall"+(n?" "+n:"")); }
 
   function redraw(u, v){
     _ui().hide().empty();
