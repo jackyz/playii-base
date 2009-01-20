@@ -9,625 +9,625 @@ middle size mahjong images
 
 /* s */
 .mj-s-t-m {
-	width:6px; height:40px;
-	background:url(mj-m.gif) no-repeat -312px -348px;
+	width:5px; height:30px;
+	background:url(mj-m.gif) no-repeat -229px -256px;
 }
 
 .mj-s-b0-m {
-	width:30px; height:48px;
-	background:url(mj-m.gif) no-repeat -57px -343px;
+	width:22px; height:33px;
+	background:url(mj-m.gif) no-repeat -43px -257px;
 }
 .mj-s-b1-m {
-	width:22px; height:30px; padding:14px 4px 3px 4px;
-	background:url(mj-m.gif) no-repeat -204px -343px;
+	width:16px; height:23px; padding: 9px 3px 2px 3px;
+	background:url(mj-m.gif) no-repeat -150px -253px;
 }
 .mj-s-b2-m {
-	width:22px; height:30px; padding:3px 4px 14px 4px;
-	background:url(mj-m.gif) no-repeat -174px -343px;
+	width:16px; height:23px; padding: 2px 3px 8px 3px;
+	background:url(mj-m.gif) no-repeat -128px -253px;
 }
 
 .mj-s-1-m {
-	width:22px; height:30px;
+	width:16px; height:23px;
 	background:url(mj-m.gif) no-repeat -0px -0px
 }
 .mj-s-2-m {
-	width:22px; height:30px;
-	background:url(mj-m.gif) no-repeat -22px -0px
+	width:16px; height:23px;
+	background:url(mj-m.gif) no-repeat -16px -0px
 }
 .mj-s-3-m {
-	width:22px; height:30px;
-	background:url(mj-m.gif) no-repeat -44px -0px
+	width:16px; height:23px;
+	background:url(mj-m.gif) no-repeat -32px -0px
 }
 .mj-s-4-m {
-	width:22px; height:30px;
-	background:url(mj-m.gif) no-repeat -66px -0px
+	width:16px; height:23px;
+	background:url(mj-m.gif) no-repeat -48px -0px
 }
 .mj-s-5-m {
-	width:22px; height:30px;
-	background:url(mj-m.gif) no-repeat -88px -0px
+	width:16px; height:23px;
+	background:url(mj-m.gif) no-repeat -64px -0px
 }
 .mj-s-6-m {
-	width:22px; height:30px;
-	background:url(mj-m.gif) no-repeat -110px -0px
+	width:16px; height:23px;
+	background:url(mj-m.gif) no-repeat -80px -0px
 }
 .mj-s-7-m {
-	width:22px; height:30px;
-	background:url(mj-m.gif) no-repeat -132px -0px
+	width:16px; height:23px;
+	background:url(mj-m.gif) no-repeat -96px -0px
 }
 .mj-s-8-m {
-	width:22px; height:30px;
-	background:url(mj-m.gif) no-repeat -154px -0px
+	width:16px; height:23px;
+	background:url(mj-m.gif) no-repeat -112px -0px
 }
 .mj-s-9-m {
-	width:22px; height:30px;
-	background:url(mj-m.gif) no-repeat -176px -0px
+	width:16px; height:23px;
+	background:url(mj-m.gif) no-repeat -128px -0px
 }
 .mj-s-11-m {
-	width:22px; height:30px;
-	background:url(mj-m.gif) no-repeat -0px -30px
+	width:16px; height:23px;
+	background:url(mj-m.gif) no-repeat -0px -23px
 }
 .mj-s-12-m {
-	width:22px; height:30px;
-	background:url(mj-m.gif) no-repeat -22px -30px
+	width:16px; height:23px;
+	background:url(mj-m.gif) no-repeat -16px -23px
 }
 .mj-s-13-m {
-	width:22px; height:30px;
-	background:url(mj-m.gif) no-repeat -44px -30px
+	width:16px; height:23px;
+	background:url(mj-m.gif) no-repeat -32px -23px
 }
 .mj-s-14-m {
-	width:22px; height:30px;
-	background:url(mj-m.gif) no-repeat -66px -30px
+	width:16px; height:23px;
+	background:url(mj-m.gif) no-repeat -48px -23px
 }
 .mj-s-15-m {
-	width:22px; height:30px;
-	background:url(mj-m.gif) no-repeat -88px -30px
+	width:16px; height:23px;
+	background:url(mj-m.gif) no-repeat -64px -23px
 }
 .mj-s-16-m {
-	width:22px; height:30px;
-	background:url(mj-m.gif) no-repeat -110px -30px
+	width:16px; height:23px;
+	background:url(mj-m.gif) no-repeat -80px -23px
 }
 .mj-s-17-m {
-	width:22px; height:30px;
-	background:url(mj-m.gif) no-repeat -132px -30px
+	width:16px; height:23px;
+	background:url(mj-m.gif) no-repeat -96px -23px
 }
 .mj-s-18-m {
-	width:22px; height:30px;
-	background:url(mj-m.gif) no-repeat -154px -30px
+	width:16px; height:23px;
+	background:url(mj-m.gif) no-repeat -112px -23px
 }
 .mj-s-19-m {
-	width:22px; height:30px;
-	background:url(mj-m.gif) no-repeat -176px -30px
+	width:16px; height:23px;
+	background:url(mj-m.gif) no-repeat -128px -23px
 }
 .mj-s-21-m {
-	width:22px; height:30px;
-	background:url(mj-m.gif) no-repeat -0px -60px
+	width:16px; height:23px;
+	background:url(mj-m.gif) no-repeat -0px -46px
 }
 .mj-s-22-m {
-	width:22px; height:30px;
-	background:url(mj-m.gif) no-repeat -22px -60px
+	width:16px; height:23px;
+	background:url(mj-m.gif) no-repeat -16px -46px
 }
 .mj-s-23-m {
-	width:22px; height:30px;
-	background:url(mj-m.gif) no-repeat -44px -60px
+	width:16px; height:23px;
+	background:url(mj-m.gif) no-repeat -32px -46px
 }
 .mj-s-24-m {
-	width:22px; height:30px;
-	background:url(mj-m.gif) no-repeat -66px -60px
+	width:16px; height:23px;
+	background:url(mj-m.gif) no-repeat -48px -46px
 }
 .mj-s-25-m {
-	width:22px; height:30px;
-	background:url(mj-m.gif) no-repeat -88px -60px
+	width:16px; height:23px;
+	background:url(mj-m.gif) no-repeat -64px -46px
 }
 .mj-s-26-m {
-	width:22px; height:30px;
-	background:url(mj-m.gif) no-repeat -110px -60px
+	width:16px; height:23px;
+	background:url(mj-m.gif) no-repeat -80px -46px
 }
 .mj-s-27-m {
-	width:22px; height:30px;
-	background:url(mj-m.gif) no-repeat -132px -60px
+	width:16px; height:23px;
+	background:url(mj-m.gif) no-repeat -96px -46px
 }
 .mj-s-28-m {
-	width:22px; height:30px;
-	background:url(mj-m.gif) no-repeat -154px -60px
+	width:16px; height:23px;
+	background:url(mj-m.gif) no-repeat -112px -46px
 }
 .mj-s-29-m {
-	width:22px; height:30px;
-	background:url(mj-m.gif) no-repeat -176px -60px
+	width:16px; height:23px;
+	background:url(mj-m.gif) no-repeat -128px -46px
 }
 .mj-s-31-m {
-	width:22px; height:30px;
-	background:url(mj-m.gif) no-repeat -0px -90px
+	width:16px; height:23px;
+	background:url(mj-m.gif) no-repeat -0px -69px
 }
 .mj-s-32-m {
-	width:22px; height:30px;
-	background:url(mj-m.gif) no-repeat -22px -90px
+	width:16px; height:23px;
+	background:url(mj-m.gif) no-repeat -16px -69px
 }
 .mj-s-33-m {
-	width:22px; height:30px;
-	background:url(mj-m.gif) no-repeat -44px -90px
+	width:16px; height:23px;
+	background:url(mj-m.gif) no-repeat -32px -69px
 }
 .mj-s-34-m {
-	width:22px; height:30px;
-	background:url(mj-m.gif) no-repeat -66px -90px
+	width:16px; height:23px;
+	background:url(mj-m.gif) no-repeat -48px -69px
 }
 .mj-s-35-m {
-	width:22px; height:30px;
-	background:url(mj-m.gif) no-repeat -88px -90px
+	width:16px; height:23px;
+	background:url(mj-m.gif) no-repeat -64px -69px
 }
 .mj-s-36-m {
-	width:22px; height:30px;
-	background:url(mj-m.gif) no-repeat -110px -90px
+	width:16px; height:23px;
+	background:url(mj-m.gif) no-repeat -80px -69px
 }
 .mj-s-37-m {
-	width:22px; height:30px;
-	background:url(mj-m.gif) no-repeat -132px -90px
+	width:16px; height:23px;
+	background:url(mj-m.gif) no-repeat -96px -69px
 }
 
 /* w */
 .mj-w-t-m {
-	width:41px; height:7px;
-	background:url(mj-m.gif) no-repeat -252px -382px;	
+	width:31px; height:5px;
+	background:url(mj-m.gif) no-repeat -185px -281px;	
 }
 
 .mj-w-b0-m {
-	width:40px; height:37px;
-	background:url(mj-m.gif) no-repeat -17px -351px;	
+	width:29px; height:27px;
+	background:url(mj-m.gif) no-repeat -13px -259px;
 }
 .mj-w-b1-m {
-	width:17px; height:49px;
-	background:url(mj-m.gif) no-repeat 0px -339px;	
+	width:13px; height:36px;
+	background:url(mj-m.gif) no-repeat -0px -250px;
 }
 .mj-w-b2-m {
-	width:33px; height:22px; padding: 2px 3px 13px 4px;
-	background:url(mj-m.gif) no-repeat -117px -339px;	
+	width:23px; height:16px; padding: 2px 3px 9px 3px;
+	background:url(mj-m.gif) no-repeat -99px -259px;
 }
 
 .mj-w-1-m {
-	width:30px; height:22px;
-	background:url(mj-m.gif) no-repeat -288px -0px
+	width:23px; height:16px;
+	background:url(mj-m.gif) no-repeat -213px -0px
 }
 .mj-w-2-m {
-	width:30px; height:22px;
-	background:url(mj-m.gif) no-repeat -288px -22px
+	width:23px; height:16px;
+	background:url(mj-m.gif) no-repeat -213px -16px
 }
 .mj-w-3-m {
-	width:30px; height:22px;
-	background:url(mj-m.gif) no-repeat -288px -44px
+	width:23px; height:16px;
+	background:url(mj-m.gif) no-repeat -213px -32px
 }
 .mj-w-4-m {
-	width:30px; height:22px;
-	background:url(mj-m.gif) no-repeat -288px -66px
+	width:23px; height:16px;
+	background:url(mj-m.gif) no-repeat -213px -48px
 }
 .mj-w-5-m {
-	width:30px; height:22px;
-	background:url(mj-m.gif) no-repeat -288px -88px
+	width:23px; height:16px;
+	background:url(mj-m.gif) no-repeat -213px -64px
 }
 .mj-w-6-m {
-	width:30px; height:22px;
-	background:url(mj-m.gif) no-repeat -288px -110px
+	width:23px; height:16px;
+	background:url(mj-m.gif) no-repeat -213px -80px
 }
 .mj-w-7-m {
-	width:30px; height:22px;
-	background:url(mj-m.gif) no-repeat -288px -132px
+	width:23px; height:16px;
+	background:url(mj-m.gif) no-repeat -213px -96px
 }
 .mj-w-8-m {
-	width:30px; height:22px;
-	background:url(mj-m.gif) no-repeat -288px -154px
+	width:23px; height:16px;
+	background:url(mj-m.gif) no-repeat -213px -112px
 }
 .mj-w-9-m {
-	width:30px; height:22px;
-	background:url(mj-m.gif) no-repeat -288px -176px
+	width:23px; height:16px;
+	background:url(mj-m.gif) no-repeat -213px -128px
 }
 .mj-w-11-m {
-	width:30px; height:22px;
-	background:url(mj-m.gif) no-repeat -258px -0px
+	width:23px; height:16px;
+	background:url(mj-m.gif) no-repeat -190px -0px
 }
 .mj-w-12-m {
-	width:30px; height:22px;
-	background:url(mj-m.gif) no-repeat -258px -22px
+	width:23px; height:16px;
+	background:url(mj-m.gif) no-repeat -190px -16px
 }
 .mj-w-13-m {
-	width:30px; height:22px;
-	background:url(mj-m.gif) no-repeat -258px -44px
+	width:23px; height:16px;
+	background:url(mj-m.gif) no-repeat -190px -32px
 }
 .mj-w-14-m {
-	width:30px; height:22px;
-	background:url(mj-m.gif) no-repeat -258px -66px
+	width:23px; height:16px;
+	background:url(mj-m.gif) no-repeat -190px -48px
 }
 .mj-w-15-m {
-	width:30px; height:22px;
-	background:url(mj-m.gif) no-repeat -258px -88px
+	width:23px; height:16px;
+	background:url(mj-m.gif) no-repeat -190px -64px
 }
 .mj-w-16-m {
-	width:30px; height:22px;
-	background:url(mj-m.gif) no-repeat -258px -110px
+	width:23px; height:16px;
+	background:url(mj-m.gif) no-repeat -190px -80px
 }
 .mj-w-17-m {
-	width:30px; height:22px;
-	background:url(mj-m.gif) no-repeat -258px -132px
+	width:23px; height:16px;
+	background:url(mj-m.gif) no-repeat -190px -96px
 }
 .mj-w-18-m {
-	width:30px; height:22px;
-	background:url(mj-m.gif) no-repeat -258px -154px
+	width:23px; height:16px;
+	background:url(mj-m.gif) no-repeat -190px -112px
 }
 .mj-w-19-m {
-	width:30px; height:22px;
-	background:url(mj-m.gif) no-repeat -258px -176px
+	width:23px; height:16px;
+	background:url(mj-m.gif) no-repeat -190px -128px
 }
 .mj-w-21-m {
-	width:30px; height:22px;
-	background:url(mj-m.gif) no-repeat -228px -0px
+	width:23px; height:16px;
+	background:url(mj-m.gif) no-repeat -167px -0px
 }
 .mj-w-22-m {
-	width:30px; height:22px;
-	background:url(mj-m.gif) no-repeat -228px -22px
+	width:23px; height:16px;
+	background:url(mj-m.gif) no-repeat -167px -16px
 }
 .mj-w-23-m {
-	width:30px; height:22px;
-	background:url(mj-m.gif) no-repeat -228px -44px
+	width:23px; height:16px;
+	background:url(mj-m.gif) no-repeat -167px -32px
 }
 .mj-w-24-m {
-	width:30px; height:22px;
-	background:url(mj-m.gif) no-repeat -228px -66px
+	width:23px; height:16px;
+	background:url(mj-m.gif) no-repeat -167px -48px
 }
 .mj-w-25-m {
-	width:30px; height:22px;
-	background:url(mj-m.gif) no-repeat -228px -88px
+	width:23px; height:16px;
+	background:url(mj-m.gif) no-repeat -167px -64px
 }
 .mj-w-26-m {
-	width:30px; height:22px;
-	background:url(mj-m.gif) no-repeat -228px -110px
+	width:23px; height:16px;
+	background:url(mj-m.gif) no-repeat -167px -80px
 }
 .mj-w-27-m {
-	width:30px; height:22px;
-	background:url(mj-m.gif) no-repeat -228px -132px
+	width:23px; height:16px;
+	background:url(mj-m.gif) no-repeat -167px -96px
 }
 .mj-w-28-m {
-	width:30px; height:22px;
-	background:url(mj-m.gif) no-repeat -228px -154px
+	width:23px; height:16px;
+	background:url(mj-m.gif) no-repeat -167px -112px
 }
 .mj-w-29-m {
-	width:30px; height:22px;
-	background:url(mj-m.gif) no-repeat -228px -176px
+	width:23px; height:16px;
+	background:url(mj-m.gif) no-repeat -167px -128px
 }
 .mj-w-31-m {
-	width:30px; height:22px;
-	background:url(mj-m.gif) no-repeat -198px -0px
+	width:23px; height:16px;
+	background:url(mj-m.gif) no-repeat -144px -0px
 }
 .mj-w-32-m {
-	width:30px; height:22px;
-	background:url(mj-m.gif) no-repeat -198px -22px
+	width:23px; height:16px;
+	background:url(mj-m.gif) no-repeat -144px -16px
 }
 .mj-w-33-m {
-	width:30px; height:22px;
-	background:url(mj-m.gif) no-repeat -198px -44px
+	width:23px; height:16px;
+	background:url(mj-m.gif) no-repeat -144px -32px
 }
 .mj-w-34-m {
-	width:30px; height:22px;
-	background:url(mj-m.gif) no-repeat -198px -66px
+	width:23px; height:16px;
+	background:url(mj-m.gif) no-repeat -144px -48px
 }
 .mj-w-35-m {
-	width:30px; height:22px;
-	background:url(mj-m.gif) no-repeat -198px -88px
+	width:23px; height:16px;
+	background:url(mj-m.gif) no-repeat -144px -64px
 }
 .mj-w-36-m {
-	width:30px; height:22px;
-	background:url(mj-m.gif) no-repeat -198px -110px
+	width:23px; height:16px;
+	background:url(mj-m.gif) no-repeat -144px -80px
 }
 .mj-w-37-m {
-	width:30px; height:22px;
-	background:url(mj-m.gif) no-repeat -198px -132px
+	width:23px; height:16px;
+	background:url(mj-m.gif) no-repeat -144px -96px
 }
 
 /* n */
 .mj-n-t-m {
-	width:6px; height:40px;
-	background:url(mj-m.gif) no-repeat -312px -348px;
+	width:5px; height:30px;
+	background:url(mj-m.gif) no-repeat -229px -256px;
 }
 
 .mj-n-b0-m {
-	width:30px; height:48px;
-	background:url(mj-m.gif) no-repeat -57px -343px;
+	width:22px; height:33px;
+	background:url(mj-m.gif) no-repeat -43px -257px;
 }
 .mj-n-b1-m {
-	width:30px; height:48px;
-	background:url(mj-m.gif) no-repeat -87px -343px;
+	width:22px; height:33px;
+	background:url(mj-m.gif) no-repeat -64px -253px;
 }
 .mj-n-b2-m {
-	width:22px; height:30px; padding:3px 4px 14px 4px;
-	background:url(mj-m.gif) no-repeat -174px -343px;
+	width:16px; height:23px; padding: 2px 3px 8px 3px;
+	background:url(mj-m.gif) no-repeat -128px -253px;
 }
 
 .mj-n-1-m {
-	width:22px; height:30px;
-	background:url(mj-m.gif) no-repeat -296px -288px
+	width:16px; height:23px;
+	background:url(mj-m.gif) no-repeat -220px -213px
 }
 .mj-n-2-m {
-	width:22px; height:30px;
-	background:url(mj-m.gif) no-repeat -274px -288px
+	width:16px; height:23px;
+	background:url(mj-m.gif) no-repeat -204px -213px
 }
 .mj-n-3-m {
-	width:22px; height:30px;
-	background:url(mj-m.gif) no-repeat -252px -288px
+	width:16px; height:23px;
+	background:url(mj-m.gif) no-repeat -188px -213px
 }
 .mj-n-4-m {
-	width:22px; height:30px;
-	background:url(mj-m.gif) no-repeat -230px -288px
+	width:16px; height:23px;
+	background:url(mj-m.gif) no-repeat -172px -213px
 }
 .mj-n-5-m {
-	width:22px; height:30px;
-	background:url(mj-m.gif) no-repeat -208px -288px
+	width:16px; height:23px;
+	background:url(mj-m.gif) no-repeat -156px -213px
 }
 .mj-n-6-m {
-	width:22px; height:30px;
-	background:url(mj-m.gif) no-repeat -186px -288px
+	width:16px; height:23px;
+	background:url(mj-m.gif) no-repeat -140px -213px
 }
 .mj-n-7-m {
-	width:22px; height:30px;
-	background:url(mj-m.gif) no-repeat -164px -288px
+	width:16px; height:23px;
+	background:url(mj-m.gif) no-repeat -124px -213px
 }
 .mj-n-8-m {
-	width:22px; height:30px;
-	background:url(mj-m.gif) no-repeat -142px -288px
+	width:16px; height:23px;
+	background:url(mj-m.gif) no-repeat -108px -213px
 }
 .mj-n-9-m {
-	width:22px; height:30px;
-	background:url(mj-m.gif) no-repeat -120px -288px
+	width:16px; height:23px;
+	background:url(mj-m.gif) no-repeat -92px -213px
 }
 .mj-n-11-m {
-	width:22px; height:30px;
-	background:url(mj-m.gif) no-repeat -296px -258px
+	width:16px; height:23px;
+	background:url(mj-m.gif) no-repeat -220px -190px
 }
 .mj-n-12-m {
-	width:22px; height:30px;
-	background:url(mj-m.gif) no-repeat -274px -258px
+	width:16px; height:23px;
+	background:url(mj-m.gif) no-repeat -204px -190px
 }
 .mj-n-13-m {
-	width:22px; height:30px;
-	background:url(mj-m.gif) no-repeat -252px -258px
+	width:16px; height:23px;
+	background:url(mj-m.gif) no-repeat -188px -190px
 }
 .mj-n-14-m {
-	width:22px; height:30px;
-	background:url(mj-m.gif) no-repeat -230px -258px
+	width:16px; height:23px;
+	background:url(mj-m.gif) no-repeat -172px -190px
 }
 .mj-n-15-m {
-	width:22px; height:30px;
-	background:url(mj-m.gif) no-repeat -208px -258px
+	width:16px; height:23px;
+	background:url(mj-m.gif) no-repeat -156px -190px
 }
 .mj-n-16-m {
-	width:22px; height:30px;
-	background:url(mj-m.gif) no-repeat -186px -258px
+	width:16px; height:23px;
+	background:url(mj-m.gif) no-repeat -140px -190px
 }
 .mj-n-17-m {
-	width:22px; height:30px;
-	background:url(mj-m.gif) no-repeat -164px -258px
+	width:16px; height:23px;
+	background:url(mj-m.gif) no-repeat -124px -190px
 }
 .mj-n-18-m {
-	width:22px; height:30px;
-	background:url(mj-m.gif) no-repeat -142px -258px
+	width:16px; height:23px;
+	background:url(mj-m.gif) no-repeat -108px -190px
 }
 .mj-n-19-m {
-	width:22px; height:30px;
-	background:url(mj-m.gif) no-repeat -120px -258px
+	width:16px; height:23px;
+	background:url(mj-m.gif) no-repeat -92px -190px
 }
 .mj-n-21-m {
-	width:22px; height:30px;
-	background:url(mj-m.gif) no-repeat -296px -228px
+	width:16px; height:23px;
+	background:url(mj-m.gif) no-repeat -220px -167px
 }
 .mj-n-22-m {
-	width:22px; height:30px;
-	background:url(mj-m.gif) no-repeat -274px -228px
+	width:16px; height:23px;
+	background:url(mj-m.gif) no-repeat -204px -167px
 }
 .mj-n-23-m {
-	width:22px; height:30px;
-	background:url(mj-m.gif) no-repeat -252px -228px
+	width:16px; height:23px;
+	background:url(mj-m.gif) no-repeat -188px -167px
 }
 .mj-n-24-m {
-	width:22px; height:30px;
-	background:url(mj-m.gif) no-repeat -230px -228px
+	width:16px; height:23px;
+	background:url(mj-m.gif) no-repeat -172px -167px
 }
 .mj-n-25-m {
-	width:22px; height:30px;
-	background:url(mj-m.gif) no-repeat -208px -228px
+	width:16px; height:23px;
+	background:url(mj-m.gif) no-repeat -156px -167px
 }
 .mj-n-26-m {
-	width:22px; height:30px;
-	background:url(mj-m.gif) no-repeat -186px -228px
+	width:16px; height:23px;
+	background:url(mj-m.gif) no-repeat -140px -167px
 }
 .mj-n-27-m {
-	width:22px; height:30px;
-	background:url(mj-m.gif) no-repeat -164px -228px
+	width:16px; height:23px;
+	background:url(mj-m.gif) no-repeat -124px -167px
 }
 .mj-n-28-m {
-	width:22px; height:30px;
-	background:url(mj-m.gif) no-repeat -142px -228px
+	width:16px; height:23px;
+	background:url(mj-m.gif) no-repeat -108px -167px
 }
 .mj-n-29-m {
-	width:22px; height:30px;
-	background:url(mj-m.gif) no-repeat -120px -228px
+	width:16px; height:23px;
+	background:url(mj-m.gif) no-repeat -92px -167px
 }
 .mj-n-31-m {
-	width:22px; height:30px;
-	background:url(mj-m.gif) no-repeat -296px -198px
+	width:16px; height:23px;
+	background:url(mj-m.gif) no-repeat -220px -144px
 }
 .mj-n-32-m {
-	width:22px; height:30px;
-	background:url(mj-m.gif) no-repeat -274px -198px
+	width:16px; height:23px;
+	background:url(mj-m.gif) no-repeat -204px -144px
 }
 .mj-n-33-m {
-	width:22px; height:30px;
-	background:url(mj-m.gif) no-repeat -252px -198px
+	width:16px; height:23px;
+	background:url(mj-m.gif) no-repeat -188px -144px
 }
 .mj-n-34-m {
-	width:22px; height:30px;
-	background:url(mj-m.gif) no-repeat -230px -198px
+	width:16px; height:23px;
+	background:url(mj-m.gif) no-repeat -172px -144px
 }
 .mj-n-35-m {
-	width:22px; height:30px;
-	background:url(mj-m.gif) no-repeat -208px -198px
+	width:16px; height:23px;
+	background:url(mj-m.gif) no-repeat -156px -144px
 }
 .mj-n-36-m {
-	width:22px; height:30px;
-	background:url(mj-m.gif) no-repeat -186px -198px
+	width:16px; height:23px;
+	background:url(mj-m.gif) no-repeat -140px -144px
 }
 .mj-n-37-m {
-	width:22px; height:30px;
-	background:url(mj-m.gif) no-repeat -164px -198px
+	width:16px; height:23px;
+	background:url(mj-m.gif) no-repeat -124px -144px
 }
 
 /* e */
 .mj-e-t-m {
-	width:41px; height:7px;
-	background:url(mj-m.gif) no-repeat -252px -382px;	
+	width:31px; height:5px;
+	background:url(mj-m.gif) no-repeat -185px -281px;	
 }
 
 .mj-e-b0-m {
-	width:40px; height:37px;
-	background:url(mj-m.gif) no-repeat -17px -351px;	
+	width:29px; height:27px;
+	background:url(mj-m.gif) no-repeat -13px -259px;
 }
 .mj-e-b1-m {
-	width:17px; height:49px;
-	background:url(mj-m.gif) no-repeat -117px -339px;	
+	width:13px; height:36px;
+	background:url(mj-m.gif) no-repeat -86px -250px;
 }
 .mj-e-b2-m {
-	width:33px; height:22px; padding: 2px 4px 13px 3px;
-	background:url(mj-m.gif) no-repeat -117px -339px;	
+	width:23px; height:16px; padding: 2px 3px 9px 3px;
+	background:url(mj-m.gif) no-repeat -99px -259px;
 }
 
 .mj-e-1-m {
-	width:30px; height:22px;
-	background:url(mj-m.gif) no-repeat -0px -296px
+	width:23px; height:16px;
+	background:url(mj-m.gif) no-repeat -0px -220px
 }
 .mj-e-2-m {
-	width:30px; height:22px;
-	background:url(mj-m.gif) no-repeat -0px -274px
+	width:23px; height:16px;
+	background:url(mj-m.gif) no-repeat -0px -204px
 }
 .mj-e-3-m {
-	width:30px; height:22px;
-	background:url(mj-m.gif) no-repeat -0px -252px
+	width:23px; height:16px;
+	background:url(mj-m.gif) no-repeat -0px -188px
 }
 .mj-e-4-m {
-	width:30px; height:22px;
-	background:url(mj-m.gif) no-repeat -0px -230px
+	width:23px; height:16px;
+	background:url(mj-m.gif) no-repeat -0px -172px
 }
 .mj-e-5-m {
-	width:30px; height:22px;
-	background:url(mj-m.gif) no-repeat -0px -208px
+	width:23px; height:16px;
+	background:url(mj-m.gif) no-repeat -0px -156px
 }
 .mj-e-6-m {
-	width:30px; height:22px;
-	background:url(mj-m.gif) no-repeat -0px -186px
+	width:23px; height:16px;
+	background:url(mj-m.gif) no-repeat -0px -140px
 }
 .mj-e-7-m {
-	width:30px; height:22px;
-	background:url(mj-m.gif) no-repeat -0px -164px
+	width:23px; height:16px;
+	background:url(mj-m.gif) no-repeat -0px -124px
 }
 .mj-e-8-m {
-	width:30px; height:22px;
-	background:url(mj-m.gif) no-repeat -0px -142px
+	width:23px; height:16px;
+	background:url(mj-m.gif) no-repeat -0px -108px
 }
 .mj-e-9-m {
-	width:30px; height:22px;
-	background:url(mj-m.gif) no-repeat -0px -120px
+	width:23px; height:16px;
+	background:url(mj-m.gif) no-repeat -0px -92px
 }
 .mj-e-11-m {
-	width:30px; height:22px;
-	background:url(mj-m.gif) no-repeat -30px -296px
+	width:23px; height:16px;
+	background:url(mj-m.gif) no-repeat -23px -220px
 }
 .mj-e-12-m {
-	width:30px; height:22px;
-	background:url(mj-m.gif) no-repeat -30px -274px
+	width:23px; height:16px;
+	background:url(mj-m.gif) no-repeat -23px -204px
 }
 .mj-e-13-m {
-	width:30px; height:22px;
-	background:url(mj-m.gif) no-repeat -30px -252px
+	width:23px; height:16px;
+	background:url(mj-m.gif) no-repeat -23px -188px
 }
 .mj-e-14-m {
-	width:30px; height:22px;
-	background:url(mj-m.gif) no-repeat -30px -230px
+	width:23px; height:16px;
+	background:url(mj-m.gif) no-repeat -23px -172px
 }
 .mj-e-15-m {
-	width:30px; height:22px;
-	background:url(mj-m.gif) no-repeat -30px -208px
+	width:23px; height:16px;
+	background:url(mj-m.gif) no-repeat -23px -156px
 }
 .mj-e-16-m {
-	width:30px; height:22px;
-	background:url(mj-m.gif) no-repeat -30px -186px
+	width:23px; height:16px;
+	background:url(mj-m.gif) no-repeat -23px -140px
 }
 .mj-e-17-m {
-	width:30px; height:22px;
-	background:url(mj-m.gif) no-repeat -30px -164px
+	width:23px; height:16px;
+	background:url(mj-m.gif) no-repeat -23px -124px
 }
 .mj-e-18-m {
-	width:30px; height:22px;
-	background:url(mj-m.gif) no-repeat -30px -142px
+	width:23px; height:16px;
+	background:url(mj-m.gif) no-repeat -23px -108px
 }
 .mj-e-19-m {
-	width:30px; height:22px;
-	background:url(mj-m.gif) no-repeat -30px -120px
+	width:23px; height:16px;
+	background:url(mj-m.gif) no-repeat -23px -92px
 }
 .mj-e-21-m {
-	width:30px; height:22px;
-	background:url(mj-m.gif) no-repeat -60px -296px
+	width:23px; height:16px;
+	background:url(mj-m.gif) no-repeat -46px -220px
 }
 .mj-e-22-m {
-	width:30px; height:22px;
-	background:url(mj-m.gif) no-repeat -60px -274px
+	width:23px; height:16px;
+	background:url(mj-m.gif) no-repeat -46px -204px
 }
 .mj-e-23-m {
-	width:30px; height:22px;
-	background:url(mj-m.gif) no-repeat -60px -252px
+	width:23px; height:16px;
+	background:url(mj-m.gif) no-repeat -46px -188px
 }
 .mj-e-24-m {
-	width:30px; height:22px;
-	background:url(mj-m.gif) no-repeat -60px -230px
+	width:23px; height:16px;
+	background:url(mj-m.gif) no-repeat -46px -172px
 }
 .mj-e-25-m {
-	width:30px; height:22px;
-	background:url(mj-m.gif) no-repeat -60px -208px
+	width:23px; height:16px;
+	background:url(mj-m.gif) no-repeat -46px -156px
 }
 .mj-e-26-m {
-	width:30px; height:22px;
-	background:url(mj-m.gif) no-repeat -60px -186px
+	width:23px; height:16px;
+	background:url(mj-m.gif) no-repeat -46px -140px
 }
 .mj-e-27-m {
-	width:30px; height:22px;
-	background:url(mj-m.gif) no-repeat -60px -164px
+	width:23px; height:16px;
+	background:url(mj-m.gif) no-repeat -46px -124px
 }
 .mj-e-28-m {
-	width:30px; height:22px;
-	background:url(mj-m.gif) no-repeat -60px -142px
+	width:23px; height:16px;
+	background:url(mj-m.gif) no-repeat -46px -108px
 }
 .mj-e-29-m {
-	width:30px; height:22px;
-	background:url(mj-m.gif) no-repeat -60px -120px
+	width:23px; height:16px;
+	background:url(mj-m.gif) no-repeat -46px -92px
 }
 .mj-e-31-m {
-	width:30px; height:22px;
-	background:url(mj-m.gif) no-repeat -90px -296px
+	width:23px; height:16px;
+	background:url(mj-m.gif) no-repeat -69px -220px
 }
 .mj-e-32-m {
-	width:30px; height:22px;
-	background:url(mj-m.gif) no-repeat -90px -274px
+	width:23px; height:16px;
+	background:url(mj-m.gif) no-repeat -69px -204px
 }
 .mj-e-33-m {
-	width:30px; height:22px;
-	background:url(mj-m.gif) no-repeat -90px -252px
+	width:23px; height:16px;
+	background:url(mj-m.gif) no-repeat -69px -188px
 }
 .mj-e-34-m {
-	width:30px; height:22px;
-	background:url(mj-m.gif) no-repeat -90px -230px
+	width:23px; height:16px;
+	background:url(mj-m.gif) no-repeat -69px -172px
 }
 .mj-e-35-m {
-	width:30px; height:22px;
-	background:url(mj-m.gif) no-repeat -90px -208px
+	width:23px; height:16px;
+	background:url(mj-m.gif) no-repeat -69px -156px
 }
 .mj-e-36-m {
-	width:30px; height:22px;
-	background:url(mj-m.gif) no-repeat -90px -186px
+	width:23px; height:16px;
+	background:url(mj-m.gif) no-repeat -69px -140px
 }
 .mj-e-37-m {
-	width:30px; height:22px;
-	background:url(mj-m.gif) no-repeat -90px -164px
+	width:23px; height:16px;
+	background:url(mj-m.gif) no-repeat -69px -124px
 }
 

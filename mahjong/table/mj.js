@@ -3,6 +3,7 @@ $(function(){
   // **** constants
 
   var F = ["N", "E", "S", "W"];
+  var S = "m";
 
   // **** handle events from secene
 
@@ -126,7 +127,7 @@ $(function(){
   // extra : 附加class字符串
   // size : 尺寸 l,m,s
   function _pai(direct, state, val, extra, size){
-    size = (size) ? size : "s";
+    size = (size) ? size : S;
     extra = (extra) ? " "+extra : "";
     return "<li"+
       (val ? " id='mj-"+val+"'" : "") +
@@ -139,7 +140,7 @@ $(function(){
   // _ting(direct, size)
   // _ting(direct) size=default
   function _ting(direct, size){
-    size = (size) ? size : "s";
+    size = (size) ? size : S;
     return "<li class='mj-"+direct+"-t-"+size+"'/>";
   }
 
@@ -147,7 +148,7 @@ $(function(){
   // _spacer(size)
   // _spacer() size=default
   function _spacer(size){
-    size = (size) ? size : "s";
+    size = (size) ? size : S;
     return "<li class='mj-e-"+size+"'/>";
   }
 
@@ -227,16 +228,17 @@ $(function(){
     }, F);
 
     // info 有新的info信息需要显示
-    if (v.sits[f] && v.sits[f].ready == true) return;
-    if (!v.info || !v.info.time || v.info.time <= last_info_time) return;
-    _ui().append("<ul id='info'></ul>");
+    // if (v.sits[f] && v.sits[f].ready == true) return;
+    // if (!v.info || !v.info.time || v.info.time <= last_info_time) return;
+    _ui().append("<ul id='info'><ul id='bg'/></ul>");
     if (v.info.done === false) { // 流局
-      _ui("#info").append("<ul id='hu'>流局</ul>");
+      _ui("#info").append("<ul id='title'>流局</ul>");
       _ui("#info").append("<ul id='cmd'><li id='ok'>ok</li></ul>");
     }else{ // 胡牌
-      _ui("#info").append("<ul id='hu'></ul>");
+      _ui("#info").append("<ul id='title'>胡牌</ul>");
+      _ui("#info").append("<ul id='pai'></ul>");
       LIST.foreach(function(x){
-	_ui("#info #hu").append(_pai("s", 2, x));
+	_ui("#info #pai").append(_pai("s", 2, x));
       }, v.info.hule);
       _ui("#info").append("<ul id='cmd'></ul>");
       if(f){
@@ -322,7 +324,7 @@ $(function(){
     _ui().append("<ul id='cmds'></ul>");
     if (f != undefined && f == v.game.turn){
       if(v.game.zhua){
-	_ui("#cmds").append(_pai("s", 1, v.game.card, "active cmd", "m"));
+	_ui("#cmds").append(_pai("s", 1, v.game.card, "active cmd", "l"));
 	_ui("#cmds li:last").click(
 	  function(){ _ui("#cmds").empty(); _pai("drop", v.game.card); } );
       }else{

@@ -12,13 +12,15 @@ body {
 }
 
 #head {
-  height:60px;
+  height:60px; 
   border-bottom:5px solid #DDDDDD;
-  background:#FCFCFC url(header_bg.png) repeat-x scroll 0 100%;
+  background:#FCFCFC url(images/header_bg.png) repeat-x scroll 0 100%;
 }
 #head .logo {
   float:left;
-  padding-top:1em;
+}
+#head .logo a img {
+  border: 0px;
 }
 #head .actions {
   float:right;
@@ -62,7 +64,9 @@ body {
   font: normal normal 88% "Courier";
 }
 #foot .links {
+  margin-left:12px;
   padding-top:0.1em;
+  padding-bottom:0.1em;
 }
 #foot .links a {
   color:#444;

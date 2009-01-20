@@ -5,74 +5,74 @@ screen size: 480px * 320px
 /**** canvas ***/
 #game {
 	position:absolute; top:65px; left:0px;
-	width:480px; height:320px;
+	width:800px; height:480px;
 	background:#3a6ea5;
 }
 
-/**** face ***/
-#game #face li {position:absolute;}
-#game #face #n {top:55px; left:224px;}
-#game #face #w {top:144px; left:67px;}
-#game #face #e {top:144px; left:380px;}
-#game #face #s {top:228px; left:224px;}
-
-/**** icon ****/
-#game #icon li {position:absolute;}
-#game #icon #n {top:55px; left:208px;}
-#game #icon #w {top:176px; left:67px;}
-#game #icon #e {top:128px; left:397px;}
-#game #icon #s {top:244px; left:256px;}
-
-#game #icon #hn {top:71px; left:208px;}
-#game #icon #hw {top:176px; left:83px;}
-#game #icon #he {top:128px; left:381px;}
-#game #icon #hs {top:228px; left:256px;}
-
-
 /**** desk ***/
-#game #desk { /* w:16*16 h:8*(23-5) */
-	width:256px; height:114px;
-	top:103px; left:112px;
+#game #desk { /* w:16*22 h:8*(33-7) */
+	width:352px; height:208px;
+	left:224px; top:136px; 
 	background:#3a7eb5;/*#3aa6a6;*/
 	/* border:1px #777 inset; */
 }
 #game #desk li {
 	float:left;
-	margin-top:-5px;
+	margin-top:-7px;
 }
 
+/**** face ***/
+#game #face li {position:absolute;}
+#game #face #n {left:394px; top:90px;}
+#game #face #w {left:178px; top:224px;}
+#game #face #s {left:394px; top:360px;}
+#game #face #e {left:590px; top:224px;}
+
+/**** icon ****/
+#game #icon li {position:absolute;}
+#game #icon #n {left:378px; top:90px;}
+#game #icon #w {left:178px; top:256px;}
+#game #icon #s {left:426px; top:376px;}
+#game #icon #e {left:606px; top:208px;}
+
+#game #icon #hn {left:378px; top:106px;}
+#game #icon #hw {left:194px; top:256px;}
+#game #icon #hs {left:426px; top:360px;}
+#game #icon #he {left:590px; top:224px;}
+
+
 /**** side ***/
-#game #side #n { /* w:18*16 h:1*23 */
-	width:288px; height:23px;
-	top:0px; left:96px;
+#game #side #n { /* w:18*22 h:1*33 */
+	width:396px; height:33px;
+	left:202px; top:20px;
 }
 #game #side #n li { float:right; }
 
-#game #side #w { /* w:1*20 h:18*(19-5) */
-	width:20px; height:252px;
-	top:34px; left:0px;
+#game #side #w { /* w:1*29 h:18*(27-7) */
+	width:29px; height:396px;
+	left:20px; top:60px;
 }
-#game #side #w li { float:none; margin-top:-5px; }
-#game #side #w li.h { margin-top:-12px; }
+#game #side #w li { float:none; margin-top:-7px; }
+#game #side #w li.h { margin-top:-18px; }
 
-#game #side #e { /* w:1*20 h:18*(19-5) */
-	width:20px; height:252px;
-	top:34px; left:460px;
-}
-#game #side #e li { float:none; margin-top:-5px; }
-#game #side #e li.h { margin-top:-12px;	margin-left:11px; }
-
-#game #side #s { /* w:18*16 h:1*23 */
-	width:288px; height:23px;
-	top:297px; left:96px;
+#game #side #s { /* w:18*23 h:1*33 */
+	width:396px; height:33px;
+	left:202px; top:427px;
 }
 #game #side #s li { float:left; }
 #game #side #s li.active:hover { margin-top:-5px; }
 
+#game #side #e { /* w:1*29 h:18*(27-7) */
+	width:29px; height:396px;
+	left:751px; top:60px;
+}
+#game #side #e li { float:none; margin-top:-7px; }
+#game #side #e li.h { margin-top:-18px;	margin-left:16px; }
+
 /**** cmds ***/
 #game #cmds {
-	width:146px; /* height:45px; */
-	top:228px; left:280px;
+	width:250px; /* height:45px; */
+	left:458px; top:360px;
 }
 #game #cmds li {
 	float:left;
@@ -80,28 +80,37 @@ screen size: 480px * 320px
 }
 
 /**** info ***/
-#game #info {
-      width:480px; height:320px;
-      top:0px; left:0px;
-      background:#333;
+#game #info #bg {
+      width:800px; height:480px;
+      left:0px; top:0px;
+      background:#000;
+      filter:alpha(opacity=80); /*IE*/
+      opacity:0.8; /*Mozilla*/ 
+}
+#game #info #title {
+      color: red;
+      font-size: 150%;
+      width:414px; height:33px;
+      left:240px; top:100px;
+}
+#game #info #pai {
+      width:414px; height:33px;
+      left:240px; top:160px;
+}
+#game #info #pai li{
+      float:left;
 }
 #game #info #cmd{
-      top:150px; left:96px;
+      width:400px; height:40px;
+      left:400px; top:440px;
 }
 #game #info #cmd li{
-      margin-left:11px;
-      float:left;
+      margin-right:10px;
+      float:right;
       background:#888;
       border:1px #aaa outset;
       padding:2px 8px;
       cursor:pointer;
-}
-#game #info #hu {
-      width:288px; height:23px;
-      top:120px; left:96px;
-}
-#game #info #hu li{
-      float:left;
 }
 
 /**** common list ***/
