@@ -84,10 +84,10 @@ $(function(){
     if (!lf) {
       // 未就坐，按 NEWS 对应
       switch(f){
-	case "N": return "n";
-	case "E": return "e";
-	case "S": return "s";
-	case "W": return "w";
+	case "N": return "N";
+	case "E": return "E";
+	case "S": return "S";
+	case "W": return "W";
 	default: return undefined;
       }
     } else {
@@ -99,10 +99,10 @@ $(function(){
 	c++;
       }while(c<4);
       switch(c){
-	case 0: return "s";
-	case 1: return "w";
-	case 2: return "n";
-	case 3: return "e";
+	case 0: return "S";
+	case 1: return "W";
+	case 2: return "N";
+	case 3: return "E";
 	default: return undefined;
       }
     }
@@ -117,16 +117,16 @@ $(function(){
   var last_info_time = 0; // 上次显示的info信息，保留其时间戳，以避免重复显示
 
   // 一张牌
-  // _pai(direct, state, val, extra, size)
-  // _pai(direct, state, val, extra) size=default
-  // _pai(direct, state, val) extra="" size=default
-  // _pai(direct, state) val=0 extra="" size=default
+  // _mahjong(direct, state, val, extra, size)
+  // _mahjong(direct, state, val, extra) size=default
+  // _mahjong(direct, state, val) extra="" size=default
+  // _mahjong(direct, state) val=0 extra="" size=default
   // direct : 朝向 news
   // state : 正面 0,1,2
   // val : 牌面， 0,1-9,11-19,21-29,31-37
   // extra : 附加class字符串
   // size : 尺寸 l,m,s
-  function _pai(direct, state, val, extra, size){
+  function _mahjong(direct, state, val, extra, size){
     size = (size) ? size : S;
     extra = (extra) ? " "+extra : "";
     return "<li"+
@@ -228,8 +228,8 @@ $(function(){
     }, F);
 
     // info 有新的info信息需要显示
-    // if (v.sits[f] && v.sits[f].ready == true) return;
-    // if (!v.info || !v.info.time || v.info.time <= last_info_time) return;
+    if (v.sits[f] && v.sits[f].ready == true) return;
+    if (!v.info || !v.info.time || v.info.time <= last_info_time) return;
     _ui().append("<ul id='info'><ul id='bg'/></ul>");
     if (v.info.done === false) { // 流局
       _ui("#info").append("<ul id='title'>流局</ul>");
@@ -238,7 +238,7 @@ $(function(){
       _ui("#info").append("<ul id='title'>胡牌</ul>");
       _ui("#info").append("<ul id='pai'></ul>");
       LIST.foreach(function(x){
-	_ui("#info #pai").append(_pai("s", 2, x));
+	_ui("#info #pai").append(_mahjong("S", 2, x));
       }, v.info.hule);
       _ui("#info").append("<ul id='cmd'></ul>");
       if(f){
@@ -283,7 +283,7 @@ $(function(){
     // desk
     _ui().append("<ul id='desk'></ul>");
     LIST.foreach(function(x){
-      _ui("#desk").append(_pai("s", 2, x));
+      _ui("#desk").append(_mahjong("S", 2, x));
     }, v.game.desk);
 
     // 4 side
@@ -293,24 +293,24 @@ $(function(){
       _ui("#side").append("<ul id='"+xf+"'></ul>");
       // show
       LIST.foreach(function(y){
-	_ui("#side #"+xf).append(_pai(xf, 2, y, "o"));
+	_ui("#side #"+xf).append(_mahjong(xf, 2, y, "o"));
       }, v.game[x].show);
       _ui("#side #"+xf).append(_spacer());
       // hide
       LIST.foreach(function(y){
-	_ui("#side #"+xf).append(_pai(xf, 1, y, "h"));
+	_ui("#side #"+xf).append(_mahjong(xf, 1, y, "h"));
       }, v.game[x].hide);
       _ui("#side #"+xf).append(_spacer());
       // hand
       LIST.foreach(function(y){
-	if(xf == "s" && f == v.game.turn && v.game.zhua){ // 到我抓牌，手牌可弃
-	  _ui("#side #"+xf).append(_pai(xf, 1, y, "h active cmd"));
+	if(xf == "S" && f == v.game.turn && v.game.zhua){ // 到我抓牌，手牌可弃
+	  _ui("#side #"+xf).append(_mahjong(xf, 1, y, "h active cmd"));
 	  _ui("#side #"+xf+" li:last").click(
 	    function(){ _ui("#cmds").empty(); _pai("drop", y, false); } );
 	}else{ // 非抓牌 或 未轮到我做决定，手牌不可弃，仅显示
 	  // 我不在游戏中，南面的手牌显示为未开
 	  var st = (f == undefined && xf == "s") ? 0 : 1;
-	  _ui("#side #"+xf).append(_pai(xf, st, y, "h"));
+	  _ui("#side #"+xf).append(_mahjong(xf, st, y, "h"));
 	}
       }, v.game[x].hand);
       _ui("#side #"+xf).append(_spacer());
@@ -324,11 +324,11 @@ $(function(){
     _ui().append("<ul id='cmds'></ul>");
     if (f != undefined && f == v.game.turn){
       if(v.game.zhua){
-	_ui("#cmds").append(_pai("s", 1, v.game.card, "active cmd", "l"));
+	_ui("#cmds").append(_mahjong("S", 1, v.game.card, "active cmd", "l"));
 	_ui("#cmds li:last").click(
 	  function(){ _ui("#cmds").empty(); _pai("drop", v.game.card); } );
       }else{
-	_ui("#cmds").append(_pai("s", 2, v.game.card, "active cmd", "m"));
+	_ui("#cmds").append(_mahjong("S", 2, v.game.card, "active cmd", "l"));
 	_ui("#cmds li:last").click(
 	  function(){ _ui("#cmds").empty(); _pai("hold"); } );
       }
@@ -346,13 +346,13 @@ $(function(){
 	      }
 	    ).mouseover(
 	      function(){
-		_ui("#side #s #mj-"+y[0]+":first").css("margin-top", "-5px");
-		_ui("#side #s #mj-"+y[1]+":first").css("margin-top", "-5px");
+		_ui("#side #S #mj-"+y[0]+".h:first").css("margin-top", "-5px");
+		_ui("#side #S #mj-"+y[1]+".h:first").css("margin-top", "-5px");
 	      }
 	    ).mouseout(
 	      function(){
-		_ui("#side #s #mj-"+y[0]+":first").css("margin-top", "");
-		_ui("#side #s #mj-"+y[1]+":first").css("margin-top", "");
+		_ui("#side #S #mj-"+y[0]+".h:first").css("margin-top", "");
+		_ui("#side #S #mj-"+y[1]+".h:first").css("margin-top", "");
 	      }
 	    );
 	  }, x.option);
@@ -445,13 +445,12 @@ $(function(){
     play: false
   };
 
-  _yield(function(){ refresh('ue', view); }, 500);
-/*
+  // _yield(function(){ refresh('ue', view); }, 500);
   _yield(function(){ _enter(); }, 100);
   _yield(function(){ _refresh(); }, 300);
   // DEBUG
   _yield(function(){ _cast("enter_debug")(); }, 500);
-*/
+
   /*
   // bind test ui callback
   $("#echo").click(function(){

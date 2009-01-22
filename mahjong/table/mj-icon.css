@@ -2,35 +2,35 @@
 mahjong icons
 *****************************************************************************/
 
-.mj-i-n {
+.mj-i-N {
     width:16px; height:16px;
     background:url(mj-icon.gif) no-repeat -126px -16px;
 }
-.mj-i-n.on {
+.mj-i-N.on {
     width:16px; height:16px;
     background:url(mj-icon.gif) no-repeat -126px -48px;
 }
-.mj-i-w {
+.mj-i-W {
     width:16px; height:16px;
     background:url(mj-icon.gif) no-repeat -110px -16px;
 }
-.mj-i-w.on {
+.mj-i-W.on {
     width:16px; height:16px; 
     background:url(mj-icon.gif) no-repeat -110px -48px;
 }
-.mj-i-e {
+.mj-i-E {
     width:16px; height:16px; 
     background:url(mj-icon.gif) no-repeat -110px -0px;
 }
-.mj-i-e.on {
+.mj-i-E.on {
     width:16px; height:16px; 
     background:url(mj-icon.gif) no-repeat -110px -32px;
 }
-.mj-i-s {
+.mj-i-S {
     width:16px; height:16px; 
     background:url(mj-icon.gif) no-repeat -126px -0px;
 }
-.mj-i-s.on {
+.mj-i-S.on {
     width:16px; height:16px; 
     background:url(mj-icon.gif) no-repeat -126px -32px;
 }
@@ -68,11 +68,11 @@ li.mj-i-shun:hover {
     width:22px; height:22px; 
     background:url(mj-icon.gif) no-repeat -44px -44px;
 }
-.mj-i-hu {
+.mj-i-hule {
     width:22px; height:22px; 
     background:url(mj-icon.gif) no-repeat -66px -0px;
 }
-li.mj-i-hu:hover {
+li.mj-i-hule:hover {
     width:22px; height:22px; 
     background:url(mj-icon.gif) no-repeat -66px -22px;
 }

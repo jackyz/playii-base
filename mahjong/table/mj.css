@@ -23,51 +23,59 @@ screen size: 480px * 320px
 
 /**** face ***/
 #game #face li {position:absolute;}
-#game #face #n {left:394px; top:90px;}
-#game #face #w {left:178px; top:224px;}
-#game #face #s {left:394px; top:360px;}
-#game #face #e {left:590px; top:224px;}
+#game #face #N {left:394px; top:90px;}
+#game #face #W {left:178px; top:224px;}
+#game #face #S {left:394px; top:360px;}
+#game #face #E {left:590px; top:224px;}
+#game #face li.cmd {
+	width:32px;
+	height:32px;
+	background:#eee;
+	/* border:1px #aaa outset; */
+	cursor:pointer;
+}
+
 
 /**** icon ****/
 #game #icon li {position:absolute;}
-#game #icon #n {left:378px; top:90px;}
-#game #icon #w {left:178px; top:256px;}
-#game #icon #s {left:426px; top:376px;}
-#game #icon #e {left:606px; top:208px;}
+#game #icon #N {left:378px; top:90px;}
+#game #icon #W {left:178px; top:256px;}
+#game #icon #S {left:426px; top:376px;}
+#game #icon #E {left:606px; top:208px;}
 
-#game #icon #hn {left:378px; top:106px;}
-#game #icon #hw {left:194px; top:256px;}
-#game #icon #hs {left:426px; top:360px;}
-#game #icon #he {left:590px; top:224px;}
+#game #icon #hN {left:378px; top:106px;}
+#game #icon #hW {left:194px; top:256px;}
+#game #icon #hS {left:426px; top:360px;}
+#game #icon #hE {left:590px; top:208px;}
 
 
 /**** side ***/
-#game #side #n { /* w:18*22 h:1*33 */
+#game #side #N { /* w:18*22 h:1*33 */
 	width:396px; height:33px;
 	left:202px; top:20px;
 }
-#game #side #n li { float:right; }
+#game #side #N li { float:right; }
 
-#game #side #w { /* w:1*29 h:18*(27-7) */
+#game #side #W { /* w:1*29 h:18*(27-7) */
 	width:29px; height:396px;
 	left:20px; top:60px;
 }
-#game #side #w li { float:none; margin-top:-7px; }
-#game #side #w li.h { margin-top:-18px; }
+#game #side #W li { float:none; margin-top:-7px; }
+#game #side #W li.h { margin-top:-18px; }
 
-#game #side #s { /* w:18*23 h:1*33 */
+#game #side #S { /* w:18*23 h:1*33 */
 	width:396px; height:33px;
 	left:202px; top:427px;
 }
-#game #side #s li { float:left; }
-#game #side #s li.active:hover { margin-top:-5px; }
+#game #side #S li { float:left; }
+#game #side #S li.active:hover { margin-top:-5px; }
 
-#game #side #e { /* w:1*29 h:18*(27-7) */
+#game #side #E { /* w:1*29 h:18*(27-7) */
 	width:29px; height:396px;
 	left:751px; top:60px;
 }
-#game #side #e li { float:none; margin-top:-7px; }
-#game #side #e li.h { margin-top:-18px;	margin-left:16px; }
+#game #side #E li { float:none; margin-top:-7px; }
+#game #side #E li.h { margin-top:-18px;	margin-left:16px; }
 
 /**** cmds ***/
 #game #cmds {

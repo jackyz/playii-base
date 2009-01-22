@@ -43,7 +43,8 @@ $(function(){
       $("#auth form").unbind();
       // $("#auth").dialog("close");
       $("#auth").dialog("destroy");
-      ui.load("#root", "/base/main.html");
+      // ui.load("#root", "/base/main.html");
+      ui.load("#root", _scene() ? _scene() : "/base/list.html" );
     },
     go_identify:function(){
       $("#auth form input:submit").removeAttr("disabled");
