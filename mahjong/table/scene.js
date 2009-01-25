@@ -23,6 +23,8 @@
      this.parent = parent,
      this.self = self,
      this.args = args,
+     // 上次 idle 的时间
+     this.last = now(),
      // 用户列表，所有在此房间的用户数据
      // {id:{id:id, nick:nick, data:data}, ...}
      // id: 玩家，nick: 昵称，data: 玩家-游戏数据
@@ -50,12 +52,21 @@
    // ** 系统事件，自动调用
    // idle() : 系统超时事件处理函数，
    function idle(){
-     var t = now();
-     if (this.play && (t - this.game.time > M)) { // 设置离线
-       this.game.time = -1;
-       do_call.call(this);
+     function empty(dict){
+       for (var i in dict) return false;
+       return true;
      }
-     // else if (t - this.start_time > M) end_up();
+     var n = now();
+     var t = n - this.last;
+     this.last = n;
+     if (this.play){ // 游戏中
+       if (n - this.game.time > M) { // 命令超时
+	 this.game.time = -1; // 清除超时标记
+	 do_call.call(this); // 自动叫牌
+       }
+     } else { // 非游戏
+       if (empty(this.list)) endup(); // 无人，自动退出
+     }
    }
 
    // ** 系统事件，所有人可用
