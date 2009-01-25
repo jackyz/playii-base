@@ -1,3 +1,42 @@
 #hall {
-    color: gold;
+    width:800px; height:480px;
+}
+
+#hall ul {
+    position:absolute;
+    display:block;
+    list-style-type:none;
+}
+
+#hall ul#players {
+    width: 320px; height: 440px;
+    left: 460px; top: 20px;
+    background: #eee;
+    border:1px #aaa solid;
+}
+
+#hall ul#users {
+    width: 320px; height: 440px;
+    left: 20px; top: 20px;
+    background: #eee;
+    border:1px #aaa solid;
+}
+
+#hall div#cmd {
+    position:absolute;
+    width: 80px; height: 40px;
+    left: 360px; top: 220px;
+    background:#eee;
+    border:1px #aaa solid;
+    cursor:pointer;
+    text-align:center;
+    line-height:40px;
+}
+#hall div#cmd:hover {
+    border:1px #aaa outset;
+}
+
+#hall li.self {
+    color:red;
+    background: #333;
 }

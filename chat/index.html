@@ -1,0 +1,25 @@
+<style type="text/css">
+@import url("/chat/chat.css");
+</style>
+
+<div id="chat">
+
+  <div id="words">words list here... <br/></div>
+
+  <div id="users">users list here... </div>
+
+  <div id="tool">
+    <span id="who_nick"></span>
+    <input id="what" type="text"/>
+    <!-- input id="rename" type="button" value="rename" -->
+    <!-- input id="send" type="button" value="send" -->
+    <input type="button" id="refresh" value="refresh"/>
+    <input type="button" id="clean" value="clean"/>
+    <input type="button" value="echo" onclick="con.cast('/chat')('echo')((new Date()).getTime()); return false;"/>
+    <input type="button" value="flood" onclick="(function(){for(var i=0; i<10; i++){ con.cast('/chat')('say')('test '+i+' !'); }})(); return false;"/>
+  </div>
+
+</div>
+
+<script language="javascript" src="/chat/chat.js"></script>
+

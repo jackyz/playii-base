@@ -1,28 +1,3 @@
-<link rel="stylesheet" type="text/css" href="/side/chat.css"/>
-
-<div id="chat">
-
-<div id="words">
-  words list here... <br/>
-</div>
-<div id="users">
-  users list here... 
-</div>
-<div id="tool">
-  <input type="button" id="refresh" value="refresh"/>
-  <input type="button" id="clean" value="clean"/>
-  <input type="button" value="echo" onclick="con.cast('/side')('echo')((new Date()).getTime()); return false;"/>
-  <input type="button" value="flood" onclick="(function(){for(var i=0; i<10; i++){ con.cast('/side')('say')('test '+i+' !'); }})(); return false;"/>
-  <br/>
-  <input id="what" type="text"/>
-  <span id="who_nick"></span>
-  <!-- input id="rename" type="button" value="rename" -->
-  <!-- input id="send" type="button" value="send" -->
-</div>
-
-</div>
-
-<script language="javascript">
 $(function(){
 
   // **** model
@@ -31,7 +6,7 @@ $(function(){
   var current = 'any';
 
   // **** the current Scene
-  var _sn = "/side";
+  var _sn = _scene();
 
   function user_welcome(u, ul){
     _info("{Welcome},{your nickname are}:"+_span(u, ul[u])+",{you can click and rename yourself}.");
@@ -130,7 +105,7 @@ $(function(){
   // shortcut functions
   function _tran(s){ return ui.tran(_sn, s);  }
   function _escp(s){ return ui.escp(s);       }
-  function _ui(n){ return $('#side #chat'+(n?" "+n:"")); }
+  function _ui(n){ return $('#chat'+(n?" "+n:"")); }
 
   // _highlight(users);
   function _highlight(users) {
@@ -239,4 +214,3 @@ $(function(){
   _yield(function(){ _select('any') }, 500);
 
 });
-</script>

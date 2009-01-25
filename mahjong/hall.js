@@ -52,25 +52,25 @@ $(function(){
 
   function redraw(u, v){
     _ui().hide().empty();
-    _ui().append("<ul id='face'></ul>");
-    // self
-    if(u in v.ul){
-      _ui("#face").append("<li>"+v.ul[u].nick+"</li>");
-      if(LIST.member(u, v.pl)){
-	_ui("#face li:last").css("color", "red");
-	_ui("#face li:last").click( function(){ _unready(); } );
-      }else{
-	_ui("#face li:last").css("color", "blue");
-	_ui("#face li:last").click( function(){ _ready(); } );
-      }
+    _ui().append("<ul id='players'>ready</ul>");
+    _ui().append("<ul id='users'>users</ul>");
+    _ui().append("<div id='cmd'></div>");
+    if(LIST.member(u, v.pl)){
+      _ui("#players").append("<li class='self'>"+v.ul[u].nick+"</li>");
+      _ui("#cmd").text("<<<");
+      _ui("#cmd").click( function(){ _unready(); } );
+    }else{
+      _ui("#users").append("<li class='self'>"+v.ul[u].nick+"</li>");
+      _ui("#cmd").text(">>>");
+      _ui("#cmd").click( function(){ _ready(); } );
     }
-    // ul & pl
     for(var x in v.ul){
       if(x == u) continue;
-      _ui("#face").append("<li>"+v.ul[x].nick+"</li>");
-      if(LIST.member(x, v.pl)){
-	_ui("#face li:last").css("color", "red");
-      }
+      _ui("#users").append("<li>"+v.ul[x].nick+"</li>");
+    }
+    for(var y in v.pl){
+      if(v.pl[y] == u) continue;
+      _ui("#players").append("<li>"+v.ul[v.pl[y]].nick+"</li>");
     }
     _ui().show();
   }

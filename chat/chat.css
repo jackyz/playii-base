@@ -1,0 +1,30 @@
+#chat {
+    width:800px; height:480px;
+}
+
+#chat div {
+    position:absolute; 
+}
+
+#chat #words {
+    overflow:auto;
+    width:598px; height:450px;
+    left:0px; top:0px;
+    border-right:2px solid #DDD;
+}
+#chat #users {
+    overflow:auto;
+    width:200px; height:450px;
+    left:600px; top:0px;
+}
+#chat #tool {
+    background:#CCC;
+    width:800px; height:30px;
+    left:0px; top:450px;
+}
+#chat #what {
+    width:320px;
+}
+#chat li.user {
+    
+}

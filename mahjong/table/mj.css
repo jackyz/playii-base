@@ -4,21 +4,26 @@ screen size: 480px * 320px
 
 /**** canvas ***/
 #game {
-	position:absolute; top:65px; left:0px;
-	width:800px; height:480px;
-	background:#3a6ea5;
+    width:800px; height:480px;
+    background:#3a6ea5;
+}
+/**** common list ***/
+#game ul {
+    position:absolute;
+    display:block;
+    list-style-type:none;
 }
 
 /**** desk ***/
 #game #desk { /* w:16*22 h:8*(33-7) */
-	width:352px; height:208px;
-	left:224px; top:136px; 
-	background:#3a7eb5;/*#3aa6a6;*/
-	/* border:1px #777 inset; */
+    width:352px; height:208px;
+    left:224px; top:136px; 
+    background:#3a7eb5;/*#3aa6a6;*/
+    /* border:1px #777 inset; */
 }
 #game #desk li {
-	float:left;
-	margin-top:-7px;
+    float:left;
+    margin-top:-7px;
 }
 
 /**** face ***/
@@ -28,11 +33,11 @@ screen size: 480px * 320px
 #game #face #S {left:394px; top:360px;}
 #game #face #E {left:590px; top:224px;}
 #game #face li.cmd {
-	width:32px;
-	height:32px;
-	background:#eee;
-	/* border:1px #aaa outset; */
-	cursor:pointer;
+    width:32px;
+    height:32px;
+    background:#eee;
+    /* border:1px #aaa outset; */
+    cursor:pointer;
 }
 
 
@@ -51,83 +56,90 @@ screen size: 480px * 320px
 
 /**** side ***/
 #game #side #N { /* w:18*22 h:1*33 */
-	width:396px; height:33px;
-	left:202px; top:20px;
+    width:396px; height:33px;
+    left:202px; top:20px;
 }
 #game #side #N li { float:right; }
 
 #game #side #W { /* w:1*29 h:18*(27-7) */
-	width:29px; height:396px;
-	left:20px; top:60px;
+    width:29px; height:396px;
+    left:20px; top:60px;
 }
 #game #side #W li { float:none; margin-top:-7px; }
 #game #side #W li.h { margin-top:-18px; }
 
 #game #side #S { /* w:18*23 h:1*33 */
-	width:396px; height:33px;
-	left:202px; top:427px;
+    width:396px; height:33px;
+    left:202px; top:427px;
 }
 #game #side #S li { float:left; }
 #game #side #S li.active:hover { margin-top:-5px; }
 
 #game #side #E { /* w:1*29 h:18*(27-7) */
-	width:29px; height:396px;
-	left:751px; top:60px;
+    width:29px; height:396px;
+    left:751px; top:60px;
 }
 #game #side #E li { float:none; margin-top:-7px; }
 #game #side #E li.h { margin-top:-18px;	margin-left:16px; }
 
 /**** cmds ***/
 #game #cmds {
-	width:250px; /* height:45px; */
-	left:458px; top:360px;
+    width:250px; /* height:45px; */
+    left:458px; top:360px;
 }
 #game #cmds li {
-	float:left;
-	margin-left:1px;
+    float:left;
+    margin-left:1px;
+}
+#game #cmds #timer {
+    margin-bottom:6px;
+}
+#game #cmds #timer #bg {
+    width:240px;
+    background:#DDD;
+    border:1px #aaa inset;
+}
+#game #cmds #timer #bg #fg {
+    height:6px;
+    background:green;
+    border:1px #000 outset;
 }
 
 /**** info ***/
 #game #info #bg {
-      width:800px; height:480px;
-      left:0px; top:0px;
-      background:#000;
-      filter:alpha(opacity=80); /*IE*/
-      opacity:0.8; /*Mozilla*/ 
+    width:800px; height:480px;
+    left:0px; top:0px;
+    background:#000;
+    filter:alpha(opacity=80); /*IE*/
+    opacity:0.8; /*Mozilla*/ 
 }
 #game #info #title {
-      color: red;
-      font-size: 150%;
-      width:414px; height:33px;
-      left:240px; top:100px;
+    color: red;
+    font-size: 150%;
+    width:414px; height:33px;
+    left:240px; top:100px;
 }
 #game #info #pai {
-      width:414px; height:33px;
-      left:240px; top:160px;
+    width:414px; height:33px;
+    left:240px; top:160px;
 }
 #game #info #pai li{
-      float:left;
+    float:left;
 }
 #game #info #cmd{
-      width:400px; height:40px;
-      left:400px; top:440px;
+    width:400px; height:40px;
+    left:400px; top:440px;
 }
 #game #info #cmd li{
-      margin-right:10px;
-      float:right;
-      background:#888;
-      border:1px #aaa outset;
-      padding:2px 8px;
-      cursor:pointer;
+    margin-right:10px;
+    float:right;
+    background:#888;
+    border:1px #aaa outset;
+    padding:2px 8px;
+    cursor:pointer;
 }
 
-/**** common list ***/
-#game ul {
-	position:absolute;
-	display:block;
-	list-style-type:none;
-}
 #game ul li.active:hover {
-	margin-top:-5px;
+    margin-top:-5px;
 }
 
