@@ -6,7 +6,7 @@ mahjong icons
     width:16px; height:16px;
     background:url(mj-icon.gif) no-repeat -126px -16px;
 }
-.mj-i-N.on {
+.mj-i-N-on {
     width:16px; height:16px;
     background:url(mj-icon.gif) no-repeat -126px -48px;
 }
@@ -14,7 +14,7 @@ mahjong icons
     width:16px; height:16px;
     background:url(mj-icon.gif) no-repeat -110px -16px;
 }
-.mj-i-W.on {
+.mj-i-W-on {
     width:16px; height:16px; 
     background:url(mj-icon.gif) no-repeat -110px -48px;
 }
@@ -22,7 +22,7 @@ mahjong icons
     width:16px; height:16px; 
     background:url(mj-icon.gif) no-repeat -110px -0px;
 }
-.mj-i-E.on {
+.mj-i-E-on {
     width:16px; height:16px; 
     background:url(mj-icon.gif) no-repeat -110px -32px;
 }
@@ -30,7 +30,7 @@ mahjong icons
     width:16px; height:16px; 
     background:url(mj-icon.gif) no-repeat -126px -0px;
 }
-.mj-i-S.on {
+.mj-i-S-on {
     width:16px; height:16px; 
     background:url(mj-icon.gif) no-repeat -126px -32px;
 }

@@ -1,6 +1,39 @@
 // playii js
 // the common functions
 
+// **** wrap the toSource function
+function _src(obj){
+  return (obj.toSource) ? obj.toSource() : JSON.stringify(obj);
+}
+
+// **** mock console if not avaliable
+if (window.console === undefined) window.console = (function(){
+  function log(lvl, str){
+    $("#log").append("["+lvl+"]"+str+"<br>");
+    // auto scroll to bottom
+    var t = $("#log").get(0).scrollHeight;
+    var v = $("#log").get(0).offsetHeight;
+    $("#log").get(0).scrollTop = t - v;
+  }
+  $(document).keydown(function(e){
+    // alert(e.keyCode);
+    if(e.keyCode == 119){ // bind F8 key as log mode
+      $("#log").toggle();
+      return false;
+    }
+  });
+  return {
+    debug: function(s){ log("DEBUG", s); },
+    info:  function(s){ log("INFO ", s); },
+    error: function(s){ log("ERROR", s); },
+    warn:  function(s){ log("WARN ", s); },
+    fatal: function(s){ log("FATAL", s); }
+  };
+})();
+
+function _log(str){ window.console.debug(str); }
+function _err(str){ _yield( function(){ alert(str); } ); }
+
 function _yield(func, time) { window.setTimeout(func, time ? time : 50); }
 
 function _cookie(name, val){
@@ -16,34 +49,6 @@ function _cookie(name, val){
     return v;
   }
 }
-
-// **** mock console if not avaliable
-if (window.console === undefined) console = (function(){
-  function log(lvl, str){
-    $("#log").append("["+lvl+"]"+str+"<br>");
-    // auto scroll to bottom
-    var t = $("#log").get(0).scrollHeight;
-    var v = $("#log").get(0).offsetHeight;
-    $("#log").get(0).scrollTop = t - v;
-  }
-  $(document).keypress(function(k){
-    // alert(k.keyCode);
-    if(k.keyCode == 119){ // bind F8 key as log mode
-      $("#log").toggle();
-      return false;
-    }
-  });
-  return {
-    debug: function(s){ log("DEBUG", s); },
-    info:  function(s){ log("INFO ", s); },
-    error: function(s){ log("ERROR", s); },
-    warn:  function(s){ log("WARN ", s); },
-    fatal: function(s){ log("FATAL", s); }
-  };
-})();
-
-function _log(str){ console.debug(str); }
-function _err(str){ _yield( function(){ alert(str); } ); }
 
 // ***** playii special
 
@@ -122,13 +127,13 @@ if(!this.con) con = (function(){
           // _log("loop:<-undefined");
 	  keep = false; // !!!! broken connect if recv failure
         } else {
-          if (d.length > 0) _log("recv:<-"+d.toSource());
+          if (d.length > 0) _log("recv:<-"+_src(d));
           for (var i = 0; i < d.length; i++) {
             var x = d[i];
             if (x !== undefined && x.length == 3) {
               _push({s:x[0], f:x[1], a:x[2]});
             } else {
-              _log("recv:<-err:bad format "+x.toSource());
+              _log("recv:<-err:bad format "+_src(x));
             }
           }
         }
@@ -164,10 +169,10 @@ if(!this.con) con = (function(){
         _log("exec: err: "+c.f+" not found");
       } else {
         objs[c.s][c.f].apply(objs[c.s], c.a);
-        _log("exec: success."+c.toSource());
+        _log("exec: success."+_src(c));
       }
     } catch(e) {
-      _log("exec: err: "+e+":"+c.toSource());
+      _log("exec: err: "+e+":"+_src(c));
     } finally {
       done = true;
     }
@@ -211,7 +216,7 @@ if(!this.con) con = (function(){
     }
     var url = "/_send";
     req["t"] = token; // inject the token
-    _log("send:->"+req.toSource());
+    _log("send:->"+_src(req));
     $.ajax({url:url, type:"POST", dataType:"json", data: req,
       error: function(xhr, s, e){
         if(e) _err("send:<-err:"+xhr.responseText);

@@ -381,7 +381,7 @@ $(function(){
   // fang : 显式方位名称，news
   // state : 是否高亮显式，bool
   function _fang(id, fang, state){
-    return "<li id='"+id+"' class='mj-i-"+fang+(state ? " on" : "")+"'/>";
+    return "<li id='"+id+"' class='mj-i-"+fang+(state ? "-on" : "")+"'/>";
   }
 
   // 用户头像 // TODO 增加对头像的操作
@@ -416,7 +416,8 @@ $(function(){
   _yield(function(){ _cast('refresh')(); }, 300);
   _yield(function(){ _cast("enter_debug")(); }, 500); // enable debug mode
 
-  /*
+/*
+
   // **** test
 
   var view = {
@@ -504,9 +505,9 @@ $(function(){
   // invoke the client debug func
   _yield(function(){ refresh('ue', view); }, 500);
 
-   */
+*/
+/*
 
-  /*
   // bind test ui callback
   $("#echo").click(function(){
     con.cast(_sn)("echo")((new Date()).getTime());
@@ -546,6 +547,7 @@ $(function(){
   $("#hold").click(function(){
     con.cast(_sn)("pai")("hold");
   });
-   */
+
+*/
 
 });

@@ -1,22 +1,19 @@
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
-<html>
+<html xmlns="http://www.w3.org/1999/xhtml">
 
 <head>
 <title>Playii</title>
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
 <link rel="shortcut icon" href="favicon.ico" />
+<link rel="stylesheet" type="text/css" href="/base/playii.css" />
+<!--[if lt IE 8]>
+<script type="text/javascript" src="/base/json.js"></script>
+<![endif]-->
 <script type="text/javascript" src="/base/jquery.js"></script>
 <script type="text/javascript" src="/base/playii.js"></script>
-<!-- script type="text/javascript" src="/lib/json.js"></script -->
-<!-- script type="text/javascript" src="/base/jquery.ui.js"></script -->
 </head>
 
 <body>
-
-<style type="text/css">
-/* @import url("/base/jquery.ui.css"); */
-@import url("/base/playii.css");
-</style>
 
   <div id="head">
     <div class="site">
@@ -56,9 +53,9 @@
   </div>
 
 <script language="javascript">
-// **** the identify logic
 $(function(){
 
+  // **** the identify logic
   var callback = {
     success:function(){
       // ui.load("#root", "/base/main.html");

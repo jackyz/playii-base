@@ -65,12 +65,13 @@ $(function(){
       _ui("#cmd").click( function(){ _ready(); } );
     }
     for(var x in v.ul){
-      if(x == u) continue;
+      if(x == u || LIST.member(x, v.pl)) continue;
       _ui("#users").append("<li>"+v.ul[x].nick+"</li>");
     }
     for(var y in v.pl){
-      if(v.pl[y] == u) continue;
-      _ui("#players").append("<li>"+v.ul[v.pl[y]].nick+"</li>");
+      var w = v.pl[y];
+      if(w == u || v.ul[w] == undefined) continue;
+      _ui("#players").append("<li>"+v.ul[w].nick+"</li>");
     }
     _ui().show();
   }

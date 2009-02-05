@@ -39,7 +39,7 @@
     <span id="error"> </span>
     <br/>
     <br/>
-    <form>
+    <form action="javascript:void();">
       <!-- id:<input type="text" name="id" value="12345"/><br/> -->
       <input type="text" id="nick" name="nick" value="nickname" size="8" />
       <input type="hidden" name="id" value="guest"/>
@@ -53,19 +53,19 @@ $(function(){
   // identify logic
   var callback = {
     success:function(){
-      $("#auth form").unbind();
-      ui.load("#root", _scene() ? _scene() : "/base/list.html" );
+      $("form").unbind();
+      ui.load("#root", (_scene() ? _scene() : "/base/list.html") );
     },
     go_identify:function(){
-      $("#auth form input:submit").removeAttr("disabled");
+      $("form input:submit").removeAttr("disabled");
     },
     failure:function(error){
-      $("#auth form input:submit").removeAttr("disabled");
+      $("form input:submit").removeAttr("disabled");
       $("#auth #error").html("error:<hr/>"+error+"<hr/>");
-    },
+    }
   };
-  $("#auth form").bind("submit", function(event){
-    $("input:submit", this).attr("disabled", true);
+  $("form").submit(function(event){
+    $("form input:submit", this).attr("disabled", true);
     con.open($("input", this).serialize(), callback);
     return false;
   });

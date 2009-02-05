@@ -22,7 +22,9 @@
 <script language="javascript">
 $(function(){
   $("#list a").click(function(event){
-    _goto($(this).attr("href")); return false;
+    var s = $(this).attr("href");
+    s = s.substr(s.indexOf("#"));
+    _goto(s); return false;
   });
 });
 </script>
