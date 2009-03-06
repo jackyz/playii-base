@@ -1,8 +1,113 @@
 (function(){
 
+// ***************** UTILITY :: COMMON
+
+   // now() : 获取当前时间戳
+   function now(){
+     return (new Date()).getTime();
+   }
+
+   // rand(max) : 生成不大于 max 的随机数
+   function rand(max) {
+     return Math.floor(Math.random() * max);
+   }
+
+// ***************** UTILITY :: LIST
+
+   // ** func(e) return true | false
+   function all(func, array){
+     for (var i=0; i<array.length; i++){
+       if (!func(array[i])) return false;
+     }
+     return true;
+   }
+
+   // ** func(e) return true | false
+   function any(func, array){
+     for (var i=0; i<array.length; i++){
+       if (func(array[i])) return true;
+     }
+     return false;
+   }
+
+   function clone(array){
+     var r = [];
+     for (var i=0; i<array.length; i++){
+       r.push(array[i]);
+     }
+     return r;
+   }
+
+   function count(e, array){
+     var c = 0;
+     for (var i=0; i<array.length; i++){
+       if (e == array[i]) c++;
+     }
+     return c;
+   }
+
+   // ** func(e) return true | false
+   function first(func, array){
+     for (var i=0; i<array.length; i++){
+       if (func(array[i])) return array[i];
+     }
+     return undefined;
+   }
+
+   // ** func(e) return void
+   function foreach(func, array){
+     for (var i=0; i<array.length; i++){
+       func(array[i]);
+     }
+   }
+
+   function indexof(e, array){
+     for (var i=0; i<array.length; i++){
+       if (array[i] == e) return i;
+     }
+     return -1;
+   }
+
+   // ** func(e) return true | false
+   function last(func, array){
+     for (var i=array.length - 1; i>0; i--){
+       if (func(array[i])) return array[i];
+     }
+     return undefined;
+   }
+
+   // ** func(e) return new element
+   function map(func, array){
+     var r = [];
+     for (var i=0; i<array.length; i++){
+       r.push(func(array[i]));
+     }
+     return r;
+   }
+
+   function member(e, array){
+     for (var i=0; i<array.length; i++){
+       if (array[i] == e) return true;
+     }
+     return false;
+   }
+
+   function remove(e, array){
+     var r = [], m = false;
+     for (var i=0; i<array.length; i++){
+       if (!m && array[i] == e) m = true;
+       else r.push(array[i]);
+     }
+     return r;
+   }
+
 // ***************** CONSTS
 
    var F = ["E", "S", "W", "N"];     // 方位：东南西北
+
+   var M = 15000;                    // 超时时间 15 秒 // 最小单位是 10 秒
+
+   var S = function(a,b){return a-b;};
 
    var Z = [                         // 牌面
      1,2,3,4,5,6,7,8,9,              // 万
@@ -11,48 +116,61 @@
      31,32,33,34,35,36,37            // 字
    ];
 
-   var M = 15000;                    // 超时时间 15 秒 // 最小单位是 10 秒
-
-   var NF = function(a,b){return a-b;};
+   // next(f) : 获取某个方位的顺位
+   function next(f){
+     switch(f){
+       case "E": return "S";
+       case "S": return "W";
+       case "W": return "N";
+       case "N": return "E";
+       default: return undefined;
+     }
+   }
 
 // ***************** LAYER 1 :: SCENE INTERFACE
 
    // ** 系统事件，自动调用
    // create(args) : 构造函数，定义数据结构，此处的 this 即为实例(数据)
-   function create(parent, self, args) {
+   function create(parent, self, sits) {
+     debug("table_create:"+self+":"+sits.toSource());
+     // 父进程，需要定时 report 状态给父进程
      this.parent = parent,
+     // 自己的url，标明自身
      this.self = self,
-     this.args = args,
-     // 上次 idle 的时间
-     this.last = now(),
+     // 座位状态
+     // id: 玩家，ready: 就绪
+     // 游戏中ready为false意味着用户离线
+     // 游戏结束，若有用户不ready，则结束游戏，回到parent
+     // 未游戏中ready为false意味着用户还未准备开始游戏(比如，在看结果)
+     this.sits = {
+       E:{ id:sits["E"], ready:true },// 东
+       S:{ id:sits["S"], ready:true },// 南
+       W:{ id:sits["W"], ready:true },// 西
+       N:{ id:sits["N"], ready:true } // 北
+     };
      // 用户列表，所有在此房间的用户数据
      // {id:{id:id, nick:nick, data:data}, ...}
      // id: 玩家，nick: 昵称，data: 玩家-游戏数据
      this.list = {};
-     // 座位状态
-     // id: 玩家，ready: 就绪
-     // 游戏中ready为false意味着用户离线
-     // 未游戏中ready为false意味着用户还未准备开始游戏(比如，在看结果)
-     this.sits = {
-       E:{ id:undefined, ready:false },// 东
-       S:{ id:undefined, ready:false },// 南
-       W:{ id:undefined, ready:false },// 西
-       N:{ id:undefined, ready:false } // 北
-     };
-     // 游戏中标志，true : 进行中
-     this.play = false;
+     // **** 非参数初始化
+     // 上次 idle 的时间
+     this.last = now(),
      // 消息，比如，胡牌结果
      this.info = undefined;
+     // 游戏中标志，true : 进行中
+     this.play = false;
      // 庄家，哪一方玩家坐庄
      this.host = undefined;
      // 游戏数据，开局时初始化
      this.game = {};
+     // 直接开局
+     do_open.call(this);
    }
 
    // ** 系统事件，自动调用
    // idle() : 系统超时事件处理函数，
    function idle(){
-     function empty(dict){
+     function is_empty(dict){
        for (var i in dict) return false;
        return true;
      }
@@ -65,7 +183,7 @@
 	 do_call.call(this); // 自动叫牌
        }
      } else { // 非游戏
-       if (empty(this.list)) endup(); // 无人，自动退出
+       // if (is_empty(this.list)) endup(); // 无人，自动退出
      }
    }
 
@@ -116,8 +234,8 @@
 
    // ** 游戏事件，场景内玩家可用
    // 对座位的可用操作
-   // sit(who, "sit_down", arg);  坐下
-   // sit(who, "stand_up");       起立
+   // // sit(who, "sit_down", arg);  坐下
+   // // sit(who, "stand_up");       起立
    // sit(who, "ready");          就绪
    function sit(who, cmd, arg){
      try {
@@ -127,10 +245,10 @@
 	 throw "{is playing}"; // 异常 游戏已开始
        // 执行命令
        switch(cmd){
-	 case "sit_down": // ** 就座
-  	   do_sit_down.call(this, who, arg); break;
-	 case "stand_up": // ** 离座
-  	   do_stand_up.call(this, who); break;
+	 //case "sit_down": // ** 就座
+  	 //  do_sit_down.call(this, who, arg); break;
+	 //case "stand_up": // ** 离座
+  	 //  do_stand_up.call(this, who); break;
 	 case "ready":    // ** 就绪
   	   do_ready.call(this, who); break;
 	 default:
@@ -204,28 +322,58 @@
      cast(who)("echo")(what, now());
    }
 
-   // **** 单元测试
-   function test() {
-     var tm = {};
-     void pass(tm);
-
-     assert( has_gang([1,1,1], 1));
-     assert( has_gang([1,1,1,2,3,5], 1));
-     assert(!has_gang([1,1,2,3,5], 1));
-     info("has_gang :: success "+ pass(tm) +"ms");
-
-     assert( has_peng([1,1], 1));
-     assert( has_peng([1,1,1], 1));
-     assert( has_peng([1,1,1,6,7], 1));
-     assert(!has_peng([1,2,3], 1));
-     info("has_peng :: success "+ pass(tm) +"ms");
-
-     assert( has_ting([1,2,2, 2,2,3, 21,21,21, 31,31,31, 37]) );
-     info("has_ting :: success "+ pass(tm) +"ms");
-   }
-
 // ***************** LAYER 2 :: ACTIONS
 
+   // get_sit(self, who) : 获取用户所在的座位
+   function get_sit(self, who){
+     return first(function(x){ return self.sits[x].id == who; }, F);
+   }
+
+   // get_view(self, sit) : 获取用户的可视数据
+   function get_view(self, sit){
+     // mask(obj) : 加码处理
+     function mask(obj){
+       return {
+	 show: obj.show,
+	 hide: map(function(x){ return 0; }, obj.hide),
+	 hand: map(function(x){ return 0; }, obj.hand),
+	 ting: obj.ting
+       };
+     }
+     // ****
+     return {
+       list: self.list,
+       sits: self.sits,
+       play: self.play,
+       info: self.info,
+       host: self.host,
+       game: self.play == true ? {
+	 desk: self.game.desk,
+	 trim: self.game.trim,
+	 E: "E" == sit ? self.game["E"] : mask(self.game["E"]),
+	 S: "S" == sit ? self.game["S"] : mask(self.game["S"]),
+	 W: "W" == sit ? self.game["W"] : mask(self.game["W"]),
+	 N: "N" == sit ? self.game["N"] : mask(self.game["N"]),
+	 turn: self.game.turn,
+	 last: self.game.last,
+	 zhua: self.game.turn == sit ? self.game.zhua : false,
+	 card: self.game.turn == sit ? self.game.card : 0,
+	 cmds: self.game.turn == sit ? self.game.cmds : []
+       } : {}
+     };
+   }
+
+   // broadcast() : 向玩家广播
+   function broadcast(){
+     for(var who in this.list) {
+       // 获取 who 对应的 sit
+       var sit = get_sit(this, who);
+       var view = get_view(this, sit);
+       cast(who)("refresh")(who, view); // 向用户发送
+     }
+   }
+
+/*
    // do_sit_down(who, sit) : 就座
    function do_sit_down(who, s){
      var sit = get_sit(this, who);
@@ -249,15 +397,20 @@
      //// cast(this.list)("sit")("stand_up", who, sit); // 广播
      broadcast.call(this); // mock
    }
+*/
 
    // do_ready(who) : 就绪
    function do_ready(who){
+     // all_ready(self)
+     function all_ready(self){
+       return all(function(x){ return self.sits[x].ready == true; }, F);
+     }
      var sit = get_sit(this, who);
      if (!sit)
        throw "{not sit yet}"; // 异常 尚未就座
      this.sits[sit].ready = true;  // 设置就绪
      //// cast(this.list)("sit")("ready", who, sit); // 广播
-     if(has_ready(this)) {
+     if(all_ready(this)) {
        do_open.call(this); // 若都已就绪，则开局
      }else{
        broadcast.call(this); // mock
@@ -274,7 +427,7 @@
      var p = [];
      p = p.concat(this.game[sit].show, this.game[sit].hide);
      p = p.concat(this.game[sit].hand, this.game.card);
-     p.sort(NF);
+     p.sort(S);
      this.info = {
        time : now(),
        done : true,
@@ -282,7 +435,9 @@
        side : sit
      };
      // 胡牌连庄，未胡轮庄
-     this.host = (sit == this.host) ? sit : next(this.host);
+     // this.host = (sit == this.host) ? sit : next(this.host);
+     // 轮庄，不做连庄处理
+     this.host = next(this.host);
      do_close.call(this); // 终局
    }
 
@@ -315,7 +470,7 @@
      this.game[sit].show.push(this.game.card);
      this.game[sit].show.push(this.game.card);
      // 设置 zhua 牌
-     this.game[sit].hand.sort(NF);
+     this.game[sit].hand.sort(S);
      this.game.card = this.game[sit].hand.pop();
      this.game.zhua = true;
      this.game.turn = sit;
@@ -328,7 +483,7 @@
    function do_shun(sit, p1, p2){
      // is_shun : 是否成顺
      function is_shun(p1, p2, card){
-       var a = []; a.push(card, p1, p2); a.sort(NF);
+       var a = []; a.push(card, p1, p2); a.sort(S);
        if (a[0]-0+1 == a[1] && a[1]-0+1 == a[2]) return true;
        return false;
      }
@@ -349,7 +504,7 @@
      this.game[sit].show.push(ps[1]);
      this.game[sit].show.push(ps[2]);
      // 设置 zhua 牌
-     this.game[sit].hand.sort(NF);
+     this.game[sit].hand.sort(S);
      this.game.card = this.game[sit].hand.pop();
      this.game.zhua = true;
      this.game.turn = sit;
@@ -380,7 +535,7 @@
        } else if (member(p, this.game[sit].hand)) { // 打手牌
 	 this.game[sit].hand = remove(p, this.game[sit].hand);
 	 this.game[sit].hand.push(this.game.card);
-	 this.game[sit].hand.sort(NF);
+	 this.game[sit].hand.sort(S);
        } else { // 既不是抓牌，也不是手牌
 	 throw "{drop failure}"; // 异常 必打手牌或抓牌
        }
@@ -425,7 +580,7 @@
      function fpai(b, c){ // b : buff, c : count
        var p = [];
        for (var i=0; i<c; i++) p.push(b.shift());
-       p.sort(NF); // 排序(不必要)
+       p.sort(S); // 排序(不必要)
        return p;
      }
      // ****
@@ -551,25 +706,21 @@
 
    // do_close() : 清盘
    function do_close(){
+     // reset_sits(self) : 重置座位
+     function reset_sits(self){
+       foreach(function(x){
+		 if (self.sits[x].ready == false){ // 如果座位离线
+		   self.sits[x] = {ready:false};  // 设为无人，清除了ID
+		 } else { // 如果座位在线
+		   self.sits[x].ready = false; // 设为待开始，没有清除ID
+		 }
+	       }, F);
+     }
      this.play = false; // 终局
      this.game = {}; // 清场
      reset_sits(this); // 重置座位
      broadcast.call(this); // mock
    }
-
-// ***************** LAYER 2 :: ACTIONS :: BROADCAST
-
-   // broadcast() : 向玩家广播
-   function broadcast(){
-     for(var who in this.list) {
-       // 获取 who 对应的 sit
-       var sit = get_sit(this, who);
-       var view = get_view(this, sit);
-       cast(who)("refresh")(who, view); // 向用户发送
-     }
-   }
-
-// ***************** LAYER 3 :: GAME LOGIC
 
    // has_hule(hand, card) : 是否胡了
    function has_hule(hand, card){
@@ -608,7 +759,7 @@
        return false; // 无法匹配，失败
      }
      // ****
-     var p = clone(hand); p.push(card); p.sort(NF);
+     var p = clone(hand); p.push(card); p.sort(S);
      return is_hu(p, false);
    }
 
@@ -627,171 +778,25 @@
      return any(function(e){ return has_hule(hand, e); }, Z);
    }
 
-   // has_ready(self)
-   function has_ready(self){
-     return all(function(x){ return self.sits[x].ready == true; }, F);
-   }
+// ***************** UNITTEST
 
-   // get_sit(self, who) : 获取用户所在的座位
-   function get_sit(self, who){
-     return first(function(x){ return self.sits[x].id == who; }, F);
-   }
+   function test() {
+     var tm = {};
+     void pass(tm);
 
-   // reset_sits(self) : 重置座位
-   function reset_sits(self){
-     foreach(function(x){
-	       if (self.sits[x].ready == false){ // 如果座位离线
-		 self.sits[x] = {ready:false};  // 设为无人
-	       } else { // 如果座位在线
-		 self.sits[x].ready = false; // 设为待开始
-	       }
-	     }, F);
-   }
+     assert( has_gang([1,1,1], 1));
+     assert( has_gang([1,1,1,2,3,5], 1));
+     assert(!has_gang([1,1,2,3,5], 1));
+     info("has_gang :: success "+ pass(tm) +"ms");
 
-   // get_view(self, sit) : 获取用户的可视数据
-   function get_view(self, sit){
-     // mask(obj) : 加码处理
-     function mask(obj){
-       return {
-	 show: obj.show,
-	 hide: map(function(x){ return 0; }, obj.hide),
-	 hand: map(function(x){ return 0; }, obj.hand),
-	 ting: obj.ting
-       };
-     }
-     // ****
-     return {
-       list: self.list,
-       sits: self.sits,
-       play: self.play,
-       info: self.info,
-       host: self.host,
-       game: self.play == true ? {
-	 desk: self.game.desk,
-	 trim: self.game.trim,
-	 E: "E" == sit ? self.game["E"] : mask(self.game["E"]),
-	 S: "S" == sit ? self.game["S"] : mask(self.game["S"]),
-	 W: "W" == sit ? self.game["W"] : mask(self.game["W"]),
-	 N: "N" == sit ? self.game["N"] : mask(self.game["N"]),
-	 turn: self.game.turn,
-	 last: self.game.last,
-	 zhua: self.game.turn == sit ? self.game.zhua : false,
-	 card: self.game.turn == sit ? self.game.card : 0,
-	 cmds: self.game.turn == sit ? self.game.cmds : []
-       } : {}
-     };
-   }
+     assert( has_peng([1,1], 1));
+     assert( has_peng([1,1,1], 1));
+     assert( has_peng([1,1,1,6,7], 1));
+     assert(!has_peng([1,2,3], 1));
+     info("has_peng :: success "+ pass(tm) +"ms");
 
-// ***************** LAYER 4 :: UTILITY
-
-   // now() : 获取当前时间戳
-   function now(){
-     return (new Date()).getTime();
-   }
-
-   // rand(max) : 生成不大于 max 的随机数
-   function rand(max) {
-     return Math.floor(Math.random() * max);
-   }
-
-   // next(fang) : 获取某个方位的顺位
-   function next(fang){
-     switch(fang){
-       case "E": return "S";
-       case "S": return "W";
-       case "W": return "N";
-       case "N": return "E";
-       default: return undefined;
-     }
-   }
-
-// ***************** LAYER 4 :: UTILITY :: LIST
-
-   // ** func(e) return true | false
-   function all(func, array){
-     for (var i=0; i<array.length; i++){
-       if (!func(array[i])) return false;
-     }
-     return true;
-   }
-
-   // ** func(e) return true | false
-   function any(func, array){
-     for (var i=0; i<array.length; i++){
-       if (func(array[i])) return true;
-     }
-     return false;
-   }
-
-   function clone(array){
-     var r = [];
-     for (var i=0; i<array.length; i++){
-       r.push(array[i]);
-     }
-     return r;
-   }
-
-   function count(e, array){
-     var c = 0;
-     for (var i=0; i<array.length; i++){
-       if (e == array[i]) c++;
-     }
-     return c;
-   }
-
-   // ** func(e) return true | false
-   function first(func, array){
-     for (var i=0; i<array.length; i++){
-       if (func(array[i])) return array[i];
-     }
-     return undefined;
-   }
-
-   // ** func(e) return void
-   function foreach(func, array){
-     for (var i=0; i<array.length; i++){
-       func(array[i]);
-     }
-   }
-
-   function indexof(e, array){
-     for (var i=0; i<array.length; i++){
-       if (array[i] == e) return i;
-     }
-     return -1;
-   }
-
-   // ** func(e) return true | false
-   function last(func, array){
-     for (var i=array.length - 1; i>0; i--){
-       if (func(array[i])) return array[i];
-     }
-     return undefined;
-   }
-
-   // ** func(e) return new element
-   function map(func, array){
-     var r = [];
-     for (var i=0; i<array.length; i++){
-       r.push(func(array[i]));
-     }
-     return r;
-   }
-
-   function member(e, array){
-     for (var i=0; i<array.length; i++){
-       if (array[i] == e) return true;
-     }
-     return false;
-   }
-
-   function remove(e, array){
-     var r = [], m = false;
-     for (var i=0; i<array.length; i++){
-       if (!m && array[i] == e) m = true;
-       else r.push(array[i]);
-     }
-     return r;
+     assert( has_ting([1,2,2, 2,2,3, 21,21,21, 31,31,31, 37]) );
+     info("has_ting :: success "+ pass(tm) +"ms");
    }
 
 // ***************** INTERFACE EXPORT

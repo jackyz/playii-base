@@ -1,5 +1,9 @@
 (function(){
 
+   // **** constants
+
+   var F = ["N", "W", "S", "E"]; // 常量，四个方位
+
    // **** utility
 
    var $L = {
@@ -36,20 +40,53 @@
      return ctx; // todo
    }
 
+   // where(ctx, who) : 获取who所在的room和sit
+   function where(ctx, who){
+     for(var r in ctx.rl)
+       for(var f in F)
+	 if(ctx.rl[r].sits[F[f]] && ctx.rl[r].sits[F[f]] == who)
+	   return {room:r, sit:F[f]};
+     return undefined;
+   }
+
    // broadcast(ctx) : 广播更新
    function broadcast(ctx){
      for(var u in ctx.ul) cast(u)("refresh")(u, view(ctx, u));
    }
 
-   // opentable : 新开一桌
-   function opentable(ctx){
-     var turl = ctx.self+"/table/"+now();
-     spawn(turl)(turl, ctx.pl);
-     $L.foreach(ctx.pl, function(x){
-		  $L.remove(ctx.ul, x);
-		  cast(x)("go")(turl);
-		});
-     ctx.pl = [];
+   // hall_full(ctx) : 是否已经满厅
+   function hall_full(ctx){
+     for(var r in ctx.rl)
+       for(var f in F)
+	 if(!ctx.rl[r].sits[F[f]])
+	   return false;
+     return true;
+   }
+
+   // table_new : 新建一桌
+   function table_new(ctx){
+     ctx.rl[""+now()] = { play:false, sits:{} };
+   }
+
+   // table_full(ctx, room) : 是否已经满桌
+   function table_full(ctx, r){
+     for(var f in F)
+       if(!ctx.rl[r].sits[F[f]])
+	 return false;
+     return true;
+   }
+
+   // table_open : 开始一桌
+   function table_open(ctx, room){
+     var turl = ctx.self+"/table/"+room;
+     var sits = ctx.rl[room].sits;
+     for(var f in F){
+       var w = sits[F[f]];
+       delete ctx.ul[w]; // remove from hall // NEED THINK AGAIN
+       cast(w)("go")(turl); // make client goto the table
+     }
+     debug("table_open("+turl+","+sits);
+     spawn(turl)(turl, sits);
    }
 
    // return a function-as-an-object structure
@@ -59,38 +96,47 @@
        this.parent = parent;
        this.self = self;
        this.ul = {};
-       this.pl = [];
+       this.rl = {};
+       table_new(this);
      },
      // methods
      {
        idle : function(){
-	 debug("idle");
+	 debug("mahjong hall idle");
        },
        echo : function(who, what){
-	 // debug("echo("+who+", "+what+")");
 	 cast(who)("echo")(what, now());
        },
        enter : function(who, nick, data){
-	 // debug("enter("+who+", "+nick+", "+data+")");
-	 // for (var u in this.ul) cast(u)("enter")(who, nick);
 	 this.ul[who] = {id:who, nick:nick};
 	 broadcast(this);
        },
        refresh : function(who){
 	 cast(who)("refresh")(who, view(this, who));
        },
-       ready : function(who){
-	 $L.append(this.pl, who);
-	 if(this.pl.length >= 4) opentable(this); // 凑齐四人，新开一桌
+       sitdown : function(who, room, sit){
+	 if (! room in this.rl) { return debug("sitdown: bad room"); }
+	 if ("NEWS".indexOf(sit) == -1){ return debug("sitdown: bad sit"); }
+	 if (this.rl[room].sits[sit]){ return debug("sitdown: sited"); }
+	 this.rl[room].sits[sit] = who;
+	 if (table_full(this, room)) table_open(this, room); // 满桌，开始
+	 if (hall_full(this)) table_new(this); // 满厅，新开
 	 broadcast(this);
        },
-       unready : function(who){
-	 this.pl = $L.remove(this.pl, who);
+       standup : function(who){
+	 var w = where(this, who);
+	 if (!w){ return debug("standup: where == undefined"); }
+	 debug("standup:"+w.toSource());
+	 delete this.rl[w.room].sits[w.sit];
 	 broadcast(this);
+       },
+       watch: function(who, room){
+	 if (! room in this.rl) { return debug("watch: bad room"); }
+	 var turl = this.self+"/table/"+room;
+	 cast(who)("go")(turl);
        },
        leave : function(who){
 	 delete this.ul[who];
-	 // for (var u in this.ul) cast(u)("leave")(who);
 	 broadcast(this);
        }
      }
