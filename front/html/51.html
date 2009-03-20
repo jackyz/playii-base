@@ -1,0 +1,119 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+
+<head>
+<title>Playii :: Chat</title>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
+<link rel="shortcut icon" href="../base/favicon.ico" />
+<!--[if lt IE 8]>
+<script type="text/javascript" src="../base/json.js"></script>
+<![endif]-->
+<script type="text/javascript" src="../base/jquery.js"></script>
+<script type="text/javascript" src="../base/playii.js"></script>
+</head>
+
+<body>
+
+  <div id="body" class="site">
+    <div id="bg0"></div>
+    <div id="root"></div>
+  </div>
+  
+  <div id="log" style="display:none;">
+    console area
+  </div>
+
+  <div id="tmpl" style="display:none;"></div>
+
+<style type="text/css">
+* {
+  margin:0; padding:0;
+}
+body {
+}
+.site {
+  width:100%; /* margin:0 auto; */
+}
+#body {
+  background:#f9f9f9;
+}
+#body #bg0 {
+  position:absolute;
+  left:0px; top:0px;
+  width:100%; height:100%;
+  background:#268 url(bg0.jpg);
+  color: #666;
+}
+#log {
+  position:absolute;
+  left:0px; top:600px;
+  height:160px; width:100%;
+  border-top:5px solid #DDD;
+  overflow:auto;
+  background:#EEE;
+  font: normal normal 88% "Courier";
+}
+.box-bg {
+  position:absolute;
+  width:100%; height:100%;
+  left:0px; top:0px;
+  background:#fff;
+  filter:alpha(opacity=50); /*IE*/
+  opacity:0.5; /*Mozilla*/ 
+  z-index: 1000;
+}
+.box-fg {
+  position:absolute;
+  background: #fff;
+  border: 1px solid #666;
+  z-index: 1001;
+  color: #444;
+  /* needs width, height, left, top, defined by id */
+}
+.box-zebra {
+  background:transparent url(zebra.gif) repeat scroll left top;
+  height:15px;
+}
+.box-title {
+  padding: 10px;
+}
+.box-texts {
+  font-size: 80%;
+  padding: 0px 20px;
+}
+</style>
+
+<script type="text/javascript">
+$(function(){
+  var sn = _scene() ? _scene() : "adv_0";
+  ui.load("#tmpl", sn, function(){
+    if (sn == "adv_0" || sn == "adv_q" || sn == "auth") {
+      ui.show(sn);
+    } else {
+      var fok = function(){
+        ui.show(sn);
+      };
+      var fau = function(){
+        if (sn != "auth") ui.go("auth");
+        else ui.show(sn);
+      };
+      con.open({}, {go_identify:fau, failure:fau, success:fok});
+    }
+  });
+});
+</script>
+
+<script type="text/javascript">
+var gaJsHost = (("https:" == document.location.protocol) ? "https://ssl." : "http://www.");
+document.write(unescape("%3Cscript src='" + gaJsHost + "google-analytics.com/ga.js' type='text/javascript'%3E%3C/script%3E"));
+</script>
+<script type="text/javascript">
+try {
+var pageTracker = _gat._getTracker("UA-6705538-1");
+pageTracker._trackPageview();
+} catch(err) {}
+</script>
+
+</body>
+
+</html>

@@ -1,0 +1,103 @@
+/*
+auth.html doc
+       about the user identify logic, there are tables:
+        record(user, {id, nick})
+	record(auth, {key, user_id, email, password}) key={user_id, email}
+        record(conn, {key, user_id, type, key}) key={user_id, type}
+       a user could be identified by any conn or auth provider, for example:
+        #user{id=12345, nick="username"}
+        #auth{user_id=12345, email="username@163.com", password="pass"}
+        #conn{user_id=12345, type=facebook, key="6123513"}
+        #conn{user_id=12345, type=openid, key="username@openid.org"}
+       user could verify himself via:
+        facebook(conn) (againest the facebook connect api)
+        openid(conn)   (againest the openid api)
+        or by auth     (againest the data in auth tab)
+       after any verify process, the user should be identify as the same one
+       the key concept here is the #user, for a guest user, who should be:
+        #user{id=undefined, nick="nickname"}
+       for a authrized user, who should be:
+        #user{id=12345, nick="username"}
+*/
+
+
+
+/*
+scene.js doc
+ **** Big picture
+ -----------------------------------------------------------------------------
+
+ (where, arg1, arg2, ...)       <-- spawn(name, [arg1, arg2, ...]) // dad
+ idle()                         <-- timeout // timer
+ func(who, arg1, arg2, ...)     <-- cast(where)(func)(arg1, arg2, ...) //player
+   * enter(who, nick, data)
+   - enter_debug(who)
+   * leave(who)
+   - leave_debug(who)
+   * refresh(who)
+     any(who, arg1, arg2, ...)
+ __func(where, arg1, arg2, ...) <-- async(where)(func)(arg1, arg2, ...) //scene
+   * __end(where)               <-- end() // son
+
+ -----------------------------------------------------------------------------
+
+ **** APIs that scene should export
+
+ return mixin(func, obj)
+ idle()
+ enter(who, nick, data)
+ leave(who)
+ refresh(who)
+ any(who, arg1, arg2)
+ _any(where, arg1, arg2)
+
+ **** APIs that scene should use
+
+ // 生成 func 和 object 的混合对象(用于定义"实例模版")
+ mixin(func, object)
+
+ // 发送调试信息，调用过 enter_debug 的用户能够收到
+ debug(string), warn(string), info(string), error(string), fatal(string)
+
+ // 调用 who(player) 的 func 函数，参数为 arg1, arg2, ...
+ cast(who)(func)(arg1, arg2, ...)
+
+ **** TODO
+
+ // 建立 where(scene)
+ spawn(where, [arg1, arg2, ...])
+
+ // 调用 where(scene) 的 func 函数，参数为 arg1, arg2, ...
+ async(where)(func)(arg1, arg2, ...)
+
+ // 退出(自身)
+ end()
+
+(function(){
+ // this, the state; handle, the process function; event, the message
+ // event : {
+ //   type : "new" | "timer" | "player" | "scene" | "kill" ,
+ //   from : {id, data},
+ //   data : {func, args}
+ // }
+ return function handle(event){
+   // dispatch event
+   switch(event.type){
+     case "new":
+       construct.call(this, event.from.id, event.data); break;
+     case "timer":
+       idle.call(this); break;
+     case "player":
+       player_do.call(this, event.from, event.data); break;
+     case "scene":
+       scene_do.call(this, event.from.id, event.data); break;
+     case "kill":
+       destruct.call(this, event.from.id); break;
+     default:
+       error("unknown event.type:"+event.type);
+   }
+ };
+})();
+
+ */
+

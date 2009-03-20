@@ -1,0 +1,25 @@
+application: playii
+version: 1
+runtime: python
+api_version: 1
+#default_expiration: "10d"
+
+handlers:
+
+# 51.html -> html_p3p.py :: 51 needs p3p header to set cookie
+
+- url: /chat/51\.html
+  script: html_p3p.py
+
+# static directories
+
+- url: /base
+  static_dir: base
+
+- url: /chat
+  static_dir: chat
+
+# default
+
+- url: /.*
+  script: not_found.py

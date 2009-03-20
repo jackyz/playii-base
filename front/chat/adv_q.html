@@ -1,0 +1,42 @@
+<!-- adv_q -->
+<style>
+#adv_q {
+}
+#adv_q #box {
+  width:520px; height:120px;
+  left:140px; top:30px;
+}
+#adv_q #box #ad {
+  background: #fff;
+  border: 1px solid #eee;
+  padding: 5px;
+}
+#adv_q #box a {
+  text-decoration:none;
+}
+#adv_q #box li {
+  list-style: inside;
+  padding-left: 40px;  
+}
+</style>
+
+<div id="adv_q">
+  <div class="box-bg"></div>
+  <div id="box" class="box-fg">
+    <div class="box-zebra"></div>
+    <div class="box-title">谢谢</div>
+    <div class="box-texts">
+      您已选择离开，请继续访问其他页面。
+      <!-- <div id="ad"></div> -->
+    </div>
+  </div>
+</div>
+
+<script type="text/javascript">
+$(function(){
+  $(document).bind("adv_q", function(event){
+    $("#tmpl #adv_q").clone().appendTo($('#root').empty());
+    con.close();
+  });
+});
+</script>

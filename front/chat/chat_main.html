@@ -1,0 +1,317 @@
+<!-- chat_main -->
+<div id="chat_main">
+  <div id="words">
+－－－－－－－－－－－－－－－－－－－－－－－－－－－－－ <br/>
+只爱陌生人，不要太认真……  <br/>
+－－－－－－－－－－－－－－－－－－－－－－－－－－－－－ <br/>
+  </div>
+  <div id="users">在线用户列表加载中……</div>
+  <div id="tools">
+    <span id="who_nick"></span>
+    <input id="what" type="text"/>
+    <input type="button" id="refresh" value="刷新"/>
+    <input type="button" id="clean" value="清屏"/>
+    <input type="button" id="quit" value="离开"/>
+    <!--
+    <input type="button" value="echo" onclick="con.cast('chat_main')('echo')((new Date()).getTime()); return false;"/>
+    <input type="button" value="flood" onclick="(function(){for(var i=0; i<10; i++){ con.cast('chat_main')('say')('test '+i+' !'); }})(); return false;"/>
+    -->
+    <div id="advs"></div>
+  </div>
+</div>
+
+<style type="text/css">
+#chat_main {
+    color:#ddd;
+}
+#chat_main div {
+    position:absolute; 
+}
+#chat_main #words {
+    overflow:auto;
+    width:75%; height:100%;
+    left:0%; top:0px;
+    /* border-right:1px solid #efc; */
+}
+#chat_main #users {
+    overflow:auto;
+    width:25%; height:100%;
+    right:0%; top:0px;
+    border-left:1px solid #123;
+    background:url(side_bg.png) repeat-x scroll 0 0;
+}
+#chat_main #tools {
+    color:#000;
+    width:100%; height:30px;
+    left:0px; bottom:0px;
+    background:#ccc;
+    filter:alpha(opacity=75); /*IE*/
+    opacity:0.75; /*Mozilla*/ 
+}
+#chat_main #tools #what {
+    width:65%;
+}
+#chat_main #tools #advs {
+    width:100%; height:6px;
+    left:0px; bottom:0px;
+    background:#aaa;
+}
+#chat_main .user {
+    color:#888;
+    cursor:text;
+}
+#chat_main .user-self {
+    color:#f88;
+    cursor:pointer;
+}
+#chat_main .user-on {
+    color:#88f;
+    cursor:pointer;
+}
+</style>
+
+<script type="text/javascript">
+$(function(){
+
+  // **** the scene
+  var _sn = "chat_main";
+
+  // **** model
+  var self = undefined;
+  var users = {};
+  var current = 'any';
+
+  // **** callback
+
+  function user_welcome(u, ul){
+    _info("{Welcome},{your nickname are}:"+_span(u, ul[u])+",{you can click and rename yourself}.");
+    users_refresh(u, ul);
+  }
+
+  function users_refresh(u, ul){
+    self = u;
+    users = ul;
+    _redraw(users);
+  }
+
+  function user_rename(u, n){
+    if (u in users) {
+      var oldn = users[u];
+      users[u] = n;
+      if (u == self) {
+        _info("{I renamed to}:"+_span(u, n)+".");
+      } else {
+        _info(_span(u, oldn)+"{renamed to}:"+_span(u, n)+".");
+      }
+      _redraw(users);
+    }
+  }
+
+  function user_enter(u, n){
+    if(u in users) {
+      // nothing
+    } else {
+      users[u] = n;
+      _info(_span(u, n)+"{just come in}.");
+      _redraw(users);
+    }
+  }
+
+  function user_leave(u){
+    if(u in users){
+      var n = users[u];
+      delete users[u];
+      _info(_span(u, n)+"{has left}.");
+      if(u == current) _select('any');
+      _redraw(users);
+    }
+  }
+
+  function msg_told(u, t){
+    if(u in users && u != 'any'){
+      _add(_span(u, users[u])+"{told me}:"+_secure(t));
+    }
+  }
+
+  function msg_said(u, t){
+    if(u in users && u != 'any'){
+      _add(_span(u, users[u])+"{said}:"+_secure(t));
+    }
+  }
+
+  function echo(time1, time2){
+    var time3 = (new Date()).getTime();
+    // _add("start:"+time1+",arrave:"+time2+",end:"+time3);
+    _add("total:"+(time3-time1)+",network:"+(time2-time1)+"X2,server:"+((time3-time1)-(time2-time1)*2));
+  }
+
+  function error(t){
+    _info(t);
+  }
+
+  function debug(str){
+    _log(str);
+  }
+
+  var callback = {
+    users_refresh:users_refresh,
+    user_welcome:user_welcome,
+    user_rename:user_rename,
+    user_enter:user_enter,
+    user_leave:user_leave,
+    msg_told:msg_told,
+    msg_said:msg_said,
+    echo:echo,
+    error:error,
+    debug:debug
+  };
+
+  // **** private
+
+  // scene api wrap functions
+  function _cast(f){ return con.cast(_sn)(f); }
+  function _refresh(){  _cast('refresh')();  }
+  function _enter(){    _cast('enter')();    }
+  function _leave(){    _cast('leave')();    }
+  function _rename(n){  _cast('rename')(n);  }
+  function _talk(n, w){ _cast('talk')(n, w); }
+  function _say(w){     _cast('say')(w);     }
+  function _echo(w){    _cast('echo')(w);    }
+
+  // shortcut functions
+  function _tran(s){ return ui.tran(_sn, s);  }
+  function _escp(s){ return ui.escp(s);       }
+  function _ui(n){return n?$(n, $("#root #chat_main")):$("#root #chat_main");}
+
+  // _highlight(users);
+  function _highlight(users) {
+    function on_click_user(){
+      _select($(this).attr('xid'));
+    }
+    _ui('[xid]').each(function (){
+      $(this).unbind();
+      $(this).removeClass("user-self").removeClass("user-on");
+      var u = $(this).attr('xid');
+      if (u in users || u == 'any') {
+        if (u == self) {
+	  $(this).addClass('user-self');
+        } else {
+	  $(this).addClass('user-on');
+        }
+        $(this).bind('click', on_click_user);
+      }
+      /*
+      if (u in users || u == 'any') {
+        if (u == self) {
+          $(this).css({color:'red', cursor:'pointer'});
+        } else {
+          $(this).css({color:'green', cursor:'pointer'});
+        }
+        $(this).bind('click', on_click_user);
+      } else {
+        $(this).css({color:'gray', cursor:'text'});
+      }
+       */
+    });
+  }
+
+  // add text to text area (translate)
+  // _add('text to add')
+  function _add(text){
+    // $('#words').append(text+"<br/>");
+    _ui('#words').append(_tran(text)+"<br/>");
+    _highlight(users);
+    // auto scroll to bottom
+    var t = _ui('#words').get(0).scrollHeight;
+    var v = _ui('#words').get(0).offsetHeight;
+    _ui("#words").get(0).scrollTop = t - v;
+  }
+  // _info('text to info')
+  function _info(text){
+    _add("<span class='info'>"+text+"</span>");
+  }
+
+  // _span('abc', 'abc_nick')
+  function _span(u, n){
+    return "<span class='user' xid='"+u+"'>"+_tran(n)+"</span>";
+  }
+
+  // user_select('abc')
+  function _select(u){
+    current = (u in users) ? u : 'any';
+    if (current == self) {
+      _ui('#who_nick').hide();
+      _ui("#rename").show();
+    } else {
+      var n = users[current] ? users[current] : '{every one}';
+      _ui('#who_nick').show().text(_tran(n));
+      _ui("#rename").hide();
+    }
+    _ui('#what')[0].focus();
+  }
+
+  // redraw the users list
+  // _redraw(users);
+  function _redraw(users){
+    _ui('#users').hide();
+    _ui('#users').empty();
+    var len = 0;
+    for(var u in users) len++;
+    _ui('#users').append(_tran("{total}:"+len+"{person}")+"<br/>");
+    if (self != undefined && users[self] != undefined) {
+      _ui('#users').append("<li>"+_span(self, users[self])+"</li>");
+    }
+    _ui('#users').append("<li>"+_span('any', '{every one}')+"</li>");
+    for(var u in users) {
+      if(u != self) _ui('#users').append("<li>"+_span(u, users[u])+"</li>");
+    }
+    _ui('#users').show();
+    _highlight(users);
+  }
+
+  function on_click_send(){
+    var what = _secure(_ui('#what').val());
+    if (what == "") {
+      // nothing
+    } else if (current == self) {
+      _rename(what);
+      _select('any');
+    } else if (current == 'any') {
+      _say(what);
+      _add("{I say}:"+what);
+    } else if (current in users) {
+      _talk(current, what);
+      _add("{I talk}"+_span(current, users[current])+"{that}:"+what);
+    } else {
+      _info(_ui('#who_nick').text()+"{has left}.");
+      _select('any');
+    }
+    _ui('#what').val('');
+  }
+
+  $(document).bind("chat_main", function(event){
+    // bind scene callback
+    con.bind(_sn, callback);
+    // auto run logics
+    _yield(function(){ _enter(); }, 100);
+    _yield(function(){ _refresh(); }, 300);
+    _yield(function(){ _select('any') }, 500);
+    // _log("chat_main");
+    $("#tmpl #chat_main").clone().appendTo($('#root').empty());
+    // fit the size
+    $(window).resize(function(){
+      var nh = $(window).height() - _ui('#tools').height();
+      _ui('#words').height( nh );
+      _ui('#users').height( nh );
+    }).trigger("resize");
+    // bind ui callbacks
+    // $('#send').bind('click', on_click_send);
+    _ui('#what').keypress(function(k){ if(k.keyCode == 13) on_click_send(); });
+    _ui('#refresh').click(function(){ _refresh(); } );
+    _ui('#rename').click(function(){ on_click_send(); } );
+    _ui('#clean').click(function(){ _ui('#words').empty(); } );
+    _ui('#quit').click(function(){ ui.go('adv_q'); });
+  });
+
+});
+</script>
