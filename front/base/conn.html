@@ -1,0 +1,134 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+
+<head>
+<title>Playii :: Conn</title>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
+<script type="text/javascript" src="../base/jquery.js"></script>
+<script type="text/javascript" src="../base/jquery.log.js"></script>
+<script type="text/javascript">
+// **** playii connection object :: the socket
+$(function(){
+
+  $.log("loading conn.html");
+
+  // **** get/set cookie
+  // * ie will block 3rd party cookie
+  // * need p3p header to work around
+  // * or using keeping iframe to avoid cookie
+  function cookie(name, val){
+    if (val != undefined) { // set cookie
+      //alert("set cookie "+val);
+      document.cookie = name+"="+encodeURIComponent(val);
+    } else {   // get cookie
+      var c = document.cookie;
+      var s = c.indexOf(name+"=");
+      var e = c.indexOf(";", s+name.length+1);
+      var v;
+      if (s != -1)
+        v = c.substring(s+name.length+1, (e==-1)?c.length:e);
+      return decodeURIComponent(v);
+    }
+  }
+
+  // var host = "http://61.139.126.212:8880";
+  // var host = "http://127.0.0.1:8880";
+  var host = "http://192.168.1.2:8880";
+  var ourl = host+"/_open?c=?"; // 连接URL
+  var rurl = host+"/_recv?c=?"; // 接收URL
+  var surl = host+"/_send?c=?"; // 发送URL
+
+  // ******** model
+  var token = "";  // 通讯令牌
+  var debug = 0;   // 通讯调试
+
+  function open(param, error, success){
+    // token = cookie("token");
+    if(token) param["t"] = token;
+    if(debug) $.log("open -> "+$.source(param));
+    $.ajax({
+      url:ourl, 
+      type:"GET", 
+      dataType:"json", 
+      cache:false,
+      data:param,
+      error:error,
+      success:function(d){
+        if(debug) $.log("open <- "+$.source(d));
+        if (d[0] == "ok"){
+	  token = d[1];
+	  // cookie("token", d[1]);
+	  // alert("p3p check!!! token:"+token+",cookie:"+_cookie("token"));
+	}
+	success(d);
+      }
+    });
+  }
+ 
+  function recv(error, success){
+    var param = {t:token};
+    if(debug) $.log("recv -> "+$.source(param));
+    $.ajax({
+      url:rurl,
+      type:"GET",
+      dataType:"json",
+      cache:false,
+      data:param,
+      error:error,
+      success:function(d){
+        if(debug) $.log("recv <- "+$.source(d));
+        success(d);
+      }
+    });
+  }
+
+  function send(param, error, success){
+    param["t"] = token;
+    if(debug) $.log("send -> "+$.source(param));
+    $.ajax({
+      url:surl,
+      type:"GET",
+      cache:false,
+      dataType:"json",
+      data: param,
+      error:error,
+      success:function(d){
+        if(debug) $.log("send <- "+$.source(d));
+        success(d);
+      }
+    });
+  }
+
+  // API EXPORT :: VIA IFRAME
+  window["_open"] = open;
+  window["_recv"] = recv;
+  window["_send"] = send;
+
+});
+</script>
+</head>
+
+<body>
+<!--
+<script type="text/javascript">
+$(function(){
+  function yield(func, time) {
+    window.setTimeout(func, time ? time : 50);
+  }
+
+  // **** test
+  window["test"] = function(){
+    parent["log"]();
+  }
+  yield(function(){
+    // try access parent
+    // $("#root", parent.document.body).empty(); 
+    parent["log"]();
+    $(parent.document).trigger("log");
+  }, 3000);
+});
+</script>
+-->
+</body>
+
+</html>

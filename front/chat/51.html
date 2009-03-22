@@ -1,0 +1,371 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+
+<head>
+<title>Playii :: Chat</title>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
+<link rel="shortcut icon" href="../base/favicon.ico" />
+<script type="text/javascript" src="../base/jquery.js"></script>
+<script type="text/javascript" src="../base/jquery.log.js"></script>
+</head>
+
+<body>
+
+  <iframe id="conn" name="conn" src="../base/conn.html"></iframe>
+
+  <div id="body" class="site">
+    <div id="bg0"></div>
+    <div id="root"></div>
+  </div>
+  
+  <div id="log" style="display:none;"></div>
+
+  <div id="tmpl" style="display:none;"></div>
+
+<style type="text/css">
+* {
+  margin:0; padding:0;
+}
+body {
+}
+.site {
+  width:100%; /* margin:0 auto; */
+}
+#conn {
+  position:absolute;
+  left: 10px; top: 10px;
+  width: 5px; height:5px;
+}
+#body {
+  background:#f9f9f9;
+}
+#body #bg0 {
+  position:absolute;
+  left:0px; top:0px;
+  width:100%; height:100%;
+  background:#268 url(bg0.jpg);
+  color: #666;
+}
+#log {
+  position:absolute;
+  left:0px; top:600px;
+  height:160px; width:100%;
+  border-top:5px solid #DDD;
+  overflow:auto;
+  background:#EEE;
+  font: normal normal 88% "Courier";
+}
+.box-bg {
+  position:absolute;
+  width:100%; height:100%;
+  left:0px; top:0px;
+  background: url(trans_bg.png);
+/*
+  background:#fff;
+  filter:alpha(opacity=50);
+  opacity:0.5;
+*/
+  z-index: 1000;
+}
+.box-fg {
+  position:absolute;
+  background: #fff;
+  border: 1px solid #666;
+  z-index: 1001;
+  color: #444;
+  /* needs width, height, left, top, defined by id */
+}
+.box-zebra {
+  background:transparent url(zebra.gif) repeat scroll left top;
+  height:15px;
+}
+.box-title {
+  padding: 10px;
+}
+.box-texts {
+  font-size: 80%;
+  padding: 0px 20px;
+}
+</style>
+
+<script type="text/javascript">
+$(function(){
+
+if(!window["ui"]) window["ui"] = (function(){
+
+  // ******** model
+  var tmpl = "#tmpl";
+  var i8ns = {};
+
+  // usage: i8n.bind("chat_room_1234", {"text":"translated text"})
+  function bind(sn, obj){
+    i8ns[sn] = obj;
+  }
+
+  // usage: i8n.unbind("chat_room_1234")
+  function unbind(sn){
+    delete i8ns[sn];
+  }
+
+  // usage: i8n.tran("chat_room_1234", "hello, {text1}, {welcome to} name");
+  // transfer the text, using the i8n dict
+  // {{xxx}} -> {xxx} the escape
+  // {xxx} -> yyy if has {xxx : yyy} perform the mapping
+  // {xxx} -> xxx if has not xxx using the text itself
+  function tran(sn, s){
+    // $.log("_tran:"+sn+","+s);
+    function map(s){
+      var x = i8ns[sn][s];
+      return x ? x : s;
+    }
+    function part(h, t){
+      var b = t.indexOf("{");
+      var e = t.indexOf("}", b);
+      if (e > b && e != -1 && b != -1) {
+        var h2 = h+t.substr(0, b)+map(t.substr(b+1, e-b-1));
+        var t2 = t.substr(e+1, t.length-e-1);
+        return part(h2, t2);
+      } else {
+        return h+t;
+      }
+    }
+    return part("", (s ? s : ""));
+  }
+
+  // usage: i8n.escp("{strangename}");
+  // escape the text
+  // {xxx} -> {{xxx}} the escape
+  function escp(s){
+    // $.log("_escp:"+s);
+    function part(h, t){
+      var b = t.indexOf("{");
+      var e = t.indexOf("}", b);
+      if (e > b && e != -1 && b != -1) {
+        var h2 = h+t.substr(0, b)+"{{"+t.substr(b+1, e-b-1)+"}}";
+        var t2 = t.substr(e+1, t.length-e-1);
+        return part(h2, t2);
+      } else {
+        return h+t;
+      }
+    }
+    return part("", (s ? s : ""));
+  }
+
+  // the file of url
+  function file(sn){
+    var a = sn.split('_');
+    return (a.length >= 2) ? [a[0], a[1]].join('_') : sn;
+  }
+
+  // load and display the sn ui
+  function load(sn){
+    if($("#"+sn, tmpl).size() <= 0){
+      $.getJSON(file(sn)+"-zh_CN.js", function(json){
+	bind(sn, json);
+      });
+      $.get(file(sn)+".html", function(html){
+	$(tmpl).append(html);
+	$(document).trigger(sn);
+      });
+    } else {
+      $(document).trigger(sn);
+    }
+  }
+
+  // API EXPORT
+  return {
+    load:load,
+    tran:tran,
+    escp:escp
+  };
+
+})();
+
+// **** playii connection object :: the proxy
+if(!window["con"]) window["con"] = (function(){
+
+  // ******** model
+  var ifrm = "conn";
+  var keep = false;// 连接状态
+  var done = true; // (执行时)防重入
+  var creg = {};   // 通道注册表
+  var rbuf = [];   // 接收(待执行)队列
+
+  // **** public
+
+  // usage: con.open({}, options);
+  // usage: con.open({id:str, nick:str}, options);
+  //   options: {success:fun, failure:fun, go_identify:fun};
+  function open(param, options){
+    _open(
+      param, // param
+      function(xhr, s, e){ // error
+        if (s) $.err("open:<-err:s:"+s+",e:"+e+",xhr:"+xhr.responseText);
+      },
+      function(d){ // success
+        if (d[0] == "ok"){  // init receive loop
+	  // keep the connect
+	  keep = true; $.thread( _keep );
+	  // jsonp will delay document ready event, load ui first
+	  if (typeof(options["success"]) == "function") options["success"]();
+	} else if (typeof(options[d[0]]) == "function") {
+          options[d[0]]();
+        } else if (typeof(options["failure"]) == "function") {
+          options["failure"](d[0]);
+        }
+      }
+    );
+  }
+
+  // usage: con.bind("chat_main_1234", {callback:func})
+  function bind(sn, obj){
+    creg[sn] = obj;
+  }
+
+  // usage: con.unbind("chat_main_1234")
+  function unbind(sn){
+    delete creg[sn];
+  }
+
+  // usage: con.cast(scene)(func)(param1, param2);
+  function cast(sn){
+    var s = "", f = "", a = [];
+    function _func(func){
+      f = func;
+      return _args;
+    }
+    function _args(){
+      for (var i = 0; i<arguments.length; i++) a.push(arguments[i]);
+      if (!keep) return $.err("send:->err:not connect yet.");
+      _send(
+        {s:s, f:f, a:a}, // param
+        function(xhr, s, e){ // error
+          if(e) $.err("send:<-err:"+xhr.responseText);
+	  // keep = false;
+	},
+	function(d){ // success
+	}
+      );
+      sbuf = null;
+    }
+    s = sn;
+    return _func;
+  }
+
+  // usage: con.close();
+  function close(){
+    keep = false;
+  }
+
+  // **** logic
+
+  // recv loop
+  function _keep(){
+    if(!keep) return;
+    _recv(
+      function(xhr, s, e){ // error
+        if(e) $.err("recv:<-err:e:"+e+",s:"+s+","+xhr.responseText);
+      },
+      function(d){ // success
+        if(! d instanceof Array) {
+          $.err("recv:<-err:bad format "+d);
+	  keep = false; // !!!! broken connect if recv failure
+	  return;
+	}
+	for (var i = 0; i < d.length; i++) {
+          var x = d[i];
+          if (x !== undefined && x.length == 3) {
+	    rbuf.push({s:x[0], f:x[1], a:x[2]});
+	    $.thread(_exec);
+          } else {
+            $.err("recv:<-err:bad format "+x);
+          }
+        }
+	// keep the connect
+        $.thread( _keep );
+      }
+    );
+  }
+
+  // recv dispatch
+  function _exec() {
+    if (! done) { $.thread(_exec); return; }
+    var c = rbuf.shift();
+    if (rbuf.length > 0) $.thread(_exec);
+    if (c == undefined) return;
+    try {
+      done = false;
+      if (creg[c.s] === undefined) {
+        $.err("exec: err: "+c.s+" not bind");
+      } else if ( typeof(creg[c.s][c.f]) !== "function") {
+        $.err("exec: err: "+c.f+" not found");
+      } else {
+        creg[c.s][c.f].apply(creg[c.s], c.a);
+        // $.log("exec: success."+c);
+      }
+    } catch(e) {
+      $.err("exec: err: "+e+":"+c);
+    } finally {
+      done = true;
+    }
+  }
+
+  // **** delegate real to iframe
+
+  function _open(param, error, success){
+    window.frames[ifrm]["_open"](param, error, success);
+  }
+
+  function _recv(error, success){
+    window.frames[ifrm]["_recv"](error, success);
+  }
+
+  function _send(param, error, success){
+    window.frames[ifrm]["_send"](param, error, success);
+  }
+
+  // API EXPORT
+  return {
+    open:open,
+    bind:bind, unbind:unbind, cast:cast,
+    close:close
+  };
+
+})();
+
+// **** boot loader
+$("#conn").load(function(){
+  function _scene(){
+    var url = window.location.hash.split('#')[1];
+    return (url) ? url : undefined;
+  };
+  var sn = _scene() || "adv_0";
+  if ( $.inArray(sn, ["adv_0", "adv_q", "auth"]) != -1 ) {
+    ui.load(sn);
+  } else {
+    var fok = function(){ ui.load(sn); };
+    var fau = function(){ ui.load("auth"); };
+    con.open({}, {go_identify:fau, failure:fau, success:fok});
+  }
+});
+
+});
+</script>
+
+<!--
+</script>
+<script type="text/javascript">
+var gaJsHost = (("https:" == document.location.protocol) ? "https://ssl." : "http://www.");
+document.write(unescape("%3Cscript src='" + gaJsHost + "google-analytics.com/ga.js' type='text/javascript'%3E%3C/script%3E"));
+</script>
+<script type="text/javascript">
+try {
+var pageTracker = _gat._getTracker("UA-6705538-1");
+pageTracker._trackPageview();
+} catch(err) {}
+</script>
+-->
+
+</body>
+
+</html>
