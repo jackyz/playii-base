@@ -1,25 +1,4 @@
 <!-- chat_main -->
-<div id="chat_main">
-  <div id="words">
-－－－－－－－－－－－－－－－－－－－－－－－－－－－－－ <br/>
-只爱陌生人，不要太认真……  <br/>
-－－－－－－－－－－－－－－－－－－－－－－－－－－－－－ <br/>
-  </div>
-  <div id="users">在线用户列表加载中……</div>
-  <div id="tools">
-    <span id="who_nick"></span>
-    <input id="what" type="text"/>
-    <input type="button" id="refresh" value="刷新"/>
-    <input type="button" id="clean" value="清屏"/>
-    <input type="button" id="quit" value="离开"/>
-    <!--
-    <input type="button" value="echo" onclick="con.cast('chat_main')('echo')((new Date()).getTime()); return false;"/>
-    <input type="button" value="flood" onclick="(function(){for(var i=0; i<10; i++){ con.cast('chat_main')('say')('test '+i+' !'); }})(); return false;"/>
-    -->
-    <div id="advs"></div>
-  </div>
-</div>
-
 <style type="text/css">
 #chat_main {
     color:#ddd;
@@ -70,8 +49,31 @@
 }
 </style>
 
+<div id="chat_main">
+  <div id="words">
+－－－－－－－－－－－－－－－－－－－－－－－－－－－－－ <br/>
+只爱陌生人，不要太认真……  <br/>
+－－－－－－－－－－－－－－－－－－－－－－－－－－－－－ <br/>
+  </div>
+  <div id="users">在线用户列表加载中……</div>
+  <div id="tools">
+    <span id="who_nick"></span>
+    <input id="what" type="text"/>
+    <input type="button" id="refresh" value="刷新"/>
+    <input type="button" id="clean" value="清屏"/>
+    <input type="button" id="quit" value="离开"/>
+    <!--
+    <input type="button" value="echo" onclick="con.cast('chat_main')('echo')((new Date()).getTime()); return false;"/>
+    <input type="button" value="flood" onclick="(function(){for(var i=0; i<10; i++){ con.cast('chat_main')('say')('test '+i+' !'); }})(); return false;"/>
+    -->
+    <div id="advs"></div>
+  </div>
+</div>
+
 <script type="text/javascript">
-$(function(){
+(function(){
+
+  $.log("loading chat_main.html");
 
   // **** the scene
   var _sn = "chat_main";
@@ -129,13 +131,13 @@ $(function(){
 
   function msg_told(u, t){
     if(u in users && u != 'any'){
-      _add(_span(u, users[u])+"{told me}:"+_secure(t));
+      _add(_span(u, users[u])+"{told me}:"+$.unhtml(t));
     }
   }
 
   function msg_said(u, t){
     if(u in users && u != 'any'){
-      _add(_span(u, users[u])+"{said}:"+_secure(t));
+      _add(_span(u, users[u])+"{said}:"+$.unhtml(t));
     }
   }
 
@@ -150,7 +152,7 @@ $(function(){
   }
 
   function debug(str){
-    _log(str);
+    $.log(str);
   }
 
   var callback = {
@@ -200,18 +202,6 @@ $(function(){
         }
         $(this).bind('click', on_click_user);
       }
-      /*
-      if (u in users || u == 'any') {
-        if (u == self) {
-          $(this).css({color:'red', cursor:'pointer'});
-        } else {
-          $(this).css({color:'green', cursor:'pointer'});
-        }
-        $(this).bind('click', on_click_user);
-      } else {
-        $(this).css({color:'gray', cursor:'text'});
-      }
-       */
     });
   }
 
@@ -270,7 +260,7 @@ $(function(){
   }
 
   function on_click_send(){
-    var what = _secure(_ui('#what').val());
+    var what = $.unhtml(_ui('#what').val());
     if (what == "") {
       // nothing
     } else if (current == self) {
@@ -290,14 +280,15 @@ $(function(){
   }
 
   $(document).bind("chat_main", function(event){
+    $("#root").empty().hide().append($("#tmpl #chat_main").clone()).fadeIn("slow");
     // bind scene callback
     con.bind(_sn, callback);
     // auto run logics
-    _yield(function(){ _enter(); }, 100);
-    _yield(function(){ _refresh(); }, 300);
-    _yield(function(){ _select('any') }, 500);
-    // _log("chat_main");
-    $("#tmpl #chat_main").clone().appendTo($('#root').empty());
+    $.thread(function(){ _enter(); }, 100);
+    // $.thread(function(){ con.cast(_sn)('enter_debug')(); }, 200);
+    $.thread(function(){ _refresh(); }, 300);
+    $.thread(function(){ _select('any') }, 400);
+    // $.log("chat_main");
     // fit the size
     $(window).resize(function(){
       var nh = $(window).height() - _ui('#tools').height();
@@ -310,8 +301,8 @@ $(function(){
     _ui('#refresh').click(function(){ _refresh(); } );
     _ui('#rename').click(function(){ on_click_send(); } );
     _ui('#clean').click(function(){ _ui('#words').empty(); } );
-    _ui('#quit').click(function(){ ui.go('adv_q'); });
+    _ui('#quit').click(function(){ ui.load("adv_q"); });
   });
 
-});
+})();
 </script>

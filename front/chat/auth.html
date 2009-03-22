@@ -13,7 +13,7 @@
   color:red;
 }
 </style>
-<!-- auth begin -->
+
 <div id="auth">
   <div class="box-bg"></div>
   <div id="box" class="box-fg">
@@ -31,33 +31,35 @@
     </div>
   </div>
 </div>
+
 <script type="text/javascript">
-$(function(){
+(function(){
+  $.log("loading auth.html");
   var next = "chat_main";
   function loop(error){
     $("form input:submit", $("#root #auth")).removeAttr("disabled");
-    if (error) $("#auth #error").html(error);
+    if (error) $("#root #auth #error").html(error);
   }
   var callback = {
     go_identify:loop,
     failure:loop,
-    success:function(){ ui.go(next); }
+    success:function(){ ui.load(next); }
   };
   $(document).bind("auth", function(event){
-    $("#tmpl #auth").clone().appendTo($('#root').empty());
+    $("#root").empty().hide().append($("#tmpl #auth").clone()).fadeIn("slow");
     $("#nick", $("#root #auth")).focus();
     $("form", $("#root #auth")).submit(function(){
-      var n = _secure($("#nick", this).val());
+      var n = $.unhtml($("#nick", this).val());
       $("#nick", this).val(n);
       if(!n) {
         $("#nick", this).focus();
         loop("认真点，好好填。");
         return false;
       }
-      $("form input:submit", this).attr("disabled", true);
+      $("input:submit", this).attr("disabled", true);
       con.open($("input", this).serialize(), callback);
       return false;
     });
   });
-});
+})();
 </script>

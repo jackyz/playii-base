@@ -8,8 +8,8 @@ handlers:
 
 # 51.html -> html_p3p.py :: 51 needs p3p header to set cookie
 
-- url: /chat/51\.html
-  script: html_p3p.py
+#- url: /chat/51\.html
+#  script: html_p3p.py
 
 # static directories
 
