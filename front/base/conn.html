@@ -4,7 +4,7 @@
 <head>
 <title>Playii :: Conn</title>
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
-<script type="text/javascript" src="../base/jquery.js"></script>
+<script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.3.2/jquery.min.js"></script>
 <script type="text/javascript" src="../base/jquery.log.js"></script>
 </head>
 
@@ -34,9 +34,8 @@ $(function(){
     }
   }
 
-  // var host = "http://61.139.126.212:8880";
-  // var host = "http://127.0.0.1:8880";
-  var host = "http://192.168.1.2:8880";
+  var host = "http://61.139.126.212:8880";
+  // var host = "http://192.168.1.2:8880";
   var ourl = host+"/_open?c=?"; // 连接URL
   var rurl = host+"/_recv?c=?"; // 接收URL
   var surl = host+"/_send?c=?"; // 发送URL
