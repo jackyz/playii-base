@@ -49,11 +49,11 @@
 
 <script type="text/javascript">
 (function(){
-  $.log("loading adv_0.html");
+  // $.log("loading adv_0.html");
   var next = "auth";
   var quit = "adv_q";
   $(document).bind("adv_0", function(event){
-    $("#root").empty().hide().append($("#tmpl #adv_0").clone()).fadeIn("slow");
+    $("#root").empty().append($("#tmpl #adv_0").clone());
     $("#next", $("#root #adv_0")).focus();
     $("#next", $("#root #adv_0")).click(function(){ ui.load(next); });
     $("#quit", $("#root #adv_0")).click(function(){ ui.load(quit); });

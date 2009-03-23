@@ -35,7 +35,7 @@
 <script type="text/javascript">
 $(function(){
   $(document).bind("adv_q", function(event){
-    $("#root").empty().hide().append($("#tmpl #adv_q").clone()).fadeIn("slow");
+    $("#root").empty().append($("#tmpl #adv_q").clone());
     con.close();
   });
 });

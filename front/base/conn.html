@@ -6,11 +6,14 @@
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
 <script type="text/javascript" src="../base/jquery.js"></script>
 <script type="text/javascript" src="../base/jquery.log.js"></script>
+</head>
+
+<body>
 <script type="text/javascript">
 // **** playii connection object :: the socket
 $(function(){
 
-  $.log("loading conn.html");
+  // $.log("loading conn.html");
 
   // **** get/set cookie
   // * ie will block 3rd party cookie
@@ -106,29 +109,6 @@ $(function(){
 
 });
 </script>
-</head>
-
-<body>
-<!--
-<script type="text/javascript">
-$(function(){
-  function yield(func, time) {
-    window.setTimeout(func, time ? time : 50);
-  }
-
-  // **** test
-  window["test"] = function(){
-    parent["log"]();
-  }
-  yield(function(){
-    // try access parent
-    // $("#root", parent.document.body).empty(); 
-    parent["log"]();
-    $(parent.document).trigger("log");
-  }, 3000);
-});
-</script>
--->
 </body>
 
 </html>

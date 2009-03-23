@@ -14,13 +14,13 @@
   <iframe id="conn" name="conn" src="../base/conn.html"></iframe>
 
   <div id="body" class="site">
-    <div id="bg0"></div>
-    <div id="root"></div>
+    <div id="bg0"> </div>
+    <div id="root"> </div>
   </div>
   
-  <div id="log" style="display:none;"></div>
+  <div id="log" style="display:none;"> </div>
 
-  <div id="tmpl" style="display:none;"></div>
+  <div id="tmpl" style="display:none;"> </div>
 
 <style type="text/css">
 * {
@@ -86,11 +86,22 @@ body {
   font-size: 80%;
   padding: 0px 20px;
 }
+
+/* ie6 hack */
+body {
+  height:100%;
+}
+#body {
+  height:100%;
+}
 </style>
 
 <script type="text/javascript">
 $(function(){
 
+// $.log("loading 51.html");
+
+// **** ui logic
 if(!window["ui"]) window["ui"] = (function(){
 
   // ******** model
@@ -181,7 +192,7 @@ if(!window["ui"]) window["ui"] = (function(){
 
 })();
 
-// **** playii connection object :: the proxy
+// **** connect logic
 if(!window["con"]) window["con"] = (function(){
 
   // ******** model
@@ -310,7 +321,7 @@ if(!window["con"]) window["con"] = (function(){
     }
   }
 
-  // **** delegate real to iframe
+  // **** delegate to the real thing
 
   function _open(param, error, success){
     window.frames[ifrm]["_open"](param, error, success);
@@ -333,26 +344,25 @@ if(!window["con"]) window["con"] = (function(){
 
 })();
 
-// **** boot loader
-$("#conn").load(function(){
-  function _scene(){
-    var url = window.location.hash.split('#')[1];
-    return (url) ? url : undefined;
-  };
-  var sn = _scene() || "adv_0";
-  if ( $.inArray(sn, ["adv_0", "adv_q", "auth"]) != -1 ) {
-    ui.load(sn);
-  } else {
-    var fok = function(){ ui.load(sn); };
-    var fau = function(){ ui.load("auth"); };
-    con.open({}, {go_identify:fau, failure:fau, success:fok});
-  }
-});
+// $.log("boot loader");
+
+function _scene(){
+  var url = window.location.hash.split('#')[1];
+  return (url) ? url : undefined;
+};
+
+var sn = _scene() || "adv_0";
+if ( $.inArray(sn, ["adv_0", "adv_q", "auth"]) != -1 ) {
+  ui.load(sn);
+} else {
+  var fok = function(){ ui.load(sn); };
+  var fau = function(){ ui.load("auth"); };
+  con.open({}, {go_identify:fau, failure:fau, success:fok});
+}
 
 });
 </script>
 
-<!--
 </script>
 <script type="text/javascript">
 var gaJsHost = (("https:" == document.location.protocol) ? "https://ssl." : "http://www.");
@@ -364,7 +374,6 @@ var pageTracker = _gat._getTracker("UA-6705538-1");
 pageTracker._trackPageview();
 } catch(err) {}
 </script>
--->
 
 </body>
 

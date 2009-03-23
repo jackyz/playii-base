@@ -34,7 +34,7 @@
 
 <script type="text/javascript">
 (function(){
-  $.log("loading auth.html");
+  // $.log("loading auth.html");
   var next = "chat_main";
   function loop(error){
     $("form input:submit", $("#root #auth")).removeAttr("disabled");
@@ -46,7 +46,7 @@
     success:function(){ ui.load(next); }
   };
   $(document).bind("auth", function(event){
-    $("#root").empty().hide().append($("#tmpl #auth").clone()).fadeIn("slow");
+    $("#root").empty().append($("#tmpl #auth").clone());
     $("#nick", $("#root #auth")).focus();
     $("form", $("#root #auth")).submit(function(){
       var n = $.unhtml($("#nick", this).val());

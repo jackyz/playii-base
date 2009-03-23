@@ -47,6 +47,11 @@
     color:#88f;
     cursor:pointer;
 }
+
+/* ie6 hack */
+#chat_main #tools #advs {
+    overflow:hidden;
+}
 </style>
 
 <div id="chat_main">
@@ -73,7 +78,7 @@
 <script type="text/javascript">
 (function(){
 
-  $.log("loading chat_main.html");
+  // $.log("loading chat_main.html");
 
   // **** the scene
   var _sn = "chat_main";
@@ -280,12 +285,12 @@
   }
 
   $(document).bind("chat_main", function(event){
-    $("#root").empty().hide().append($("#tmpl #chat_main").clone()).fadeIn("slow");
+    $("#root").empty().append($("#tmpl #chat_main").clone());
     // bind scene callback
     con.bind(_sn, callback);
     // auto run logics
-    $.thread(function(){ _enter(); }, 100);
-    // $.thread(function(){ con.cast(_sn)('enter_debug')(); }, 200);
+    $.thread(function(){ con.cast(_sn)('enter_debug')(); }, 100);
+    $.thread(function(){ _enter(); }, 200);
     $.thread(function(){ _refresh(); }, 300);
     $.thread(function(){ _select('any') }, 400);
     // $.log("chat_main");
