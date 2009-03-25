@@ -1,0 +1,633 @@
+/*****************************************************************************
+small size mahjong images
+*****************************************************************************/
+
+/* spacer */
+.mj-e-s { width:2px; height:12px; }
+
+/* mj-{direct}-{id}-{size} */
+
+/* s */
+.mj-S-t-s {
+	width:4px; height:20px;
+	background:url(mj-s.gif) no-repeat -156px -174px;
+}
+
+.mj-S-b0-s {
+	width:15px; height:23px;
+	background:url(mj-s.gif) no-repeat -29px -171px;
+}
+.mj-S-b1-s {
+	width:11px; height:15px; padding:7px 2px 1px 2px;
+	background:url(mj-s.gif) no-repeat -102px -171px;
+}
+.mj-S-b2-s {
+	width:11px; height:15px; padding:1px 2px 7px 2px;
+	background:url(mj-s.gif) no-repeat -87px -171px;
+}
+
+.mj-S-1-s {
+	width:11px; height:15px;
+	background:url(mj-s.gif) no-repeat -0px -0px
+}
+.mj-S-2-s {
+	width:11px; height:15px;
+	background:url(mj-s.gif) no-repeat -11px -0px
+}
+.mj-S-3-s {
+	width:11px; height:15px;
+	background:url(mj-s.gif) no-repeat -22px -0px
+}
+.mj-S-4-s {
+	width:11px; height:15px;
+	background:url(mj-s.gif) no-repeat -33px -0px
+}
+.mj-S-5-s {
+	width:11px; height:15px;
+	background:url(mj-s.gif) no-repeat -44px -0px
+}
+.mj-S-6-s {
+	width:11px; height:15px;
+	background:url(mj-s.gif) no-repeat -55px -0px
+}
+.mj-S-7-s {
+	width:11px; height:15px;
+	background:url(mj-s.gif) no-repeat -66px -0px
+}
+.mj-S-8-s {
+	width:11px; height:15px;
+	background:url(mj-s.gif) no-repeat -77px -0px
+}
+.mj-S-9-s {
+	width:11px; height:15px;
+	background:url(mj-s.gif) no-repeat -88px -0px
+}
+.mj-S-11-s {
+	width:11px; height:15px;
+	background:url(mj-s.gif) no-repeat -0px -15px
+}
+.mj-S-12-s {
+	width:11px; height:15px;
+	background:url(mj-s.gif) no-repeat -11px -15px
+}
+.mj-S-13-s {
+	width:11px; height:15px;
+	background:url(mj-s.gif) no-repeat -22px -15px
+}
+.mj-S-14-s {
+	width:11px; height:15px;
+	background:url(mj-s.gif) no-repeat -33px -15px
+}
+.mj-S-15-s {
+	width:11px; height:15px;
+	background:url(mj-s.gif) no-repeat -44px -15px
+}
+.mj-S-16-s {
+	width:11px; height:15px;
+	background:url(mj-s.gif) no-repeat -55px -15px
+}
+.mj-S-17-s {
+	width:11px; height:15px;
+	background:url(mj-s.gif) no-repeat -66px -15px
+}
+.mj-S-18-s {
+	width:11px; height:15px;
+	background:url(mj-s.gif) no-repeat -77px -15px
+}
+.mj-S-19-s {
+	width:11px; height:15px;
+	background:url(mj-s.gif) no-repeat -88px -15px
+}
+.mj-S-21-s {
+	width:11px; height:15px;
+	background:url(mj-s.gif) no-repeat -0px -30px
+}
+.mj-S-22-s {
+	width:11px; height:15px;
+	background:url(mj-s.gif) no-repeat -11px -30px
+}
+.mj-S-23-s {
+	width:11px; height:15px;
+	background:url(mj-s.gif) no-repeat -22px -30px
+}
+.mj-S-24-s {
+	width:11px; height:15px;
+	background:url(mj-s.gif) no-repeat -33px -30px
+}
+.mj-S-25-s {
+	width:11px; height:15px;
+	background:url(mj-s.gif) no-repeat -44px -30px
+}
+.mj-S-26-s {
+	width:11px; height:15px;
+	background:url(mj-s.gif) no-repeat -55px -30px
+}
+.mj-S-27-s {
+	width:11px; height:15px;
+	background:url(mj-s.gif) no-repeat -66px -30px
+}
+.mj-S-28-s {
+	width:11px; height:15px;
+	background:url(mj-s.gif) no-repeat -77px -30px
+}
+.mj-S-29-s {
+	width:11px; height:15px;
+	background:url(mj-s.gif) no-repeat -88px -30px
+}
+.mj-S-31-s {
+	width:11px; height:15px;
+	background:url(mj-s.gif) no-repeat -0px -45px
+}
+.mj-S-32-s {
+	width:11px; height:15px;
+	background:url(mj-s.gif) no-repeat -11px -45px
+}
+.mj-S-33-s {
+	width:11px; height:15px;
+	background:url(mj-s.gif) no-repeat -22px -45px
+}
+.mj-S-34-s {
+	width:11px; height:15px;
+	background:url(mj-s.gif) no-repeat -33px -45px
+}
+.mj-S-35-s {
+	width:11px; height:15px;
+	background:url(mj-s.gif) no-repeat -44px -45px
+}
+.mj-S-36-s {
+	width:11px; height:15px;
+	background:url(mj-s.gif) no-repeat -55px -45px
+}
+.mj-S-37-s {
+	width:11px; height:15px;
+	background:url(mj-s.gif) no-repeat -66px -45px
+}
+
+/* w */
+.mj-W-t-s {
+	width:20px; height:3px;
+	background:url(mj-s.gif) no-repeat -126px -191px;
+}
+
+.mj-W-b0-s {
+	width:20px; height:19px;
+	background:url(mj-s.gif) no-repeat -9px -175px;
+}
+.mj-W-b1-s {
+	width:9px; height:25px;
+	background:url(mj-s.gif) no-repeat -0px -169px;
+}
+.mj-W-b2-s {
+	width:15px; height:11px; padding:1px 2px 7px 3px;
+	background:url(mj-s.gif) no-repeat -67px -176px;
+}
+
+.mj-W-1-s {
+	width:15px; height:11px;
+	background:url(mj-s.gif) no-repeat -144px -0px
+}
+.mj-W-2-s {
+	width:15px; height:11px;
+	background:url(mj-s.gif) no-repeat -144px -11px
+}
+.mj-W-3-s {
+	width:15px; height:11px;
+	background:url(mj-s.gif) no-repeat -144px -22px
+}
+.mj-W-4-s {
+	width:15px; height:11px;
+	background:url(mj-s.gif) no-repeat -144px -33px
+}
+.mj-W-5-s {
+	width:15px; height:11px;
+	background:url(mj-s.gif) no-repeat -144px -44px
+}
+.mj-W-6-s {
+	width:15px; height:11px;
+	background:url(mj-s.gif) no-repeat -144px -55px
+}
+.mj-W-7-s {
+	width:15px; height:11px;
+	background:url(mj-s.gif) no-repeat -144px -66px
+}
+.mj-W-8-s {
+	width:15px; height:11px;
+	background:url(mj-s.gif) no-repeat -144px -77px
+}
+.mj-W-9-s {
+	width:15px; height:11px;
+	background:url(mj-s.gif) no-repeat -144px -88px
+}
+.mj-W-11-s {
+	width:15px; height:11px;
+	background:url(mj-s.gif) no-repeat -129px -0px
+}
+.mj-W-12-s {
+	width:15px; height:11px;
+	background:url(mj-s.gif) no-repeat -129px -11px
+}
+.mj-W-13-s {
+	width:15px; height:11px;
+	background:url(mj-s.gif) no-repeat -129px -22px
+}
+.mj-W-14-s {
+	width:15px; height:11px;
+	background:url(mj-s.gif) no-repeat -129px -33px
+}
+.mj-W-15-s {
+	width:15px; height:11px;
+	background:url(mj-s.gif) no-repeat -129px -44px
+}
+.mj-W-16-s {
+	width:15px; height:11px;
+	background:url(mj-s.gif) no-repeat -129px -55px
+}
+.mj-W-17-s {
+	width:15px; height:11px;
+	background:url(mj-s.gif) no-repeat -129px -66px
+}
+.mj-W-18-s {
+	width:15px; height:11px;
+	background:url(mj-s.gif) no-repeat -129px -77px
+}
+.mj-W-19-s {
+	width:15px; height:11px;
+	background:url(mj-s.gif) no-repeat -129px -88px
+}
+.mj-W-21-s {
+	width:15px; height:11px;
+	background:url(mj-s.gif) no-repeat -114px -0px
+}
+.mj-W-22-s {
+	width:15px; height:11px;
+	background:url(mj-s.gif) no-repeat -114px -11px
+}
+.mj-W-23-s {
+	width:15px; height:11px;
+	background:url(mj-s.gif) no-repeat -114px -22px
+}
+.mj-W-24-s {
+	width:15px; height:11px;
+	background:url(mj-s.gif) no-repeat -114px -33px
+}
+.mj-W-25-s {
+	width:15px; height:11px;
+	background:url(mj-s.gif) no-repeat -114px -44px
+}
+.mj-W-26-s {
+	width:15px; height:11px;
+	background:url(mj-s.gif) no-repeat -114px -55px
+}
+.mj-W-27-s {
+	width:15px; height:11px;
+	background:url(mj-s.gif) no-repeat -114px -66px
+}
+.mj-W-28-s {
+	width:15px; height:11px;
+	background:url(mj-s.gif) no-repeat -114px -77px
+}
+.mj-W-29-s {
+	width:15px; height:11px;
+	background:url(mj-s.gif) no-repeat -114px -88px
+}
+.mj-W-31-s {
+	width:15px; height:11px;
+	background:url(mj-s.gif) no-repeat -99px -0px
+}
+.mj-W-32-s {
+	width:15px; height:11px;
+	background:url(mj-s.gif) no-repeat -99px -11px
+}
+.mj-W-33-s {
+	width:15px; height:11px;
+	background:url(mj-s.gif) no-repeat -99px -22px
+}
+.mj-W-34-s {
+	width:15px; height:11px;
+	background:url(mj-s.gif) no-repeat -99px -33px
+}
+.mj-W-35-s {
+	width:15px; height:11px;
+	background:url(mj-s.gif) no-repeat -99px -44px
+}
+.mj-W-36-s {
+	width:15px; height:11px;
+	background:url(mj-s.gif) no-repeat -99px -55px
+}
+.mj-W-37-s {
+	width:15px; height:11px;
+	background:url(mj-s.gif) no-repeat -99px -66px
+}
+
+/* n */
+.mj-N-t-s {
+	width:4px; height:20px;
+	background:url(mj-s.gif) no-repeat -156px -174px;
+}
+
+.mj-N-b0-s {
+	width:15px; height:23px;
+	background:url(mj-s.gif) no-repeat -29px -171px;
+}
+.mj-N-b1-s {
+	width:15px; height:23px;
+	background:url(mj-s.gif) no-repeat -44px -171px;
+}
+.mj-N-b2-s {
+	width:11px; height:15px; padding:1px 2px 7px 2px;
+	background:url(mj-s.gif) no-repeat -87px -171px;
+}
+
+.mj-N-1-s {
+	width:11px; height:15px;
+	background:url(mj-s.gif) no-repeat -148px -144px
+}
+.mj-N-2-s {
+	width:11px; height:15px;
+	background:url(mj-s.gif) no-repeat -137px -144px
+}
+.mj-N-3-s {
+	width:11px; height:15px;
+	background:url(mj-s.gif) no-repeat -126px -144px
+}
+.mj-N-4-s {
+	width:11px; height:15px;
+	background:url(mj-s.gif) no-repeat -115px -144px
+}
+.mj-N-5-s {
+	width:11px; height:15px;
+	background:url(mj-s.gif) no-repeat -104px -144px
+}
+.mj-N-6-s {
+	width:11px; height:15px;
+	background:url(mj-s.gif) no-repeat -93px -144px
+}
+.mj-N-7-s {
+	width:11px; height:15px;
+	background:url(mj-s.gif) no-repeat -82px -144px
+}
+.mj-N-8-s {
+	width:11px; height:15px;
+	background:url(mj-s.gif) no-repeat -71px -144px
+}
+.mj-N-9-s {
+	width:11px; height:15px;
+	background:url(mj-s.gif) no-repeat -60px -144px
+}
+.mj-N-11-s {
+	width:11px; height:15px;
+	background:url(mj-s.gif) no-repeat -148px -129px
+}
+.mj-N-12-s {
+	width:11px; height:15px;
+	background:url(mj-s.gif) no-repeat -137px -129px
+}
+.mj-N-13-s {
+	width:11px; height:15px;
+	background:url(mj-s.gif) no-repeat -126px -129px
+}
+.mj-N-14-s {
+	width:11px; height:15px;
+	background:url(mj-s.gif) no-repeat -115px -129px
+}
+.mj-N-15-s {
+	width:11px; height:15px;
+	background:url(mj-s.gif) no-repeat -104px -129px
+}
+.mj-N-16-s {
+	width:11px; height:15px;
+	background:url(mj-s.gif) no-repeat -93px -129px
+}
+.mj-N-17-s {
+	width:11px; height:15px;
+	background:url(mj-s.gif) no-repeat -82px -129px
+}
+.mj-N-18-s {
+	width:11px; height:15px;
+	background:url(mj-s.gif) no-repeat -71px -129px
+}
+.mj-N-19-s {
+	width:11px; height:15px;
+	background:url(mj-s.gif) no-repeat -60px -129px
+}
+.mj-N-21-s {
+	width:11px; height:15px;
+	background:url(mj-s.gif) no-repeat -148px -114px
+}
+.mj-N-22-s {
+	width:11px; height:15px;
+	background:url(mj-s.gif) no-repeat -137px -114px
+}
+.mj-N-23-s {
+	width:11px; height:15px;
+	background:url(mj-s.gif) no-repeat -126px -114px
+}
+.mj-N-24-s {
+	width:11px; height:15px;
+	background:url(mj-s.gif) no-repeat -115px -114px
+}
+.mj-N-25-s {
+	width:11px; height:15px;
+	background:url(mj-s.gif) no-repeat -104px -114px
+}
+.mj-N-26-s {
+	width:11px; height:15px;
+	background:url(mj-s.gif) no-repeat -93px -114px
+}
+.mj-N-27-s {
+	width:11px; height:15px;
+	background:url(mj-s.gif) no-repeat -82px -114px
+}
+.mj-N-28-s {
+	width:11px; height:15px;
+	background:url(mj-s.gif) no-repeat -71px -114px
+}
+.mj-N-29-s {
+	width:11px; height:15px;
+	background:url(mj-s.gif) no-repeat -60px -114px
+}
+.mj-N-31-s {
+	width:11px; height:15px;
+	background:url(mj-s.gif) no-repeat -148px -99px
+}
+.mj-N-32-s {
+	width:11px; height:15px;
+	background:url(mj-s.gif) no-repeat -137px -99px
+}
+.mj-N-33-s {
+	width:11px; height:15px;
+	background:url(mj-s.gif) no-repeat -126px -99px
+}
+.mj-N-34-s {
+	width:11px; height:15px;
+	background:url(mj-s.gif) no-repeat -115px -99px
+}
+.mj-N-35-s {
+	width:11px; height:15px;
+	background:url(mj-s.gif) no-repeat -104px -99px
+}
+.mj-N-36-s {
+	width:11px; height:15px;
+	background:url(mj-s.gif) no-repeat -93px -99px
+}
+.mj-N-37-s {
+	width:11px; height:15px;
+	background:url(mj-s.gif) no-repeat -82px -99px
+}
+
+/* e */
+.mj-E-t-s {
+	width:20px; height:3px;
+	background:url(mj-s.gif) no-repeat -126px -191px;
+}
+
+.mj-E-b0-s {
+	width:20px; height:19px;
+	background:url(mj-s.gif) no-repeat -9px -175px;
+}
+.mj-E-b1-s {
+	width:9px; height:25px;
+	background:url(mj-s.gif) no-repeat -59px -169px;
+}
+.mj-E-b2-s {
+	width:15px; height:11px; padding:1px 3px 7px 2px;
+	background:url(mj-s.gif) no-repeat -67px -176px;
+}
+
+.mj-E-1-s {
+	width:15px; height:11px;
+	background:url(mj-s.gif) no-repeat -0px -148px
+}
+.mj-E-2-s {
+	width:15px; height:11px;
+	background:url(mj-s.gif) no-repeat -0px -137px
+}
+.mj-E-3-s {
+	width:15px; height:11px;
+	background:url(mj-s.gif) no-repeat -0px -126px
+}
+.mj-E-4-s {
+	width:15px; height:11px;
+	background:url(mj-s.gif) no-repeat -0px -115px
+}
+.mj-E-5-s {
+	width:15px; height:11px;
+	background:url(mj-s.gif) no-repeat -0px -104px
+}
+.mj-E-6-s {
+	width:15px; height:11px;
+	background:url(mj-s.gif) no-repeat -0px -93px
+}
+.mj-E-7-s {
+	width:15px; height:11px;
+	background:url(mj-s.gif) no-repeat -0px -82px
+}
+.mj-E-8-s {
+	width:15px; height:11px;
+	background:url(mj-s.gif) no-repeat -0px -71px
+}
+.mj-E-9-s {
+	width:15px; height:11px;
+	background:url(mj-s.gif) no-repeat -0px -60px
+}
+.mj-E-11-s {
+	width:15px; height:11px;
+	background:url(mj-s.gif) no-repeat -15px -148px
+}
+.mj-E-12-s {
+	width:15px; height:11px;
+	background:url(mj-s.gif) no-repeat -15px -137px
+}
+.mj-E-13-s {
+	width:15px; height:11px;
+	background:url(mj-s.gif) no-repeat -15px -126px
+}
+.mj-E-14-s {
+	width:15px; height:11px;
+	background:url(mj-s.gif) no-repeat -15px -115px
+}
+.mj-E-15-s {
+	width:15px; height:11px;
+	background:url(mj-s.gif) no-repeat -15px -104px
+}
+.mj-E-16-s {
+	width:15px; height:11px;
+	background:url(mj-s.gif) no-repeat -15px -93px
+}
+.mj-E-17-s {
+	width:15px; height:11px;
+	background:url(mj-s.gif) no-repeat -15px -82px
+}
+.mj-E-18-s {
+	width:15px; height:11px;
+	background:url(mj-s.gif) no-repeat -15px -71px
+}
+.mj-E-19-s {
+	width:15px; height:11px;
+	background:url(mj-s.gif) no-repeat -15px -60px
+}
+.mj-E-21-s {
+	width:15px; height:11px;
+	background:url(mj-s.gif) no-repeat -30px -148px
+}
+.mj-E-22-s {
+	width:15px; height:11px;
+	background:url(mj-s.gif) no-repeat -30px -137px
+}
+.mj-E-23-s {
+	width:15px; height:11px;
+	background:url(mj-s.gif) no-repeat -30px -126px
+}
+.mj-E-24-s {
+	width:15px; height:11px;
+	background:url(mj-s.gif) no-repeat -30px -115px
+}
+.mj-E-25-s {
+	width:15px; height:11px;
+	background:url(mj-s.gif) no-repeat -30px -104px
+}
+.mj-E-26-s {
+	width:15px; height:11px;
+	background:url(mj-s.gif) no-repeat -30px -93px
+}
+.mj-E-27-s {
+	width:15px; height:11px;
+	background:url(mj-s.gif) no-repeat -30px -82px
+}
+.mj-E-28-s {
+	width:15px; height:11px;
+	background:url(mj-s.gif) no-repeat -30px -71px
+}
+.mj-E-29-s {
+	width:15px; height:11px;
+	background:url(mj-s.gif) no-repeat -30px -60px
+}
+.mj-E-31-s {
+	width:15px; height:11px;
+	background:url(mj-s.gif) no-repeat -45px -148px
+}
+.mj-E-32-s {
+	width:15px; height:11px;
+	background:url(mj-s.gif) no-repeat -45px -137px
+}
+.mj-E-33-s {
+	width:15px; height:11px;
+	background:url(mj-s.gif) no-repeat -45px -126px
+}
+.mj-E-34-s {
+	width:15px; height:11px;
+	background:url(mj-s.gif) no-repeat -45px -115px
+}
+.mj-E-35-s {
+	width:15px; height:11px;
+	background:url(mj-s.gif) no-repeat -45px -104px
+}
+.mj-E-36-s {
+	width:15px; height:11px;
+	background:url(mj-s.gif) no-repeat -45px -93px
+}
+.mj-E-37-s {
+	width:15px; height:11px;
+	background:url(mj-s.gif) no-repeat -45px -82px
+}
+

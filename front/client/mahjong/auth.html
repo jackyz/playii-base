@@ -1,0 +1,68 @@
+<!-- auth -->
+<style>
+#auth {
+}
+#auth #box {
+  width:300px; height:150px;
+  left:250px; top:30px;
+}
+#auth #nick {
+  width: 200px;
+}
+#auth #error {
+  color:red;
+}
+</style>
+
+<div id="auth">
+  <div class="box-bg"></div>
+  <div id="box" class="box-fg">
+    <div class="box-zebra"></div>
+    <div class="box-title">请输入你想要的名字</div>
+    <div class="box-texts">
+      名字就是你的代号，大杀四方，威风八面的你，怎能没有一个拉风的名字呢？ <br/>
+      <span id="error"></span><br/>
+      <form action="javascript:void();">
+	<input type="text" id="nick" name="nick" value="" />
+	<input type="hidden" name="id" value="guest"/>
+	<input type="submit" value="继续"/>
+      </form>
+    </div>
+  </div>
+</div>
+
+<script type="text/javascript">
+(function(){
+  // $.log("loading auth.html");
+  function _scene(){
+    var url = window.location.hash.split('#')[1];
+    return (url) ? url : undefined;
+  };
+  var next = _scene() || "mahjong_hall";
+  function loop(error){
+    $("form input:submit", $("#root #auth")).removeAttr("disabled");
+    if (error) $("#root #auth #error").html(error);
+  }
+  var callback = {
+    go_identify:loop,
+    failure:loop,
+    success:function(){ ui.load(next); }
+  };
+  $(document).bind("auth", function(event){
+    $("#root").empty().append($("#tmpl #auth").clone());
+    $("#nick", $("#root #auth")).focus();
+    $("form", $("#root #auth")).submit(function(){
+      var n = $.unhtml($("#nick", this).val());
+      $("#nick", this).val(n);
+      if(!n) {
+        $("#nick", this).focus();
+        loop("认真点，好好填。");
+        return false;
+      }
+      $("input:submit", this).attr("disabled", true);
+      con.open($("input", this).serialize(), callback);
+      return false;
+    });
+  });
+})();
+</script>

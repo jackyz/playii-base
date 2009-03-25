@@ -7,19 +7,18 @@ api_version: 1
 handlers:
 
 # 51.html -> html_p3p.py :: 51 needs p3p header to set cookie
-
 #- url: /chat/51\.html
-#  script: html_p3p.py
+#  script: p3p_header.py
 
-# static directories
+#### static directories
 
-- url: /base
-  static_dir: base
+- url: /ajax
+  static_dir: ajax
 
-- url: /chat
-  static_dir: chat
+- url: /client
+  static_dir: client
 
-# default
+#### default handler
 
 - url: /.*
   script: not_found.py

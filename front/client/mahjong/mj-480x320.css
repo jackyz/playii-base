@@ -1,0 +1,116 @@
+/*****************************************************************************
+screen size: 480px * 320px
+*****************************************************************************/
+
+/**** canvas ***/
+#game {
+	position:absolute; top:65px; left:0px;
+	width:480px; height:320px;
+	background:#3a6ea5;
+}
+
+/**** face ***/
+#game #face li {position:absolute;}
+#game #face #n {top:55px; left:224px;}
+#game #face #w {top:144px; left:67px;}
+#game #face #e {top:144px; left:380px;}
+#game #face #s {top:228px; left:224px;}
+
+/**** icon ****/
+#game #icon li {position:absolute;}
+#game #icon #n {top:55px; left:208px;}
+#game #icon #w {top:176px; left:67px;}
+#game #icon #e {top:128px; left:397px;}
+#game #icon #s {top:244px; left:256px;}
+
+#game #icon #hn {top:71px; left:208px;}
+#game #icon #hw {top:176px; left:83px;}
+#game #icon #he {top:128px; left:381px;}
+#game #icon #hs {top:228px; left:256px;}
+
+
+/**** desk ***/
+#game #desk { /* w:16*16 h:8*(23-5) */
+	width:256px; height:114px;
+	top:103px; left:112px;
+	background:#3a7eb5;/*#3aa6a6;*/
+	/* border:1px #777 inset; */
+}
+#game #desk li {
+	float:left;
+	margin-top:-5px;
+}
+
+/**** side ***/
+#game #side #n { /* w:18*16 h:1*23 */
+	width:288px; height:23px;
+	top:0px; left:96px;
+}
+#game #side #n li { float:right; }
+
+#game #side #w { /* w:1*20 h:18*(19-5) */
+	width:20px; height:252px;
+	top:34px; left:0px;
+}
+#game #side #w li { float:none; margin-top:-5px; }
+#game #side #w li.h { margin-top:-12px; }
+
+#game #side #e { /* w:1*20 h:18*(19-5) */
+	width:20px; height:252px;
+	top:34px; left:460px;
+}
+#game #side #e li { float:none; margin-top:-5px; }
+#game #side #e li.h { margin-top:-12px;	margin-left:11px; }
+
+#game #side #s { /* w:18*16 h:1*23 */
+	width:288px; height:23px;
+	top:297px; left:96px;
+}
+#game #side #s li { float:left; }
+#game #side #s li.active:hover { margin-top:-5px; }
+
+/**** cmds ***/
+#game #cmds {
+	width:146px; /* height:45px; */
+	top:228px; left:280px;
+}
+#game #cmds li {
+	float:left;
+	margin-left:1px;
+}
+
+/**** info ***/
+#game #info {
+      width:480px; height:320px;
+      top:0px; left:0px;
+      background:#333;
+}
+#game #info #cmd{
+      top:150px; left:96px;
+}
+#game #info #cmd li{
+      margin-left:11px;
+      float:left;
+      background:#888;
+      border:1px #aaa outset;
+      padding:2px 8px;
+      cursor:pointer;
+}
+#game #info #hu {
+      width:288px; height:23px;
+      top:120px; left:96px;
+}
+#game #info #hu li{
+      float:left;
+}
+
+/**** common list ***/
+#game ul {
+	position:absolute;
+	display:block;
+	list-style-type:none;
+}
+#game ul li.active:hover {
+	margin-top:-5px;
+}
+

@@ -76,16 +76,16 @@
      return true;
    }
 
-   // table_open : 开始一桌
-   function table_open(ctx, room){
-     var turl = ctx.self+"/table/"+room;
+   // room_open : 开始一桌
+   function room_open(ctx, room){
+     var turl = "mahjong_room_"+room;
      var sits = ctx.rl[room].sits;
      for(var f in F){
        var w = sits[F[f]];
        delete ctx.ul[w]; // remove from hall // NEED THINK AGAIN
        cast(w)("go")(turl); // make client goto the table
      }
-     debug("table_open("+turl+","+sits);
+     debug("room_open("+turl+","+sits.toSource());
      spawn(turl)(turl, sits);
    }
 
@@ -118,8 +118,9 @@
 	 if (! room in this.rl) { return debug("sitdown: bad room"); }
 	 if ("NEWS".indexOf(sit) == -1){ return debug("sitdown: bad sit"); }
 	 if (this.rl[room].sits[sit]){ return debug("sitdown: sited"); }
+	 debug("sitdown:{room:\""+room+"\", sit:\""+sit+"\"}");
 	 this.rl[room].sits[sit] = who;
-	 if (table_full(this, room)) table_open(this, room); // 满桌，开始
+	 if (table_full(this, room)) room_open(this, room); // 满桌，开始
 	 if (hall_full(this)) table_new(this); // 满厅，新开
 	 broadcast(this);
        },

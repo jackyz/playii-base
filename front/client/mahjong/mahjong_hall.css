@@ -1,0 +1,96 @@
+#mahjong_hall {
+    width:760px; height:560px;
+    overflow:auto;
+    padding: 20px;
+}
+
+#mahjong_hall ul {
+/*
+    position:absolute;
+    display:block;
+*/
+    list-style-type:none;
+}
+
+#mahjong_hall #rooms {
+}
+
+#mahjong_hall #rooms ul {
+    float:left;
+}
+
+#mahjong_hall #rooms ul.room {
+    width: 120px; height: 120px;
+    margin: 20px;
+    padding: 9px;
+    border: 1px #aaa solid;
+    background: #eee;
+}
+
+#mahjong_hall #rooms ul.play {
+    background: #ccc;
+}
+
+#mahjong_hall #rooms li {
+    width: 34px; height:34px;
+    border: 1px #888 solid;
+    background: #aaa;
+    position: relative;
+}
+
+#mahjong_hall #rooms #N { left:42px; top:0px; }
+
+#mahjong_hall #rooms #W { left:0px; top:6px; }
+
+#mahjong_hall #rooms #S { left:42px; top:12px; }
+
+#mahjong_hall #rooms #E { left:84px; top:-66px; }
+
+#mahjong_hall #rooms #V { left:42px; top:-102px; }
+
+#mahjong_hall #rooms li.empty { background:#ccc; }
+
+#mahjong_hall #rooms li.on {
+    background:#aaf;
+    cursor:pointer;
+}
+
+#mahjong_hall #rooms li.on:hover { background:#88f; }
+
+#mahjong_hall #rooms li.on.self { background:#55f; }
+
+/*
+#mahjong_hall ul#players {
+    width: 320px; height: 440px;
+    left: 460px; top: 20px;
+    background: #eee;
+    border:1px #aaa solid;
+}
+
+#mahjong_hall ul#users {
+    width: 320px; height: 440px;
+    left: 20px; top: 20px;
+    background: #eee;
+    border:1px #aaa solid;
+}
+
+#mahjong_hall div#cmd {
+    position:absolute;
+    width: 80px; height: 40px;
+    left: 360px; top: 220px;
+    background:#eee;
+    border:1px #aaa solid;
+    cursor:pointer;
+    text-align:center;
+    line-height:40px;
+}
+#mahjong_hall div#cmd:hover {
+    border:1px #aaa outset;
+}
+
+#mahjong_hall li.self {
+    color:red;
+    background: #333;
+}
+
+*/

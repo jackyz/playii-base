@@ -1,0 +1,62 @@
+<!-- adv_0 -->
+<style>
+#adv_0 {
+}
+#adv_0 #box {
+  width:520px; height:320px;
+  left:140px; top:30px;
+}
+#adv_0 #box #ad {
+  background: #fff;
+  border: 1px solid #eee;
+  padding: 5px;
+}
+#adv_0 #box a {
+  text-decoration:none;
+}
+#adv_0 #box li {
+  list-style: inside;
+  padding-left: 40px;  
+}
+</style>
+
+<div id="adv_0">
+  <div class="box-bg"></div>
+  <div id="box" class="box-fg">
+    <div class="box-zebra"></div>
+    <div class="box-title">注意事项</div>
+    <div class="box-texts">
+      <div id="ad">
+	　　网络麻将是存在于现实生活之外的虚拟公共空间，虚拟并不意味着无需为自己的行为负责。在这里你需要遵守以下规则： <br/>
+	<ol>
+	  <li>本服务仅供娱乐，严禁赌博。</li>
+	  <li>本服务仅对成年人开放，未成年人请离开。</li>
+	  <li>严格区分虚拟和现实，不要泄露隐私，不可轻信任何言论。</li>
+	  <li>有礼貌，尊重他人，不允许诬蔑和诽谤他人。</li>
+	  <li>严格遵守国家法律。</li>
+	</ol>
+	　　如果违反上述规则，由此造成的任何后果(包括但不限于：情感挫折、经济损失、民事纠纷乃至刑事责任)，你必须自行承担，服务提供者不负任何责任。否则，请勿使用本服务。
+      </div>
+      <br/>
+      请仔细阅读注意事项，选'继续'视作理解并接受上述规则，否则请选'离开'。
+      <br/>
+      <br/>
+      <input id="next" type="button" value="继续" />
+      <input id="quit" type="button" value="离开" />
+    </div>
+  </div>
+</div>
+
+<script type="text/javascript">
+(function(){
+  // $.log("loading adv_0.html");
+  var next = "auth";
+  var quit = "adv_q";
+  $(document).bind("adv_0", function(event){
+    $("#root").empty().append($("#tmpl #adv_0").clone());
+    $("#next", $("#root #adv_0")).focus();
+    $("#next", $("#root #adv_0")).click(function(){ ui.load(next); });
+    $("#quit", $("#root #adv_0")).click(function(){ ui.load(quit); });
+  });
+})();
+</script>

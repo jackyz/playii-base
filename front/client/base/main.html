@@ -33,7 +33,7 @@ body {
 }
 #conn {
   position:absolute;
-  left: 10px; top: 10px;
+  left: -1000px; top: -1000px;
   width: 5px; height:5px;
 }
 #body {
@@ -43,7 +43,7 @@ body {
   position:absolute;
   left:0px; top:0px;
   width:100%; height:100%;
-  background:#268 url(bg0.jpg);
+  background: url(bg0.jpg);
   color: #666;
 }
 #log {
@@ -108,14 +108,36 @@ if(!window["ui"]) window["ui"] = (function(){
   var tmpl = "#tmpl";
   var i8ns = {};
 
-  // usage: i8n.bind("chat_room_1234", {"text":"translated text"})
-  function bind(sn, obj){
-    i8ns[sn] = obj;
+  // sn is a structured string
+  // first part means the class
+  // second part means the instance
+  // "chat" -> ["chat"]
+  // "chat_room" -> ["chat_room", undefined]
+  // "chat_room_1234" -> ["chat_room", "1234"]
+  function struc(sn){
+    var r, a = sn.split('_');
+    if (a.length > 2) {
+      var c = [a[0], a[1]].join('_');
+      a.shift(); a.shift();
+      var i = a.join('_');
+      r = [c, i];
+    } else {
+      r = [sn, undefined];
+    }
+    // $.log("struc("+sn+")->"+$.source(r));
+    return r;
   }
 
-  // usage: i8n.unbind("chat_room_1234")
+  // usage: bind("chat_room_1234", {"text":"translated text"})
+  function bind(sn, obj){
+    var s = struc(sn);
+    i8ns[s[0]] = obj;
+  }
+
+  // usage: unbind("chat_room_1234")
   function unbind(sn){
-    delete i8ns[sn];
+    var s = struc(sn);
+    delete i8ns[s[0]];
   }
 
   // usage: i8n.tran("chat_room_1234", "hello, {text1}, {welcome to} name");
@@ -126,7 +148,7 @@ if(!window["ui"]) window["ui"] = (function(){
   function tran(sn, s){
     // $.log("_tran:"+sn+","+s);
     function map(s){
-      var x = i8ns[sn][s];
+      var x = i8ns[s[0]][s];
       return x ? x : s;
     }
     function part(h, t){
@@ -140,6 +162,7 @@ if(!window["ui"]) window["ui"] = (function(){
         return h+t;
       }
     }
+    var s = struc(sn);
     return part("", (s ? s : ""));
   }
 
@@ -162,24 +185,19 @@ if(!window["ui"]) window["ui"] = (function(){
     return part("", (s ? s : ""));
   }
 
-  // the file of url
-  function file(sn){
-    var a = sn.split('_');
-    return (a.length >= 2) ? [a[0], a[1]].join('_') : sn;
-  }
-
   // load and display the sn ui
   function load(sn){
-    if($("#"+sn, tmpl).size() <= 0){
-      $.getJSON(file(sn)+"-zh_CN.js", function(json){
-	bind(sn, json);
+    var s = struc(sn);
+    if($("#"+s[0], tmpl).size() <= 0){ // if not load
+      $.getJSON(s[0]+"-zh_CN.js", function(json){
+	bind(s[0], json);
       });
-      $.get(file(sn)+".html", function(html){
+      $.get(s[0]+".html", function(html){
 	$(tmpl).append(html);
-	$(document).trigger(sn);
+        $(document).trigger(s[0], [s[1]]);
       });
     } else {
-      $(document).trigger(sn);
+      $(document).trigger(s[0], [s[1]]);
     }
   }
 
@@ -357,13 +375,14 @@ if ( $.inArray(sn, ["adv_0", "adv_q", "auth"]) != -1 ) {
 } else {
   var fok = function(){ ui.load(sn); };
   var fau = function(){ ui.load("auth"); };
+  $("#conn").load(function(){
   con.open({}, {go_identify:fau, failure:fau, success:fok});
+  });
 }
 
 });
 </script>
 
-</script>
 <script type="text/javascript">
 var gaJsHost = (("https:" == document.location.protocol) ? "https://ssl." : "http://www.");
 document.write(unescape("%3Cscript src='" + gaJsHost + "google-analytics.com/ga.js' type='text/javascript'%3E%3C/script%3E"));

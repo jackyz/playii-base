@@ -284,23 +284,22 @@
     _ui('#what').val('');
   }
 
-  $(document).bind("chat_main", function(event){
-    $("#root").empty().append($("#tmpl #chat_main").clone());
+  $(document).bind(_sn, function(event){
+    $("#root").empty().append($("#tmpl #"+_sn).clone());
     // bind scene callback
     con.bind(_sn, callback);
     // auto run logics
-    $.thread(function(){ con.cast(_sn)('enter_debug')(); }, 100);
+    $.thread(function(){ _cast('enter_debug')(); }, 100);
     $.thread(function(){ _enter(); }, 200);
     $.thread(function(){ _refresh(); }, 300);
     $.thread(function(){ _select('any') }, 400);
-    // $.log("chat_main");
-    // fit the size
+    // $.log(_sn);
+    // bind ui callbacks
     $(window).resize(function(){
       var nh = $(window).height() - _ui('#tools').height();
       _ui('#words').height( nh );
       _ui('#users').height( nh );
     }).trigger("resize");
-    // bind ui callbacks
     // $('#send').bind('click', on_click_send);
     _ui('#what').keypress(function(k){ if(k.keyCode == 13) on_click_send(); });
     _ui('#refresh').click(function(){ _refresh(); } );
