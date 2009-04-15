@@ -56,9 +56,11 @@
 
 <div id="chat_main">
   <div id="words">
+<!--
 －－－－－－－－－－－－－－－－－－－－－－－－－－－－－ <br/>
 只爱陌生人，不要太认真……  <br/>
 －－－－－－－－－－－－－－－－－－－－－－－－－－－－－ <br/>
+-->
   </div>
   <div id="users">在线用户列表加载中……</div>
   <div id="tools">
@@ -84,7 +86,7 @@
   var _sn = "chat_main";
 
   // **** model
-  var self = undefined;
+  var whoami = undefined;
   var users = {};
   var current = 'any';
 
@@ -96,7 +98,7 @@
   }
 
   function users_refresh(u, ul){
-    self = u;
+    whoami = u;
     users = ul;
     _redraw(users);
   }
@@ -105,7 +107,7 @@
     if (u in users) {
       var oldn = users[u];
       users[u] = n;
-      if (u == self) {
+      if (u == whoami) {
         _info("{I renamed to}:"+_span(u, n)+".");
       } else {
         _info(_span(u, oldn)+"{renamed to}:"+_span(u, n)+".");
@@ -200,7 +202,7 @@
       $(this).removeClass("user-self").removeClass("user-on");
       var u = $(this).attr('xid');
       if (u in users || u == 'any') {
-        if (u == self) {
+        if (u == whoami) {
 	  $(this).addClass('user-self');
         } else {
 	  $(this).addClass('user-on');
@@ -234,7 +236,7 @@
   // user_select('abc')
   function _select(u){
     current = (u in users) ? u : 'any';
-    if (current == self) {
+    if (current == whoami) {
       _ui('#who_nick').hide();
       _ui("#rename").show();
     } else {
@@ -248,19 +250,19 @@
   // redraw the users list
   // _redraw(users);
   function _redraw(users){
-    _ui('#users').hide();
-    _ui('#users').empty();
+    var str = "";
     var len = 0;
     for(var u in users) len++;
-    _ui('#users').append(_tran("{total}:"+len+"{person}")+"<br/>");
-    if (self != undefined && users[self] != undefined) {
-      _ui('#users').append("<li>"+_span(self, users[self])+"</li>");
+    str += _tran("{total}:"+len+"{person}")+"<br/>";
+    if (whoami != undefined && users[whoami] != undefined) {
+      str += "<li>"+_span(whoami, users[whoami])+"</li>";
     }
-    _ui('#users').append("<li>"+_span('any', '{every one}')+"</li>");
+    str += "<li>"+_span('any', '{every one}')+"</li>";
     for(var u in users) {
-      if(u != self) _ui('#users').append("<li>"+_span(u, users[u])+"</li>");
+      if(u != whoami) str += "<li>"+_span(u, users[u])+"</li>";
     }
-    _ui('#users').show();
+    // $.log("str="+str);
+    _ui("#users").hide().empty().append(str).show();
     _highlight(users);
   }
 
@@ -268,7 +270,7 @@
     var what = $.unhtml(_ui('#what').val());
     if (what == "") {
       // nothing
-    } else if (current == self) {
+    } else if (current == whoami) {
       _rename(what);
       _select('any');
     } else if (current == 'any') {

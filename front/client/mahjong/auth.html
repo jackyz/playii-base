@@ -63,6 +63,9 @@
       con.open($("input", this).serialize(), callback);
       return false;
     });
+    // preload
+    ui.load(next, false);
   });
+
 })();
 </script>

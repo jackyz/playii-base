@@ -15,39 +15,18 @@ $(function(){
 
   // $.log("loading conn.html");
 
-  // **** get/set cookie
-  // * ie will block 3rd party cookie
-  // * need p3p header to work around
-  // * or using keeping iframe to avoid cookie
-  function cookie(name, val){
-    if (val != undefined) { // set cookie
-      //alert("set cookie "+val);
-      document.cookie = name+"="+encodeURIComponent(val);
-    } else {   // get cookie
-      var c = document.cookie;
-      var s = c.indexOf(name+"=");
-      var e = c.indexOf(";", s+name.length+1);
-      var v;
-      if (s != -1)
-        v = c.substring(s+name.length+1, (e==-1)?c.length:e);
-      return decodeURIComponent(v);
-    }
-  }
-
   // var host = "http://61.139.126.212:8880";
-  var host = "http://playii.appspot.com:8880";
+  var host = "http://api.playii.com:8880";
   var ourl = host+"/_open?c=?"; // 连接URL
   var rurl = host+"/_recv?c=?"; // 接收URL
   var surl = host+"/_send?c=?"; // 发送URL
+  var debug= 1;                 // 通讯调试
+  var timeout = 30000;          // 通讯超时 3 seconds
 
-  // ******** model
-  var token = "";  // 通讯令牌
-  var debug = 0;   // 通讯调试
-
-  function open(param, error, success){
-    // token = cookie("token");
-    if(token) param["t"] = token;
+  function open(param, success, error){
     if(debug) $.log("open -> "+$.source(param));
+    // jsonp timeout work around
+    var tId = $.thread(function(){ error(null, 404, "timeout"); }, timeout);
     $.ajax({
       url:ourl, 
       type:"GET", 
@@ -56,20 +35,18 @@ $(function(){
       data:param,
       error:error,
       success:function(d){
+        // jsonp timeout work around
+        $.cancel(tId);
         if(debug) $.log("open <- "+$.source(d));
-        if (d[0] == "ok"){
-	  token = d[1];
-	  // cookie("token", d[1]);
-	  // alert("p3p check!!! token:"+token+",cookie:"+_cookie("token"));
-	}
 	success(d);
       }
     });
   }
  
-  function recv(error, success){
-    var param = {t:token};
+  function recv(param, success, error){
     if(debug) $.log("recv -> "+$.source(param));
+    // jsonp timeout work around
+    var tId = $.thread(function(){ error(null, 404, "timeout"); }, timeout);
     $.ajax({
       url:rurl,
       type:"GET",
@@ -78,15 +55,18 @@ $(function(){
       data:param,
       error:error,
       success:function(d){
+        // jsonp timeout work around
+        $.cancel(tId);
         if(debug) $.log("recv <- "+$.source(d));
         success(d);
       }
     });
   }
 
-  function send(param, error, success){
-    param["t"] = token;
+  function send(param, success, error){
     if(debug) $.log("send -> "+$.source(param));
+    // jsonp timeout work around
+    var tId = $.thread(function(){ error(null, 404, "timeout"); }, timeout);
     $.ajax({
       url:surl,
       type:"GET",
@@ -95,6 +75,8 @@ $(function(){
       data: param,
       error:error,
       success:function(d){
+        // jsonp timeout work around
+        $.cancel(tId);
         if(debug) $.log("send <- "+$.source(d));
         success(d);
       }

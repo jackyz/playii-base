@@ -65,7 +65,7 @@
 
    // table_new : 新建一桌
    function table_new(ctx){
-     ctx.rl[""+now()] = { play:false, sits:{} };
+     ctx.rl["mahjong_room_"+now()] = { play:false, sits:{} };
    }
 
    // table_full(ctx, room) : 是否已经满桌
@@ -78,15 +78,14 @@
 
    // room_open : 开始一桌
    function room_open(ctx, room){
-     var turl = "mahjong_room_"+room;
      var sits = ctx.rl[room].sits;
      for(var f in F){
        var w = sits[F[f]];
        delete ctx.ul[w]; // remove from hall // NEED THINK AGAIN
-       cast(w)("go")(turl); // make client goto the table
+       cast(w)("go")(room); // make client goto the table
      }
-     debug("room_open("+turl+","+sits.toSource());
-     spawn(turl)(turl, sits);
+     debug("room_open("+room+","+sits.toSource());
+     spawn(room)(room, sits);
    }
 
    // return a function-as-an-object structure

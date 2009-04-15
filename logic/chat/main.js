@@ -3,7 +3,7 @@
    // shared private, constants
    function mask(ul){
      var nul = {};
-     for(var n in ul) nul[n] = ul[n].nick;
+     for(var n in ul) nul[n] = ul[n].param.nick;
      return nul;
    }
 
@@ -22,10 +22,12 @@
        refresh: function(who){
 	 cast(who)("users_refresh")(who, mask(this.ul));
        },
-       enter: function(who, nick, data){
-	 debug("enter("+who+", "+nick+", "+data+")");
-	 for (var u in this.ul) cast(u)("user_enter")(who, nick);
-	 this.ul[who] = {id:who, nick:nick, data:data}; // 设置进入
+       enter: function(who, param, data){
+	 param = fromjson(param);
+	 data = fromjson(data);
+	 debug("enter("+who+", "+param+", "+data+")");
+	 for (var u in this.ul) cast(u)("user_enter")(who, param.nick);
+	 this.ul[who] = {id:who, param:param, data:data}; // 设置进入
 	 cast(who)("user_welcome")(who, mask(this.ul));
        },
        leave: function(who){

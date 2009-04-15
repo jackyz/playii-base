@@ -10,6 +10,9 @@ handlers:
 #- url: /chat/51\.html
 #  script: p3p_header.py
 
+- url: /51/GetInfo.js
+  script: 51_getinfo.py
+
 #### static directories
 
 - url: /ajax

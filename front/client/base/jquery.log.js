@@ -1,7 +1,11 @@
 
 (function($){
   $.thread = function(func, time){
-    window.setTimeout(func, time ? time : 50);
+    var threadId = window.setTimeout(func, time ? time : 50);
+    return threadId;
+  };
+  $.cancel = function(threadId){
+    window.clearTimeout(threadId);
   };
   $.source = function(obj){
     return obj.toSource();

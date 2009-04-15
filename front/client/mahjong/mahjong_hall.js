@@ -137,6 +137,9 @@ $(function(){
   };
   _redraw("ui", view);
 */
+    // preload
+    ui.load("mahjong_room", false);
   });
+
 
 });

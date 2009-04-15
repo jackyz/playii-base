@@ -3,11 +3,11 @@
 #auth {
 }
 #auth #box {
-  width:300px; height:150px;
+  width:300px; height:200px;
   left:250px; top:30px;
 }
 #auth #nick {
-  width: 200px;
+  width: 80px;
 }
 #auth #error {
   color:red;
@@ -18,16 +18,25 @@
   <div class="box-bg"></div>
   <div id="box" class="box-fg">
     <div class="box-zebra"></div>
-    <div class="box-title">请输入你想要的名字</div>
+    <div class="box-title">选择聊天方式</div>
     <div class="box-texts">
-      名字只是个代号，但也它能说明一切……。  <br/>
-      今天的心情，适合取个什么名字呢？ <br/>
-      <span id="error"></span><br/>
-      <form action="javascript:void();">
-	<input type="text" id="nick" name="nick" value="" />
-	<input type="hidden" name="id" value="guest"/>
-	<input type="submit" value="继续"/>
-      </form>
+      如果想要隐身聊天(你的朋友无法认出你)，请选择：
+      <input type="button" id="auth_2" value="隐身聊天"/>
+      <br/><br/>
+      <span id="error"></span>
+      <div id="load">
+	正在鉴定你当前的身份......
+      </div>
+      <div id="done" style="display:none;">
+	<div style="float:right; text-align:center; width:80px; height:80px; margin:5px; line-height:5px;">
+	  <img id="face" style="width:48px; height:48px"/><br/>
+	  <span id="info" style="font-size:75%;"></span>
+	</div>
+	<form>
+	  这是你现在的身份。如果想公开身份聊天(你的朋友可以认出你)，请选择：
+	  <input type="submit" value="开始实名聊天"/>
+	</form>
+      </div>
     </div>
   </div>
 </div>
@@ -35,10 +44,14 @@
 <script type="text/javascript">
 (function(){
   // $.log("loading auth.html");
-  var next = "chat_main";
+  function _scene(){
+    var url = window.location.hash.split('#')[1];
+    return (url) ? url : undefined;
+  };
+  var next = _scene() || "chat_main";
   function loop(error){
     $("form input:submit", $("#root #auth")).removeAttr("disabled");
-    if (error) $("#root #auth #error").html(error);
+    if (error) $("#error", $("#root #auth")).html(error);
   }
   var callback = {
     go_identify:loop,
@@ -47,18 +60,31 @@
   };
   $(document).bind("auth", function(event){
     $("#root").empty().append($("#tmpl #auth").clone());
-    $("#nick", $("#root #auth")).focus();
-    $("form", $("#root #auth")).submit(function(){
-      var n = $.unhtml($("#nick", this).val());
-      $("#nick", this).val(n);
-      if(!n) {
-        $("#nick", this).focus();
-        loop("认真点，好好填。");
+    $("#auth_2", $("#root #auth")).click(function(){
+      ui.load("auth_2");
+    });
+    // TODO match 51/xn/hn from it's URL
+    // var url = "/51/"+"GetInfo.js"+window.location.search; // real
+    var url = "/client/test/"+"GetInfo.js"+window.location.search; // mock
+    $.getJSON(url, function(d){
+      var id = "guest";
+      var nick = d[0].nickname || d[0].username || d[0].uid;
+      var face = d[0].facesmall;
+      var sex  = d[0].sex;
+      sex = (sex == "" ? "保密" : (sex == "1" ? "男" : "女"));
+      var data = '{"nick":"'+nick+'", "face":"'+face+'", "sex":"'+sex+'"}';
+      //
+      $("#root #auth #done form").submit(function(){
+        $("input:submit", this).attr("disabled", true);
+        var param = {id: id, param: data};
+        // con.open($("input", this).serialize(), callback);
+        con.open(param, callback);
         return false;
-      }
-      $("input:submit", this).attr("disabled", true);
-      con.open($("input", this).serialize(), callback);
-      return false;
+      });
+      //
+      $("#face", $("#root #auth #done")).attr("src", face);
+      $("#info", $("#root #auth #done")).text(nick+"("+sex+")");
+      $("#root #auth #load").hide(); $("#root #auth #done").show();
     });
   });
 })();

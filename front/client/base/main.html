@@ -2,16 +2,17 @@
 <html xmlns="http://www.w3.org/1999/xhtml">
 
 <head>
-<title>Playii :: Chat</title>
+<title>Playii</title>
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
-<link rel="shortcut icon" href="../base/favicon.ico" />
 <script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.3.2/jquery.min.js"></script>
 <script type="text/javascript" src="../base/jquery.log.js"></script>
+<link rel="shortcut icon" href="../base/favicon.ico" />
 </head>
 
 <body>
 
-  <iframe id="conn" name="conn" src="../base/conn.html"></iframe>
+  <iframe id="recv" name="recv" class="conn" src="../base/conn.html"></iframe>
+  <iframe id="send" name="send" class="conn" src="../base/conn.html"></iframe>
 
   <div id="body" class="site">
     <div id="bg0"> </div>
@@ -31,7 +32,7 @@ body {
 .site {
   width:100%; /* margin:0 auto; */
 }
-#conn {
+.conn {
   position:absolute;
   left: -1000px; top: -1000px;
   width: 5px; height:5px;
@@ -45,6 +46,7 @@ body {
   width:100%; height:100%;
   background: url(bg0.jpg);
   color: #666;
+  z-index: -100;
 }
 #log {
   position:absolute;
@@ -145,10 +147,11 @@ if(!window["ui"]) window["ui"] = (function(){
   // {{xxx}} -> {xxx} the escape
   // {xxx} -> yyy if has {xxx : yyy} perform the mapping
   // {xxx} -> xxx if has not xxx using the text itself
-  function tran(sn, s){
-    // $.log("_tran:"+sn+","+s);
+  function tran(sn, str){
+    // $.log("_tran:"+sn+","+str);
     function map(s){
-      var x = i8ns[s[0]][s];
+      var x = i8ns[class][s];
+      // $.log("_tran::map::"+s+"->"+x);
       return x ? x : s;
     }
     function part(h, t){
@@ -162,8 +165,8 @@ if(!window["ui"]) window["ui"] = (function(){
         return h+t;
       }
     }
-    var s = struc(sn);
-    return part("", (s ? s : ""));
+    var class = struc(sn)[0];
+    return part("", (str ? str : ""));
   }
 
   // usage: i8n.escp("{strangename}");
@@ -186,18 +189,18 @@ if(!window["ui"]) window["ui"] = (function(){
   }
 
   // load and display the sn ui
-  function load(sn){
+  function load(sn, trigger){
     var s = struc(sn);
-    if($("#"+s[0], tmpl).size() <= 0){ // if not load
+    if($(tmpl+" > div#"+s[0]).size() <= 0){ // load it, if needed
       $.getJSON(s[0]+"-zh_CN.js", function(json){
 	bind(s[0], json);
       });
       $.get(s[0]+".html", function(html){
 	$(tmpl).append(html);
-        $(document).trigger(s[0], [s[1]]);
+        if(!(trigger === false)) $(document).trigger(s[0], [s[1]]);
       });
     } else {
-      $(document).trigger(s[0], [s[1]]);
+      if(!(trigger === false)) $(document).trigger(s[0], [s[1]]);
     }
   }
 
@@ -214,11 +217,15 @@ if(!window["ui"]) window["ui"] = (function(){
 if(!window["con"]) window["con"] = (function(){
 
   // ******** model
-  var ifrm = "conn";
-  var keep = false;// 连接状态
-  var done = true; // (执行时)防重入
-  var creg = {};   // 通道注册表
-  var rbuf = [];   // 接收(待执行)队列
+  var rifm = "recv"; // 接收通道
+  var sifm = "send"; // 发送通道
+  var token= "";     // 通讯令牌
+  var keep = false;  // 连接状态
+  var done = true;   // 防重入(执行完毕)
+  var creg = {};     // 通道注册表
+  var rbuf = [];     // 接收队列(待执行)
+  var rerr = 0;      // 接收失败计数
+  var rmax = 3;      // 接收失败最大值(达到则断开)
 
   // **** public
 
@@ -226,22 +233,25 @@ if(!window["con"]) window["con"] = (function(){
   // usage: con.open({id:str, nick:str}, options);
   //   options: {success:fun, failure:fun, go_identify:fun};
   function open(param, options){
+    // token = cookie("token");
+    if(token) param["t"] = token;
     _open(
       param, // param
-      function(xhr, s, e){ // error
-        if (s) $.err("open:<-err:s:"+s+",e:"+e+",xhr:"+xhr.responseText);
-      },
       function(d){ // success
         if (d[0] == "ok"){  // init receive loop
-	  // keep the connect
-	  keep = true; $.thread( _keep );
-	  // jsonp will delay document ready event, load ui first
+	  // init token, keep the connect
+	  token = d[1]; keep = true; $.thread( _keep );
+	  // cookie("token", d[1]);
+	  // alert("p3p check!!! token:"+token+",cookie:"+_cookie("token"));
 	  if (typeof(options["success"]) == "function") options["success"]();
 	} else if (typeof(options[d[0]]) == "function") {
           options[d[0]]();
         } else if (typeof(options["failure"]) == "function") {
           options["failure"](d[0]);
         }
+      },
+      function(xhr, s, e){ // error
+        if (e) $.err("open:<-err:s:"+s+",e:"+e);
       }
     );
   }
@@ -267,12 +277,12 @@ if(!window["con"]) window["con"] = (function(){
       for (var i = 0; i<arguments.length; i++) a.push(arguments[i]);
       if (!keep) return $.err("send:->err:not connect yet.");
       _send(
-        {s:s, f:f, a:a}, // param
-        function(xhr, s, e){ // error
-          if(e) $.err("send:<-err:"+xhr.responseText);
-	  // keep = false;
-	},
+        {s:s, f:f, a:a, t:token}, // param :: inject token !!!
 	function(d){ // success
+	},
+        function(xhr, s, e){ // error
+          if(e) $.err("send:<-err:s:"+s+",e:"+e);
+	  // keep = false;
 	}
       );
       sbuf = null;
@@ -291,10 +301,9 @@ if(!window["con"]) window["con"] = (function(){
   // recv loop
   function _keep(){
     if(!keep) return;
+    var param = {t:token};
     _recv(
-      function(xhr, s, e){ // error
-        if(e) $.err("recv:<-err:e:"+e+",s:"+s+","+xhr.responseText);
-      },
+      param, // param
       function(d){ // success
         if(! d instanceof Array) {
           $.err("recv:<-err:bad format "+d);
@@ -310,8 +319,17 @@ if(!window["con"]) window["con"] = (function(){
             $.err("recv:<-err:bad format "+x);
           }
         }
-	// keep the connect
-        $.thread( _keep );
+        rerr = 0;  // reset recv error count
+        $.thread( _keep ); // keep the connect
+      },
+      function(xhr, s, e){ // error
+        if(e) $.err("recv:<-err:s:"+s+",e:"+e);
+        if (++rerr <= rmax) { // should we retry
+          $.thread( _keep ); // retry
+	} else { // broken the connect, and alert
+          keep = false;
+          $.thread( function(){ alert("连接已中断，请刷新或重试。"); } );
+        }
       }
     );
   }
@@ -339,18 +357,39 @@ if(!window["con"]) window["con"] = (function(){
     }
   }
 
+  // **** private
+
+  // **** get/set cookie
+  // * ie will block 3rd party cookie
+  // * need p3p header to work around
+  // * or using keeping iframe to avoid cookie
+  function cookie(name, val){
+    if (val != undefined) { // set cookie
+      //alert("set cookie "+val);
+      document.cookie = name+"="+encodeURIComponent(val);
+    } else {   // get cookie
+      var c = document.cookie;
+      var s = c.indexOf(name+"=");
+      var e = c.indexOf(";", s+name.length+1);
+      var v;
+      if (s != -1)
+        v = c.substring(s+name.length+1, (e==-1)?c.length:e);
+      return decodeURIComponent(v);
+    }
+  }
+
   // **** delegate to the real thing
 
-  function _open(param, error, success){
-    window.frames[ifrm]["_open"](param, error, success);
+  function _open(param, success, error){
+    window.frames[rifm]["_open"](param, success, error);
   }
 
-  function _recv(error, success){
-    window.frames[ifrm]["_recv"](error, success);
+  function _recv(param, success, error){
+    window.frames[rifm]["_recv"](param, success, error);
   }
 
-  function _send(param, error, success){
-    window.frames[ifrm]["_send"](param, error, success);
+  function _send(param, success, error){
+    window.frames[sifm]["_send"](param, success, error);
   }
 
   // API EXPORT
@@ -364,25 +403,33 @@ if(!window["con"]) window["con"] = (function(){
 
 // $.log("boot loader");
 
+// preload
+ui.load("auth", false);
+
 function _scene(){
   var url = window.location.hash.split('#')[1];
   return (url) ? url : undefined;
 };
 
 var sn = _scene() || "adv_0";
-if ( $.inArray(sn, ["adv_0", "adv_q", "auth"]) != -1 ) {
+if ( $.inArray(sn, ["adv_0", "adv_q", "auth", "auth_2"]) != -1 ) {
   ui.load(sn);
 } else {
   var fok = function(){ ui.load(sn); };
   var fau = function(){ ui.load("auth"); };
-  $("#conn").load(function(){
-  con.open({}, {go_identify:fau, failure:fau, success:fok});
+  var callback = {
+    go_identify:fau,
+    failure:fau,
+    success:fok
+  };
+  $("#recv").load(function(){
+    con.open({}, callback);
   });
 }
 
 });
 </script>
-
+<!--
 <script type="text/javascript">
 var gaJsHost = (("https:" == document.location.protocol) ? "https://ssl." : "http://www.");
 document.write(unescape("%3Cscript src='" + gaJsHost + "google-analytics.com/ga.js' type='text/javascript'%3E%3C/script%3E"));
@@ -393,7 +440,7 @@ var pageTracker = _gat._getTracker("UA-6705538-1");
 pageTracker._trackPageview();
 } catch(err) {}
 </script>
-
+-->
 </body>
 
 </html>

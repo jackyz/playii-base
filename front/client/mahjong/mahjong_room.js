@@ -13,17 +13,17 @@ $(function(){
 
   function debug(s){
     for(var i=0; i<arguments.length; i++)
-      _log(arguments[i]);
+      $.log(arguments[i]);
   }
 
   function error(){
     var a = []; for(var i=0;i<arguments.length;i++) a.push(arguments[i]);
-    _log("error("+a.join(",")+")");
+    $.log("error("+a.join(",")+")");
   }
 
   function echo(timelocal, timeserver){
     var now = (new Date()).getTime();
-    _log("echo total:"+(now-timelocal)+"");
+    $.log("echo total:"+(now-timelocal)+"");
   }
 
   function refresh(u, v){
@@ -32,7 +32,7 @@ $(function(){
 
   function user(cmd, u, nick){
     var a = []; for(var i=0;i<arguments.length;i++) a.push(arguments[i]);
-    _log("user("+a.join(",")+")");
+    $.log("user("+a.join(",")+")");
     if (cmd == "enter"){ // TODO
     } else if (cmd == "leave"){ // TODO
     }
@@ -40,12 +40,12 @@ $(function(){
 
   function sit(){
     var a = []; for(var i=0;i<arguments.length;i++) a.push(arguments[i]);
-    _log("sit("+a.join(",")+")");
+    $.log("sit("+a.join(",")+")");
   }
 
   function pai(){
     var a = []; for(var i=0;i<arguments.length;i++) a.push(arguments[i]);
-    _log("pai("+a.join(",")+")");
+    $.log("pai("+a.join(",")+")");
   }
 
   // **** conn funcs
