@@ -75,8 +75,8 @@
       }
       $("input:submit", this).attr("disabled", true);
       var face = $("input[name='face']", this).val();
-      var sex  = $("input[name='sex']", this).val();
-      sex = (sex == "" ? "保密" : (sex == "1" ? "男" : "女"));
+      var sex  = $("input[name='sex'][checked]", this).val();
+      // sex = (sex == "" ? "保密" : (sex == "1" ? "男" : "女"));
       var data = '{"nick":"'+nick+'", "face":"'+face+'", "sex":"'+sex+'"}';
       var param = {id: id, param: data};
       // con.open($("input", this).serialize(), callback);

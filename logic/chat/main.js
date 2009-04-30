@@ -3,7 +3,7 @@
    // shared private, constants
    function mask(ul){
      var nul = {};
-     for(var n in ul) nul[n] = ul[n].param.nick;
+     for(var n in ul) nul[n] = ul[n].param;
      return nul;
    }
 
@@ -23,10 +23,10 @@
 	 cast(who)("users_refresh")(who, mask(this.ul));
        },
        enter: function(who, param, data){
-	 param = fromjson(param);
-	 data = fromjson(data);
 	 debug("enter("+who+", "+param+", "+data+")");
-	 for (var u in this.ul) cast(u)("user_enter")(who, param.nick);
+	 param = loads(param);
+	 data = loads(data);
+	 for (var u in this.ul) cast(u)("user_enter")(who, param);
 	 this.ul[who] = {id:who, param:param, data:data}; // 设置进入
 	 cast(who)("user_welcome")(who, mask(this.ul));
        },
@@ -38,7 +38,7 @@
 	 if (name == "fuck"){
 	   cast(who)("error")("{dirty name}");
 	 } else {
-	   this.ul[who].nick = name;
+	   this.ul[who].param.nick = name;
 	   for (var u in this.ul) cast(u)("user_rename")(who, name);
 	 }
        },

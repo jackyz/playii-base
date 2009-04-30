@@ -93,8 +93,8 @@
   // **** callback
 
   function user_welcome(u, ul){
-    _info("{Welcome},{your nickname are}:"+_span(u, ul[u])+",{you can click and rename yourself}.");
     users_refresh(u, ul);
+    _info("{Welcome},:"+_user(u)+",{you can click and rename yourself}.");
   }
 
   function users_refresh(u, ul){
@@ -105,32 +105,31 @@
 
   function user_rename(u, n){
     if (u in users) {
-      var oldn = users[u];
-      users[u] = n;
+      var oldn = users[u].nick;
+      users[u].nick = n;
       if (u == whoami) {
-        _info("{I renamed to}:"+_span(u, n)+".");
+        _info("{I renamed to}:"+_user(u)+".");
       } else {
-        _info(_span(u, oldn)+"{renamed to}:"+_span(u, n)+".");
+        _info(_user(u, oldn)+"{renamed to}:"+_user(u)+".");
       }
       _redraw(users);
     }
   }
 
-  function user_enter(u, n){
+  function user_enter(u, param){
     if(u in users) {
       // nothing
     } else {
-      users[u] = n;
-      _info(_span(u, n)+"{just come in}.");
+      users[u] = param;
+      _info(_user(u)+"{just come in}.");
       _redraw(users);
     }
   }
 
   function user_leave(u){
     if(u in users){
-      var n = users[u];
+      _info(_user(u)+"{has left}.");
       delete users[u];
-      _info(_span(u, n)+"{has left}.");
       if(u == current) _select('any');
       _redraw(users);
     }
@@ -138,13 +137,13 @@
 
   function msg_told(u, t){
     if(u in users && u != 'any'){
-      _add(_span(u, users[u])+"{told me}:"+$.unhtml(t));
+      _add(_user(u)+"{told me}:"+$.unhtml(t));
     }
   }
 
   function msg_said(u, t){
     if(u in users && u != 'any'){
-      _add(_span(u, users[u])+"{said}:"+$.unhtml(t));
+      _add(_user(u)+"{said}:"+$.unhtml(t));
     }
   }
 
@@ -228,21 +227,35 @@
     _add("<span class='info'>"+text+"</span>");
   }
 
-  // _span('abc', 'abc_nick')
-  function _span(u, n){
-    return "<span class='user' xid='"+u+"'>"+_tran(n)+"</span>";
+  // _nick('abc')
+  function _nick(u){
+    if(u == 'any'){
+      return _tran('{every one}');
+    } else {
+      return users[u]["nick"];
+    }
+  }
+
+  // _user('abc', 'abc_nick')
+  function _user(u, n){
+    // $.log("_user("+u+","+n+") users :: "+$.source(users));
+    if(u == 'any'){
+      return "<span class='user' xid='"+u+"'>"+_nick(u)+"</span>";
+    } else {
+      n = n || _nick(u);
+      var f = users[u]["face"];
+      var s = users[u]["sex"];
+      return "<span class='user' xid='"+u+"'><img src='"+f+"' width='16' height='16'/>"+n+(s == "" ? "" : (s == "1" ? "(男)" : "(女)"))+"</span>";
+    }
   }
 
   // user_select('abc')
   function _select(u){
     current = (u in users) ? u : 'any';
     if (current == whoami) {
-      _ui('#who_nick').hide();
-      _ui("#rename").show();
+      _ui('#who_nick').text(_tran("{rename}"));
     } else {
-      var n = users[current] ? users[current] : '{every one}';
-      _ui('#who_nick').show().text(_tran(n));
-      _ui("#rename").hide();
+      _ui('#who_nick').text(_nick(u));
     }
     _ui('#what')[0].focus();
   }
@@ -254,12 +267,12 @@
     var len = 0;
     for(var u in users) len++;
     str += _tran("{total}:"+len+"{person}")+"<br/>";
+    str += "<li>"+_user('any')+"</li>";
     if (whoami != undefined && users[whoami] != undefined) {
-      str += "<li>"+_span(whoami, users[whoami])+"</li>";
+      str += "<li>"+_user(whoami)+"</li>";
     }
-    str += "<li>"+_span('any', '{every one}')+"</li>";
     for(var u in users) {
-      if(u != whoami) str += "<li>"+_span(u, users[u])+"</li>";
+      if(u != whoami) str += "<li>"+_user(u)+"</li>";
     }
     // $.log("str="+str);
     _ui("#users").hide().empty().append(str).show();
@@ -278,7 +291,7 @@
       _add("{I say}:"+what);
     } else if (current in users) {
       _talk(current, what);
-      _add("{I talk}"+_span(current, users[current])+"{that}:"+what);
+      _add("{I talk}"+_user(current)+"{that}:"+what);
     } else {
       _info(_ui('#who_nick').text()+"{has left}.");
       _select('any');

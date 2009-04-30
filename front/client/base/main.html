@@ -225,7 +225,7 @@ if(!window["con"]) window["con"] = (function(){
   var creg = {};     // 通道注册表
   var rbuf = [];     // 接收队列(待执行)
   var rerr = 0;      // 接收失败计数
-  var rmax = 3;      // 接收失败最大值(达到则断开)
+  var rmax = 2;      // 接收失败最大值(达到则断开)
 
   // **** public
 
@@ -404,7 +404,7 @@ if(!window["con"]) window["con"] = (function(){
 // $.log("boot loader");
 
 // preload
-ui.load("auth", false);
+// ui.load("auth", false);
 
 function _scene(){
   var url = window.location.hash.split('#')[1];
