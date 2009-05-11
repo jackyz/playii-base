@@ -15,9 +15,6 @@ handlers:
 
 #### static directories
 
-- url: /ajax
-  static_dir: ajax
-
 - url: /client
   static_dir: client
 
