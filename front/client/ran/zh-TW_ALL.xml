@@ -1,0 +1,18 @@
+<messagebundle>  
+  <msg name="title">只愛陌生人</msg>  
+  <msg name="desc">你永遠不知道會在這裏碰見誰。</msg>  
+  <msg name="stg_from">陌生人來自</msg>  
+  <msg name="geo_null">世界的另一端</msg>  
+  <msg name="wait_conn">連接中</msg>  
+  <msg name="fail_conn">對不起，連接失敗</msg>  
+  <msg name="wait_pick">搜尋陌生人中</msg>  
+  <msg name="you_left">你已離開</msg>  
+  <msg name="stg_left">陌生人已離開</msg>  
+  <msg name="open">開始</msg>  
+  <msg name="quit">退出</msg>  
+  <msg name="bore">離開</msg>  
+  <msg name="clea">清屏</msg>  
+  <msg name="pick">再搜尋</msg>  
+  <msg name="send">送出</msg>  
+</messagebundle>
+

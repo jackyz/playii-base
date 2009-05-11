@@ -1,0 +1,780 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<Module>
+  <ModulePrefs
+     title="__MSG_title__"
+     description="__MSG_desc__"
+     screenshot="http://playii.appspot.com/client/ran/screen.png"
+     thumbnail="http://playii.appspot.com/client/ran/thumb.png"
+     author="jackyz"
+     author_email="jackyz.zhao+feedback@gmail.com"
+     author_affiliation="http://playii.com"
+     author_photo=""
+     author_aboutme=""
+     author_link=""
+     author_quote="">
+    <Locale messages="http://playii.appspot.com/client/ran/ALL_ALL.xml"/>
+    <Locale lang="zh-CN" messages="http://playii.appspot.com/client/ran/zh-CN_ALL.xml"/>
+    <Locale lang="zh-TW" messages="http://playii.appspot.com/client/ran/zh-TW_ALL.xml"/>
+    <Require feature="dynamic-height" />
+    <Require feature="analytics" />
+  </ModulePrefs>
+  <Content type="html">
+    <![CDATA[
+<!-- BEGIN -->
+<script type="text/javascript" src="http://www.google.com/jsapi"></script>
+<script type="text/javascript">
+google.load("jquery", "1.3.2");
+google.setOnLoadCallback(function(){
+
+  // **** common functions
+  $.log = function(msg){
+    if(window["console"] != undefined){
+      window["console"].debug(msg);
+    }
+  };
+  $.err = function(msg){
+    if(window["console"] != undefined){
+      window["console"].error(msg);
+    }
+  };
+  $.thread = function(func, time){
+    var threadId = window.setTimeout(func, time ? time : 15);
+    return threadId;
+  };
+  $.cancel = function(threadId){
+    window.clearTimeout(threadId);
+  };
+  $.source = function(obj){
+    return ($.browser.mozilla ? obj.toSource() : ""+obj);
+  };
+  $.unhtml = function(s){
+    return s.replace('<', '&lt;').replace('>', '&gt;');
+  };
+
+  var prefs = new _IG_Prefs();
+  
+  $.i8n = function(msg){
+    // get i8n of msg via google gadgets api
+    var str = prefs.getMsg(msg);
+    return (str ? str : "__MSG_"+msg+"__");
+  }
+  
+  $.geo = function(){
+    // get geo by ip via google api
+    var str = "";
+    if (google.loader.ClientLocation &&
+      google.loader.ClientLocation.address.country &&
+      google.loader.ClientLocation.address.city) {
+      str = google.loader.ClientLocation.address.country + "." +
+        google.loader.ClientLocation.address.city;
+    }
+    return (str ? str : $.i8n("geo_null"));
+  }
+
+  // **** connect object
+  $.con = function(){
+    
+    // **** connect implement by iframe
+
+    var host = "http://61.139.126.212:8080";
+    // var host = "http://127.0.0.1:8880";
+    var ourl = host+"/_open?c=?"; // 连接URL
+    var rurl = host+"/_recv?c=?"; // 接收URL
+    var surl = host+"/_send?c=?"; // 发送URL
+    var debug= 1;                 // 通讯调试
+    var timeout = 30000;          // 通讯超时 30 seconds
+
+    // one connection per domain in same window, so we need two window here
+    var rifm = "recv";            // 接收通道
+    var sifm = "send";            // 发送通道
+
+    function _init(){
+      function mkiframe(name){
+        var iframe = document.createElement('iframe');
+        iframe.className = "conn";
+        iframe.width = iframe.height = 0;
+        iframe.name = iframe.id = name;
+        document.body.appendChild(iframe);
+        var html = "<html><head><script type='text/javascript'>";
+        html += "(function(){";
+        html += "if(window['$'] == undefined) window['$'] = parent.$;";
+        html += "function timer(efun){";
+        html += "  return $.thread(function(){";
+        html += "    efun(null, 404, 'timeout');";
+        html += "  }, "+timeout+");";
+        html += "};";
+        html += "function normal(tm, info, sfun){";
+        html += "  return function(d){";
+        html += (debug) ? "    $.log(info+'<-'+$.source(d));" : "";
+        html += "    $.cancel(tm);";
+        html += "    sfun(d);";
+        html += "  };";
+        html += "};";
+        html += "function jsonp(info, url, param, sfun, efun){";
+        html += (debug) ? "  $.log(info+'->'+$.source(param));" : "";
+        html += "  var tm = timer(efun);";
+        html += "  $.ajax({";
+        html += "    url:url, data:param,";
+        html += "    error:efun, success:normal(tm, info, sfun),";
+        html += "    type:'GET', dataType:'json', cache:false";
+        html += "  });";
+        html += "};";
+        html += "window['jsonp'] = jsonp;";
+        html += "})();"
+        html += "<"+"/"+"script></head><body></body></html>";
+        // iframe.innerHtml = html; // doesn't work
+        var doc = window.frames[name].document;
+        doc.open();
+        doc.write(html);
+        doc.close();
+      }
+      mkiframe(rifm);
+      mkiframe(sifm);
+    }
+    function _open(param, success, error){
+      if(window.frames[rifm]["jsonp"] != undefined){
+        window.frames[rifm]["jsonp"]('open', ourl, param, success, error);
+      }
+    }
+    function _recv(param, success, error){
+      if(window.frames[rifm]["jsonp"] != undefined){
+        window.frames[rifm]["jsonp"]('recv', rurl, param, success, error);
+      }
+    }
+    function _send(param, success, error){
+      if(window.frames[sifm]["jsonp"] != undefined){
+        window.frames[sifm]["jsonp"]('send', surl, param, success, error);
+      }
+    }
+
+    // ******** const
+    var rmax = 2;      // 接收失败最大值(达到则断开)
+
+    // ******** model
+    var token= "";     // 通讯令牌
+    var link = false;  // 连接状态
+    var idle = true;   // 防重入(执行完毕)
+    var creg = {};     // 通道注册表
+    var rbuf = [];     // 接收队列(待执行)
+    var rerr = 0;      // 接收失败计数
+    
+    // **** public
+
+    // usage: con.init();
+    //   init the connection component(ie. create conn iframe)
+    function init(){
+      if(_init) _init(); // call init if defined
+    }
+    
+    // usage: con.open({}, options);
+    // usage: con.open({id:str, nick:str}, options);
+    //   options: {success:fun, failure:fun, go_identify:fun};
+    function open(param, options){
+      if(token) param["t"] = token;
+      _open(
+        param, // param
+        function(d){ // success
+          if (d[0] == "ok"){  // init receive loop
+            // init token, keep the connect
+            token = d[1]; link = true; $.thread( poll );
+            if (typeof(options["success"]) == "function") options["success"]();
+          } else if (typeof(options[d[0]]) == "function") {
+            options[d[0]]();
+          } else if (typeof(options["failure"]) == "function") {
+            options["failure"](d[0]);
+          }
+        },
+        function(xhr, s, e){ // error
+          if (e) $.err("open:<-err:s:"+s+",e:"+e);
+        }
+      );
+    }
+    
+    // usage: con.bind("chat_main_1234", {callback:func})
+    function bind(sn, obj){
+      creg[sn] = obj;
+    }
+    
+    // usage: con.unbind("chat_main_1234")
+    function unbind(sn){
+      delete creg[sn];
+    }
+    
+    // usage: con.cast(scene)(func)(param1, param2);
+    function cast(sn){
+      var s = "", f = "", a = [];
+      function _func(func){
+        f = func;
+        return _args;
+      }
+      function _args(){
+        for (var i = 0; i<arguments.length; i++) a.push(arguments[i]);
+        if (!link) return $.err("send:->err:not connect yet.");
+        _send(
+          {s:s, f:f, a:a, t:token}, // param :: inject token !!!
+          function(d){ // success
+          },
+          function(xhr, s, e){ // error
+            if(e) $.err("send:<-err:s:"+s+",e:"+e);
+            // link = false;
+          }
+        );
+        sbuf = null;
+      }
+      s = sn;
+      return _func;
+    }
+    
+    // usage: con.close();
+    function close(){
+      token= "";
+      link = false;
+      idle = true;
+      creg = {};
+      rbuf = [];
+      rerr = 0;
+    }
+    
+    // **** logic
+    
+    // recv loop
+    function poll(){
+      if(!link) return;
+      var param = {t:token};
+      _recv(
+        param, // param
+        function(d){ // success
+          if(! d instanceof Array) {
+            $.err("recv:<-err:bad format "+d);
+            link = false; // !!!! broken connect if recv failure
+            return;
+          }
+          for (var i = 0; i < d.length; i++) {
+            var x = d[i];
+            if (x !== undefined && x.length == 3) {
+              rbuf.push({s:x[0], f:x[1], a:x[2]});
+              $.thread(exec);
+            } else {
+              $.err("recv:<-err:bad format "+x);
+            }
+          }
+          rerr = 0;  // reset recv error count
+          $.thread( poll ); // keep the connect
+        },
+        function(xhr, s, e){ // error
+          if(e) $.err("recv:<-err:s:"+s+",e:"+e);
+          if (++rerr <= rmax) { // should we retry
+            $.thread( poll ); // retry
+          } else { // broken the connect, and alert
+            link = false;
+            $.thread( function(){ alert("connect broken."); } );
+          }
+        }
+      );
+    }
+    
+    // recv dispatch
+    function exec() {
+      if (! idle) { $.thread(exec); return; }
+      var c = rbuf.shift();
+      if (rbuf.length > 0) $.thread(exec);
+      if (c == undefined) return;
+      try {
+        idle = false;
+        if (creg[c.s] === undefined) {
+          $.err("exec: err: "+c.s+" not bind");
+        } else if ( typeof(creg[c.s][c.f]) !== "function") {
+          $.err("exec: err: "+c.f+" not found");
+        } else {
+          creg[c.s][c.f].apply(creg[c.s], c.a);
+          // $.log("exec: success."+c);
+        }
+      } catch(e) {
+        $.err("exec: err: "+e+":"+c);
+      } finally {
+        idle = true;
+      }
+    }
+    
+    // API EXPORT
+    return {
+      init:init,
+      open:open,
+      bind:bind,
+      unbind:unbind,
+      cast:cast,
+      close:close
+    };
+
+  }();
+  
+  // **** main
+  (function(){
+
+    // **** ui utils
+
+    function resize(){
+      // change width of #type
+      var w = $("#tool").width() - $("#send").width();
+      w -= 44; // 28+16 hard code (28 is fix)
+      $("#type").width(w);
+      // change height of #mask
+      $("#mask").height($("#chat").height());
+    }
+  
+    // ****
+  
+    function disp(html){
+      $("#text").append(html);
+      // auto scroll to bottom
+      var t = $("#text").get(0).scrollHeight;
+      var v = $("#text").get(0).offsetHeight;
+      $("#text").get(0).scrollTop = t - v;
+    }
+    
+    function dispL(text){
+      var html = "";
+      html += "<div class='cl'>";
+      html += "<table cellpadding='0' cellspacing='0' class='boxl pink'>";
+      html += "<tr><td class='c'>";
+      html += text;
+      html += "</td><td class='r'></td></tr>";
+      html += "<tr><td class='b'></td><td class='br'></td></tr></table>";
+      html += "<div class='clear'></div></div>";
+      disp(html);
+    }
+  
+    function dispR(text){
+      var html = "";
+      html += "<div class='cr'>";
+      html += "<table cellpadding='0' cellspacing='0' class='boxr blue'>";
+      html += "<tr><td class='c'>";
+      html += text;
+      html += "</td><td class='r'></td></tr>";
+      html += "<tr><td class='b'></td><td class='br'></td></tr></table>";
+      html += "<div class='clear'></div></div>";
+      disp(html);
+    }
+  
+    function dispC(text){
+      disp("<div class='cc'>"+text+"</div>");
+    }
+  
+    // ****
+  
+    function ui_home(){
+      $("#home").show();
+      $("#chat").hide();
+      _IG_AdjustIFrameHeight();
+      _IG_Analytics("UA-6705538-3", "/ran/home");
+    }
+    
+    function ui_chat(){
+      $("#home").hide();
+      $("#chat").show();
+      _IG_AdjustIFrameHeight();
+      _IG_Analytics("UA-6705538-3", "/ran/chat");
+    }
+  
+    function ui_fail(text){
+      $("#quit").show();
+      $("#bore").hide();
+      $("#clea").hide();
+      $("#pick").hide();
+      $("#mask").show();
+      $("#wait").hide();
+      $("#info").text(text).show();
+      $("#type").blur();
+    }
+  
+    function ui_wait(text){
+      $("#quit").show();
+      $("#bore").hide();
+      $("#clea").hide();
+      $("#pick").hide();
+      $("#mask").show();
+      $("#wait").show();
+      $("#info").text(text).show();
+      $("#type").blur();
+    }
+  
+    function ui_pick(text){
+      $("#quit").hide();
+      $("#bore").show();
+      $("#clea").show();
+      $("#pick").hide();
+      $("#mask").hide();
+      $("#wait").hide();
+      $("#info").hide();
+      //
+      $("#text").empty();
+      dispC(text);
+      $("#type").focus();
+    }
+
+    function ui_bore(text){
+      dispC(text);
+      //
+      $("#quit").show();
+      $("#bore").hide();
+      $("#clea").hide();
+      $("#pick").show();
+      $("#mask").show();
+      $("#wait").hide();
+      $("#info").hide();
+      $("#type").blur();
+    }
+  
+    function ui_told(text){
+      dispL($.unhtml(text));
+      $("#type").focus();
+    }
+  
+    // **** server api
+
+    var sn = "ruan_main";
+    function _enter(){ $.con.cast(sn)("enter")(); }
+    function _pick(){  $.con.cast(sn)("pick")();  }
+    function _talk(w){ $.con.cast(sn)("talk")(w); }
+    function _bore(){  $.con.cast(sn)("bore")();  }
+    function _leave(){ $.con.cast(sn)("leave")(); }
+  
+    // **** client callbacks
+
+    var open_callback = {
+      go_identify : function(){
+        // ui_fail("go identify?"); // shoud not happen
+      },
+      failure : function(e){
+        ui_fail($.i8n("fail_conn"));
+      },
+      success : function(){
+        $.con.bind(sn, bind_callback);
+        // $.thread(function(){$.con.cast(sn)("enter_debug")()}, 50);
+        $.thread(_enter, 100);
+        ui_wait($.i8n("wait_pick"));
+      }
+    }
+  
+    var bind_callback = {
+      bepick : function(n,m,w){
+        ui_pick($.i8n("stg_from") + " " + w);
+      },
+      betold : function(w){
+        ui_told(w);
+      },
+      bebore : function(n,m){
+        ui_bore($.i8n("stg_left"));
+      }
+    };
+  
+    // **** ui callback
+  
+    $("#open").click(function(){
+      $.con.open({id: "guest", param: $.geo()}, open_callback);
+      ui_chat();
+      resize();
+      ui_wait($.i8n("wait_conn"));
+    });
+    $("#quit").click(function(){
+      _leave();
+      $("#text").empty();
+      ui_home();
+      resize();
+      $.con.close();
+    });
+    $("#bore").click(function(){
+      _bore();
+      ui_bore($.i8n("you_left"));
+    });
+    $("#clea").click(function(){
+      $("#text").empty();
+    });
+    $("#pick").click(function(){
+      _pick();
+      ui_wait($.i8n("wait_pick"));
+    });
+    // ****
+    var do_send = function(){
+      var w = $.unhtml($("#type").val());
+      if (w != "") {
+        _talk(w);
+        dispR(w); $("#type").val("");
+      }
+    }
+    $("#send").click(function(){ do_send(); });
+    $("#type").keypress(function(k){ if(k.keyCode == 13) do_send(); });
+    $(window).resize(resize);
+
+    // **** boot
+    $.con.init();
+    ui_home();
+  
+    // *ie6 css no cache bug fix
+    try { document.execCommand('BackgroundImageCache', false, true); } catch(e) {}
+
+  })();
+  
+});
+</script>
+
+<!-- ui.html -->
+
+<style>
+
+* { margin:0; padding:0; }
+
+/** ui style **/
+
+#home {
+  background: #fff;
+  text-align: center;
+}
+
+#chat {
+}
+#chat #mask {
+  z-index: 1000;
+  position:absolute;
+  left:0px; top:0px; width:100%; height:100%;
+  background:#000; filter:alpha(opacity=50); opacity:0.5;
+}
+#chat div.menu {
+  padding:6px 0px;
+  height:32px; *height:44px;
+  background: #9dadc1 url(http://playii.appspot.com/client/ran/menu-bg.gif) repeat-x;
+}
+#chat #menu {
+  z-index: 1001;
+  position:absolute;
+  top:0px; left:0px; width:100%;
+}
+#chat #menu #wait{
+  background: url(http://playii.appspot.com/client/ran/ajax-load.gif);
+  width: 32px; height: 32px;
+  margin-left: 8px;
+  float: left;
+}
+#chat #menu #info{
+  line-height: 32px;
+  margin-left: 8px;
+  color: #ddd;
+  float: left;
+}
+#chat #menu a.bt {
+  display:none;
+}
+#chat #text {
+  height: 300px; /* 388px */
+  background: #dbe2ed;
+  padding: 4px;
+  overflow: auto;
+  text-align: center;
+}
+#chat #tool {
+  padding: 6px 0px;
+  height: 28px; *height:40px;
+  background: #e8e8ec url(http://playii.appspot.com/client/ran/tool-bg.gif) repeat-x;
+}
+
+div.clear{
+  clear:both;
+}
+
+.conn {
+  border: 0px none;
+  visibility: hidden;
+  height: 0px; width: 0px;
+  position: absolute;
+  left: -1000px; top: -1000px;
+}
+
+/* button */
+
+a.bt{
+  color:#ddd;
+  text-decoration:none;
+  cursor:hand;
+}
+a.bt:hover{
+  color:#fff;
+}
+a.bt:visited{
+  color:#ddd;
+}
+
+a.c1 i{
+  display:block; float:left;
+  height:32px; width:14px;
+  background:url(http://playii.appspot.com/client/ran/button.png) left 0;
+}
+a.c1 span{
+  display:block; float:left;
+  padding: 5px 14px 5px 0px;
+  height:22px; line-height:22px;
+  *height:32px;
+  background:url(http://playii.appspot.com/client/ran/button.png) right 0;
+}
+
+a.c2 i{
+  display:block; float:left;
+  height:32px; width:14px;
+  background:url(http://playii.appspot.com/client/ran/button.png) left -32px;
+}
+a.c2 span{
+  display:block; float:left;
+  padding: 5px 14px 5px 0px;
+  height:22px; line-height:22px;
+  *height:32px;
+  background:url(http://playii.appspot.com/client/ran/button.png) right -32px;
+}
+
+a.c3 i{
+  display:block; float:left;
+  height:28px; width:14px;
+  background:url(http://playii.appspot.com/client/ran/button.png) left -64px;
+}
+a.c3 span{
+  display:block; float:left;
+  padding: 3px 14px 3px 0px;
+  height:22px; line-height:22px;
+  *height:28px;
+  background:url(http://playii.appspot.com/client/ran/button.png) right -64px;
+}
+
+span.c4 i{
+  display:block; float:left;
+  height:28px; width:14px;
+  background:url(http://playii.appspot.com/client/ran/button.png) left -92px;
+}
+span.c4 div {
+  display:block; float:left;
+  padding:9px 14px 3px 0px;
+  height:16px; *height:28px;
+  background:url(http://playii.appspot.com/client/ran/button.png) right -92px;
+}
+span.c4 div input{
+  display:block; float:left;
+  border:none; width:80px;
+  font-size:12px;
+  background:none;
+}
+
+/* balloon */
+
+div.cc{
+  font-size: 90%; font-weight: bold; color: #888;
+  *width:100%;
+}
+div.cl{
+  padding: 5px 20% 5px 5px;
+  *width:100%;
+}
+div.cr{
+  padding: 5px 5px 5px 20%;
+  *width:100%;
+}
+
+table{
+  border-collapse:separate;
+  border-spacing:0px;
+  border: 0px;
+  color: #333;
+}
+
+table.boxr{
+  min-width:43px; min-height:32px;
+  float:right;
+}
+table.boxr td.c{
+  min-width:17px; min-height:16px;
+  background-position:0px 0px;
+  padding: 16px 0px 0px 17px;
+}
+table.boxr td.r{
+  background-position:-977px 0px;
+}
+table.boxr td.b{
+  background-position:0px -384px;
+}
+table.boxr td.br{
+  width:22px; height:16px;
+  background-position:-977px -384px;
+}
+
+table.boxl{
+  min-width:43px; min-height:32px;
+  float:left;
+}
+table.boxl td.c{
+  min-width:22px; min-height:16px;
+  background-position:6px 0px;
+  padding: 16px 0px 0px 22px;
+}
+table.boxl td.r{
+  background-position:-976px 0px;
+}
+table.boxl td.b{
+  background-position:0px -405px;
+}
+table.boxl td.br{
+  width:17px; height:16px;
+  background-position:-982px -405px;
+}
+
+table.blue td{
+  background-image:url(http://playii.appspot.com/client/ran/blue.png);
+}
+table.red td{
+  background-image:url(http://playii.appspot.com/client/ran/red.png);
+}
+table.green td{
+  background-image:url(http://playii.appspot.com/client/ran/green.png);
+}
+table.pink td{
+  background-image:url(http://playii.appspot.com/client/ran/pink.png);
+}
+
+</style>
+
+<div id="home">
+  <input id="open" type="button" value="__MSG_open__" />
+</div>
+
+<div id="chat" style="display:none;">
+  <div id="mask" style="display:none;"></div>
+  <div class="menu"></div>
+  <div class="menu" id="menu">
+    <span style="float:left;">
+      <a id="quit" href="javascript:this.blur();" class="bt c1"><i></i><span>__MSG_quit__</span></a>
+      <a id="bore" href="javascript:this.blur();" class="bt c1"><i></i><span>__MSG_bore__</span></a>
+    </span>
+    <div  id="wait"></div>
+    <span id="info">wait text...</span>
+    <span style="float:right;">
+      <a id="clea" href="javascript:this.blur();" class="bt c2"><i></i><span>__MSG_clea__</span></a>
+      <a id="pick" href="javascript:this.blur();" class="bt c2"><i></i><span>__MSG_pick__</span></a>
+    </span>
+  </div>
+  <div id="text">
+<!--
+<div class="cc">stranger is from China.Beijing.</div>
+<div class="cl"><table class="boxl pink" cellpadding="0" cellspacing="0"><tbody><tr><td class="c">hi there</td><td class="r"></td></tr><tr><td class="b"></td><td class="br"></td></tr></tbody></table><div class="clear"></div></div>
+<div class="cr"><table class="boxr blue" cellpadding="0" cellspacing="0"><tbody><tr><td class="c">yep, buddy</td><td class="r"></td></tr><tr><td class="b"></td><td class="br"></td></tr></tbody></table><div class="clear"></div></div>
+<div class="cc">stranger had left.</div>
+-->
+  </div>
+  <div id="tool">
+    <span class="c4" style="float:left;">
+      <i></i><div><input id="type" type="text" value=""/></div>
+    </span>
+    <span style="float:right;">
+      <a id="send" href="javascript:this.blur();" class="bt c3"><i></i><span>__MSG_send__</span></a>
+    </span>
+  </div>
+</div>
+
+<!-- END -->
+    ]]>
+  </Content>
+</Module>

@@ -1,0 +1,17 @@
+<messagebundle>  
+  <msg name="title">Talk to Stranger</msg>  
+  <msg name="desc">You never know who will you meet here.</msg>  
+  <msg name="stg_from">stranger was from</msg>  
+  <msg name="geo_null">somewhere</msg>  
+  <msg name="wait_conn">waiting for connect.</msg>  
+  <msg name="fail_conn">failure when connect.</msg>  
+  <msg name="wait_pick">waiting for stranger.</msg>  
+  <msg name="you_left">you has left.</msg>  
+  <msg name="stg_left">stranger has left.</msg>  
+  <msg name="open">start</msg>  
+  <msg name="quit">quit</msg>  
+  <msg name="bore">leave</msg>  
+  <msg name="clea">clean</msg>  
+  <msg name="pick">random</msg>  
+  <msg name="send">send</msg>  
+</messagebundle>
