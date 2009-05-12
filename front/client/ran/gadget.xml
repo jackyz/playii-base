@@ -76,7 +76,8 @@ google.setOnLoadCallback(function(){
     
     // **** connect implement by iframe
 
-    var host = "http://61.139.126.212:8080";
+    var host = "http://74.207.243.96";
+    // var host = "http://61.139.126.212:8080";
     // var host = "http://127.0.0.1:8880";
     var ourl = host+"/_open?c=?"; // 连接URL
     var rurl = host+"/_recv?c=?"; // 接收URL
@@ -316,7 +317,7 @@ google.setOnLoadCallback(function(){
     function resize(){
       // change width of #type
       var w = $("#tool").width() - $("#send").width();
-      w -= 44; // 28+16 hard code (28 is fix)
+      w -= 64; // 28+16+20 hard code (28 is fix)
       $("#type").width(w);
       // change height of #mask
       $("#mask").height($("#chat").height());
@@ -365,15 +366,16 @@ google.setOnLoadCallback(function(){
     function ui_home(){
       $("#home").show();
       $("#chat").hide();
-      _IG_AdjustIFrameHeight();
       _IG_Analytics("UA-6705538-3", "/ran/home");
+      _IG_AdjustIFrameHeight();
     }
     
     function ui_chat(){
       $("#home").hide();
       $("#chat").show();
-      _IG_AdjustIFrameHeight();
       _IG_Analytics("UA-6705538-3", "/ran/chat");
+      resize(); // in webpage, trigger it manually
+      _IG_AdjustIFrameHeight();
     }
   
     function ui_fail(text){
@@ -432,7 +434,7 @@ google.setOnLoadCallback(function(){
   
     // **** server api
 
-    var sn = "ruan_main";
+    var sn = "ran_main";
     function _enter(){ $.con.cast(sn)("enter")(); }
     function _pick(){  $.con.cast(sn)("pick")();  }
     function _talk(w){ $.con.cast(sn)("talk")(w); }
@@ -575,6 +577,9 @@ google.setOnLoadCallback(function(){
   padding: 6px 0px;
   height: 28px; *height:40px;
   background: #e8e8ec url(http://playii.appspot.com/client/ran/tool-bg.gif) repeat-x;
+}
+#chat #tool #type {
+  width:160px;
 }
 
 div.clear{
