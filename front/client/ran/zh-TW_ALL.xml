@@ -4,7 +4,7 @@
   <msg name="stg_from">陌生人來自</msg>  
   <msg name="geo_null">世界的另一端</msg>  
   <msg name="wait_conn">連接中</msg>  
-  <msg name="fail_conn">對不起，連接失敗</msg>  
+  <msg name="fail_conn">服務暫時不可用</msg>  
   <msg name="wait_pick">搜尋陌生人中</msg>  
   <msg name="you_left">你已離開</msg>  
   <msg name="stg_left">陌生人已離開</msg>  

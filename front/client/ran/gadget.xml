@@ -2,19 +2,24 @@
 <Module>
   <ModulePrefs
      title="__MSG_title__"
+     title_url="http://playii.com"
+     directory_title="Talk to Stranger"
      description="__MSG_desc__"
-     screenshot="http://playii.appspot.com/client/ran/screen.png"
-     thumbnail="http://playii.appspot.com/client/ran/thumb.png"
+     category="funandgames"
+     category2="communication"
+     thumbnail="http://p.gmodules.com/ig/proxy?log=1&amp;url=http://playii.appspot.com/client/ran/thumb.png"
+     screenshot="http://p.gmodules.com/ig/proxy?log=1&amp;url=http://playii.appspot.com/client/ran/screen.png"
      author="jackyz"
      author_email="jackyz.zhao+feedback@gmail.com"
+     author_location="China.BeiJing"
      author_affiliation="http://playii.com"
      author_photo=""
      author_aboutme=""
      author_link=""
      author_quote="">
-    <Locale messages="http://playii.appspot.com/client/ran/ALL_ALL.xml"/>
-    <Locale lang="zh-CN" messages="http://playii.appspot.com/client/ran/zh-CN_ALL.xml"/>
-    <Locale lang="zh-TW" messages="http://playii.appspot.com/client/ran/zh-TW_ALL.xml"/>
+    <Locale messages="http://p.gmodules.com/ig/proxy?log=1&amp;url=http://playii.appspot.com/client/ran/ALL_ALL.xml"/>
+    <Locale lang="zh-CN" messages="http://p.gmodules.com/ig/proxy?log=1&amp;url=http://playii.appspot.com/client/ran/zh-CN_ALL.xml"/>
+    <Locale lang="zh-TW" messages="http://p.gmodules.com/ig/proxy?log=1&amp;url=http://playii.appspot.com/client/ran/zh-TW_ALL.xml"/>
     <Require feature="dynamic-height" />
     <Require feature="analytics" />
   </ModulePrefs>
@@ -82,8 +87,8 @@ google.setOnLoadCallback(function(){
     var ourl = host+"/_open?c=?"; // 连接URL
     var rurl = host+"/_recv?c=?"; // 接收URL
     var surl = host+"/_send?c=?"; // 发送URL
-    var debug= 1;                 // 通讯调试
-    var timeout = 30000;          // 通讯超时 30 seconds
+    var debug= 0;                 // 通讯调试
+    var timeout = 20000;          // 通讯超时 30 seconds
 
     // one connection per domain in same window, so we need two window here
     var rifm = "recv";            // 接收通道
@@ -186,7 +191,11 @@ google.setOnLoadCallback(function(){
           }
         },
         function(xhr, s, e){ // error
-          if (e) $.err("open:<-err:s:"+s+",e:"+e);
+	  if (typeof(options["failure"]) == "function") {
+            options["failure"](s);
+          } else {
+            if (e) $.err("open:<-err:s:"+s+",e:"+e);
+          }
         }
       );
     }
@@ -264,7 +273,7 @@ google.setOnLoadCallback(function(){
         },
         function(xhr, s, e){ // error
           if(e) $.err("recv:<-err:s:"+s+",e:"+e);
-          if (++rerr <= rmax) { // should we retry
+          if (++rerr < rmax) { // should we retry
             $.thread( poll ); // retry
           } else { // broken the connect, and alert
             link = false;
@@ -444,9 +453,6 @@ google.setOnLoadCallback(function(){
     // **** client callbacks
 
     var open_callback = {
-      go_identify : function(){
-        // ui_fail("go identify?"); // shoud not happen
-      },
       failure : function(e){
         ui_fail($.i8n("fail_conn"));
       },
@@ -534,6 +540,7 @@ google.setOnLoadCallback(function(){
 }
 
 #chat {
+  font-size: 14px;
 }
 #chat #mask {
   z-index: 1000;
@@ -544,7 +551,7 @@ google.setOnLoadCallback(function(){
 #chat div.menu {
   padding:6px 0px;
   height:32px; *height:44px;
-  background: #9dadc1 url(http://playii.appspot.com/client/ran/menu-bg.gif) repeat-x;
+  background: #9dadc1 url(http://p.gmodules.com/ig/proxy?log=1&url=http://playii.appspot.com/client/ran/menu-bg.gif) repeat-x;
 }
 #chat #menu {
   z-index: 1001;
@@ -552,7 +559,7 @@ google.setOnLoadCallback(function(){
   top:0px; left:0px; width:100%;
 }
 #chat #menu #wait{
-  background: url(http://playii.appspot.com/client/ran/ajax-load.gif);
+  background: url(http://p.gmodules.com/ig/proxy?log=1&url=http://playii.appspot.com/client/ran/ajax-load.gif);
   width: 32px; height: 32px;
   margin-left: 8px;
   float: left;
@@ -565,6 +572,7 @@ google.setOnLoadCallback(function(){
 }
 #chat #menu a.bt {
   display:none;
+  font-weight: bold;
 }
 #chat #text {
   height: 300px; /* 388px */
@@ -576,7 +584,7 @@ google.setOnLoadCallback(function(){
 #chat #tool {
   padding: 6px 0px;
   height: 28px; *height:40px;
-  background: #e8e8ec url(http://playii.appspot.com/client/ran/tool-bg.gif) repeat-x;
+  background: #e8e8ec url(http://p.gmodules.com/ig/proxy?log=1&url=http://playii.appspot.com/client/ran/tool-bg.gif) repeat-x;
 }
 #chat #tool #type {
   width:160px;
@@ -600,6 +608,7 @@ a.bt{
   color:#ddd;
   text-decoration:none;
   cursor:hand;
+  font-weight: bold;
 }
 a.bt:hover{
   color:#fff;
@@ -611,52 +620,52 @@ a.bt:visited{
 a.c1 i{
   display:block; float:left;
   height:32px; width:14px;
-  background:url(http://playii.appspot.com/client/ran/button.png) left 0;
+  background:url(http://p.gmodules.com/ig/proxy?log=1&url=http://playii.appspot.com/client/ran/button.png) left 0;
 }
 a.c1 span{
   display:block; float:left;
   padding: 5px 14px 5px 0px;
   height:22px; line-height:22px;
   *height:32px;
-  background:url(http://playii.appspot.com/client/ran/button.png) right 0;
+  background:url(http://p.gmodules.com/ig/proxy?log=1&url=http://playii.appspot.com/client/ran/button.png) right 0;
 }
 
 a.c2 i{
   display:block; float:left;
   height:32px; width:14px;
-  background:url(http://playii.appspot.com/client/ran/button.png) left -32px;
+  background:url(http://p.gmodules.com/ig/proxy?log=1&url=http://playii.appspot.com/client/ran/button.png) left -32px;
 }
 a.c2 span{
   display:block; float:left;
   padding: 5px 14px 5px 0px;
   height:22px; line-height:22px;
   *height:32px;
-  background:url(http://playii.appspot.com/client/ran/button.png) right -32px;
+  background:url(http://p.gmodules.com/ig/proxy?log=1&url=http://playii.appspot.com/client/ran/button.png) right -32px;
 }
 
 a.c3 i{
   display:block; float:left;
   height:28px; width:14px;
-  background:url(http://playii.appspot.com/client/ran/button.png) left -64px;
+  background:url(http://p.gmodules.com/ig/proxy?log=1&url=http://playii.appspot.com/client/ran/button.png) left -64px;
 }
 a.c3 span{
   display:block; float:left;
   padding: 3px 14px 3px 0px;
   height:22px; line-height:22px;
   *height:28px;
-  background:url(http://playii.appspot.com/client/ran/button.png) right -64px;
+  background:url(http://p.gmodules.com/ig/proxy?log=1&url=http://playii.appspot.com/client/ran/button.png) right -64px;
 }
 
 span.c4 i{
   display:block; float:left;
   height:28px; width:14px;
-  background:url(http://playii.appspot.com/client/ran/button.png) left -92px;
+  background:url(http://p.gmodules.com/ig/proxy?log=1&url=http://playii.appspot.com/client/ran/button.png) left -92px;
 }
 span.c4 div {
   display:block; float:left;
   padding:9px 14px 3px 0px;
   height:16px; *height:28px;
-  background:url(http://playii.appspot.com/client/ran/button.png) right -92px;
+  background:url(http://p.gmodules.com/ig/proxy?log=1&url=http://playii.appspot.com/client/ran/button.png) right -92px;
 }
 span.c4 div input{
   display:block; float:left;
@@ -728,16 +737,16 @@ table.boxl td.br{
 }
 
 table.blue td{
-  background-image:url(http://playii.appspot.com/client/ran/blue.png);
+  background-image:url(http://p.gmodules.com/ig/proxy?log=1&url=http://playii.appspot.com/client/ran/blue.png);
 }
 table.red td{
-  background-image:url(http://playii.appspot.com/client/ran/red.png);
+  background-image:url(http://p.gmodules.com/ig/proxy?log=1&url=http://playii.appspot.com/client/ran/red.png);
 }
 table.green td{
-  background-image:url(http://playii.appspot.com/client/ran/green.png);
+  background-image:url(http://p.gmodules.com/ig/proxy?log=1&url=http://playii.appspot.com/client/ran/green.png);
 }
 table.pink td{
-  background-image:url(http://playii.appspot.com/client/ran/pink.png);
+  background-image:url(http://p.gmodules.com/ig/proxy?log=1&url=http://playii.appspot.com/client/ran/pink.png);
 }
 
 </style>
