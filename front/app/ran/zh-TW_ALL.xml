@@ -8,6 +8,12 @@
   <msg name="wait_pick">搜尋陌生人中</msg>  
   <msg name="you_left">你已離開</msg>  
   <msg name="stg_left">陌生人已離開</msg>  
+  <msg name="close_warn">真的不想继续聊了？这个操作将会结束正在进行中的对话。
+
+　　如果不小心点错了，请选“取消”。
+　　如果确实不想聊了，就选“确定”。
+
+小提示：聊天中随时可以选“离开”结束对话，换人再聊。</msg>
   <msg name="open">開始</msg>  
   <msg name="quit">退出</msg>  
   <msg name="bore">離開</msg>  

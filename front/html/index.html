@@ -1,0 +1,31 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="content-type" content="text/html; charset=utf-8" />
+    <link rel="shortcut icon" href="/favicon.ico" />
+    <title>Playii</title>
+  </head>
+  <body>
+    <script type="text/javascript">
+      function lang(){
+        return (navigator.userAgent.indexOf("MSIE") != 1) ? 
+               navigator.browserLanguage : navigator.language ;
+      }
+      var l = (lang() == "zh-cn") ? "cn" : "en";
+      window.location = "html/"+l+"/index.html";
+    </script>
+    <noscript>
+    Choose your language:
+    <a href="html/en/index.html">english</a>,
+    <a href="html/cn/index.html">chinese</a>.
+    JavaScript has been disabled in your browser,
+    you might have problem view some pages of this site.
+    <br/>
+    请选择您的语言：
+    <a href="html/en/index.html">英文</a>，
+    <a href="html/cn/index.html">中文</a>。
+    你的浏览器禁止了 JavaScript 脚本运行，
+    将会无法正常浏览本站的部分内容。
+    </noscript>
+  </body>
+</html>

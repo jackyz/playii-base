@@ -1,6 +1,6 @@
 #!/usr/bin/python
 import logging
-from fiveone import FiveOne
+from lib import FiveOne
 from google.appengine.ext import webapp
 from django.utils import simplejson as json
 from google.appengine.ext.webapp.util import run_wsgi_app
@@ -25,8 +25,7 @@ class GetInfo(webapp.RequestHandler):
         self.response.headers['Content-Type'] = 'text/javascript'
         self.response.out.write( json.dumps(info) )
 
-application = webapp.WSGIApplication(
-    [('/51/GetInfo.js', GetInfo)], debug=True)
+application = webapp.WSGIApplication([('/51/GetInfo.js', GetInfo)], debug=True)
 
 def main():
     run_wsgi_app(application)

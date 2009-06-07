@@ -1,0 +1,96 @@
+<!-- chat_hall -->
+<style type="text/css">
+#chat_hall {
+}
+</style>
+
+<div id="chat_hall">
+  新建聊天室 <span id="error"></span><br/>
+  <form action="javascript:void();">
+    名字：
+    <input id="name" type="text" value="" />
+    <input id="new" type="submit" value="创建" />
+  </form>
+  <br/>
+  加入聊天室 <br/>
+  <ul id="rooms">
+  </ul>
+  <br/>
+  消息：<span id="text"></span> <br/> 
+</div>
+
+<script type="text/javascript">
+(function(){
+
+  var _sn = "chat_hall";
+
+  $.log("loading "+_sn);
+
+  // scene api wrap functions
+  function _cast(f){ return con.cast(_sn)(f); }
+  function _refresh(){  _cast('refresh')();  }
+  function _enter(){    _cast('enter')();    }
+  function _leave(){    _cast('leave')();    }
+  function _goroom(r){  _cast('goroom')(r);  }
+  function _newroom(n){ _cast('newroom')(n); }
+  function _echo(w){    _cast('echo')(w);    }
+
+  // shortcut functions
+  function _tran(s){ return ui.tran(_sn, s);  }
+  function _escp(s){ return ui.escp(s);       }
+  function _ui(n){ return n ? $(n, $("#root #"+_sn)) : $("#root #"+_sn); }
+
+  $(document).bind(_sn, function(event){
+    // show ui
+    $("#root").empty().append($("#tmpl #"+_sn).clone());
+    // bind scene callback
+    con.bind(_sn, {
+      debug : function(){
+	var a = []; for(var i=0; i<arguments.length; i++) a.push(arguments[i]);
+	$.each(a, function(i, v){ $.log(v); });
+      },
+      error : function(){
+	var a = []; for(var i=0; i<arguments.length; i++) a.push(arguments[i]);
+	$.each(a, function(i, v){ $.log(v); });
+      },
+      echo : function(timelocal, timeserver){
+	var now = (new Date()).getTime();
+	$.log("echo total:"+(now-timelocal)+"");
+      },
+      refresh : function(u, v){
+	_ui("#rooms").empty();
+	$.each(v.rl, function(k, x){
+          _ui("#rooms").append("<li room='"+k+"'>"+x+"</li>");
+	});
+        _ui("#rooms li").click(function(){
+          _goroom($(this).attr("room"));
+	});
+        _ui("#text").empty().append(v.text);
+      },
+      goroom : function(sn){
+	$.log("!!!goroom("+sn+")");
+	ui.load(sn);
+      }
+    });
+    // auto run logics
+    $.thread(function(){ _cast('enter_debug')(); }, 100);
+    $.thread(function(){ _enter(); }, 200);
+    $.thread(function(){ _refresh(); }, 300);
+    // bind ui callback
+    _ui("form").submit(function(){
+      var n = $.unhtml($("#name", this).val());
+      $("#name", this).val(n);
+      if(!n) {
+        $("#name", this).focus();
+        loop("认真点，好好填。");
+        return false;
+      }
+      $("input:submit", this).attr("disabled", true);
+      _newroom(n);
+      return false;
+    });
+    // ...
+  });
+
+})();
+</script>

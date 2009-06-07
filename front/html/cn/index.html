@@ -1,0 +1,129 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="content-type" content="text/html; charset=utf-8" />
+    <title>Playii : 独乐乐，与人乐乐，孰乐？</title>
+    <link rel="shortcut icon" href="/favicon.ico" />
+    <link rel="stylesheet" type="text/css" href="../style/css.css" />
+  </head>
+  <body class="cn">
+    
+    <div id="Wrapper">
+
+      <!-- ==================================================== -->
+      <div id="Page">
+	
+	<!-- ---------------------------------------------------- -->	
+	<div id="Header">
+	  <!--
+	  <h1>Playii</h1>
+	  <p>
+	    <a id="LinkPlayii" href="http://playii.com">Playii</a>
+	  </p>
+	  <p>
+	    <a id="LinkGadget" href="http://www.google.com/ig/directory?type=gadgets&url=playii.appspot.com/client/ran/gadget.xml">获取这个组件</a>
+	  </p>
+	  -->
+	</div>
+	
+	<!-- ---------------------------------------------------- -->	
+	<div id="NavBar">
+	  <ul>
+	    <li id="NavBarLink2">
+	      <a href="/support/">Support</a>
+	    </li>
+	    <li id="NavBarLink3">
+	      <a href="/things/wiki/index.php?title=Frequently_Asked_Questions_%28Things_iPhone%29">FAQ</a>
+	    </li>
+	    <li id="NavBarLang">
+	      <a href="../en/index.html">English</a>
+	    </li>
+	  </ul>
+	</div>
+	
+	<!-- ---------------------------------------------------- -->	
+	<div id="Content">
+	  
+	  <!-- -------------------------------- -->	
+	  <div id="Tutorials">
+	    <!-- <h2>聊聊</h2> -->
+	    <div class="tutorial" id="Tutorial1">
+	      <div id="game" class="screenshot">
+		<img src="../image/screenshot-02_cn.png" alt="屏幕快照" />
+	      </div>
+	      <div id="ad" class="description">
+		<h3>聊聊</h3>
+		<dl>
+		  <dt><img src="../image/icon-star.png" alt="Inbox" class="icon" /></dt>
+		  <dd>		
+		    <p>
+		      想找个<em>陌生人</em>，随意的<em>聊聊</em>？
+		      <br/>
+		      <br/>
+		      请放心，聊天完全匿名。
+		      聊天中随时可以选“离开”结束对话，换人再聊。
+		    </p>
+		  </dd>
+		</dl>
+		<p>
+		  <!--
+		      Some info text goes here.
+		    -->
+		</p>
+		<p style="text-align:center;">
+		  <input id="start" type="image" src="../image/button-start_cn.gif" onclick="this.blur();" />
+		</p>
+	      </div>
+	    </div>
+	  </div>
+	  
+	  <!-- -------------------------------- -->	
+	  <div>
+	    <!-- <h2>Omegle :: Talk to Stranger</h2> -->
+	    <p>
+	      * 喜欢这个小玩意？<a id="LinkGadget" href="http://www.google.com/ig/directory?type=gadgets&url=playii.appspot.com/client/ran/gadget.xml" target=_blank>拿回去</a>用吧。<br/>
+	      * 我们是<a href="http://github.com/jackyz/playii-base/tree/master" target=_blank>开源</a>的，你可以做你自己的小玩意。<br/>
+	      * 记得常来哦，更多有意思的小玩意正在开发中。<br/>
+	      * 碰到问题了？有个好点子？别客气，发电邮给<a href="mailto:playii.admin+ideas[at]gmail.com">我们</a>就好。
+	    </p>
+	  </div>
+	  
+	  <!-- -------------------------------- -->
+	  
+	</div>
+	
+	<!-- ---------------------------------------------------- -->
+	<div id="Footer">
+	  <a href="about.html">关于我们</a>
+	  <a href="/blog/">开发日志</a>
+	</div>
+
+      </div>
+      
+    </div>
+
+  </body>
+  
+  <script type="text/javascript" src="http://www.google.com/jsapi"></script>
+  <script type="text/javascript">
+    google.load("jquery", "1.3.2");
+    google.setOnLoadCallback(function(){
+      // init
+      (function($){
+        $("#start").click(function(){
+          $("#game").fadeOut("normal", function(){
+            var h = "<iframe src='/app/ran/ui.html' class='game_iframe'/>";
+            $("#game").empty().append(h).fadeIn("normal", function(){
+              $("#ad").fadeOut("normal", function(){
+                var h = "<iframe src='ad.html' class='ad_iframe'/>";
+                $("#ad").empty().append(h).fadeIn();
+              });
+            });
+          });
+        });
+      })(jQuery);
+    });
+  </script>    
+  
+</html>
+

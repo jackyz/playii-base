@@ -1,0 +1,56 @@
+<!-- adv_0 -->
+<style>
+#adv_0 {
+}
+#adv_0 #box {
+  width:520px; height:480px;
+  left:140px; top:30px;
+}
+#adv_0 #box #ad {
+  background: #fff;
+  border: 1px solid #eee;
+  padding: 5px;
+}
+#adv_0 #box a {
+  text-decoration:none;
+}
+#adv_0 #box #next {
+  cursor: pointer;
+}
+#adv_0 #box li {
+  list-style: inside;
+  padding-left: 40px;  
+}
+</style>
+
+<div id="adv_0">
+  <div class="box-bg"></div>
+  <div id="box" class="box-fg">
+    <div class="box-zebra"></div>
+    <div class="box-title"> 欢迎使用 Omegle </div>
+    <div class="box-texts">
+	　　Omegle 是全新的交友服务。当你开始使用 Omegle 时，我们会随机挑选另外一个用户与你配对，你们可以单独开聊，聊天是完全匿名的。要不要在聊天之中告诉对方你的信息？这完全取决于你自己的喜好。
+      <br/>
+      <br/>
+      <img id="next" src="startbutton.png" alt="开始聊天" />
+      <br/>
+      <br/>
+      <br/>
+      <div id="ad">
+	google 提供的广告
+      </div>
+    </div>
+  </div>
+</div>
+
+<script type="text/javascript">
+(function(){
+  // $.log("loading adv_0.html");
+  var next = "room";
+  $(document).bind("adv_0", function(event){
+    $("#root").empty().append($("#tmpl #adv_0").clone());
+    $("#next", $("#root #adv_0")).focus();
+    $("#next", $("#root #adv_0")).click(function(){ ui.load(next); });
+  });
+})();
+</script>

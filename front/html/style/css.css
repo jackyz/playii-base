@@ -1,0 +1,435 @@
+/*
+ * {
+ border: 0px;
+ padding: 0px;
+ margin: 0px;
+ }
+ */
+
+body, div, dl, dt, dd, ul, ol, li, h1, h2, h3, h4, h5, h6, pre, form, fieldset, input, textarea, p, blockquote, th, td { 
+    margin: 0;
+    padding: 0;
+}
+table {
+    border-collapse: collapse;
+    border-spacing: 0;
+}
+fieldset, img { 
+    border: 0;
+}
+address, caption, cite, code, dfn, em, strong, th, var {
+    font-style: normal;
+    font-weight: normal;
+}
+ol, ul {
+    list-style: none;
+}
+caption, th {
+    text-align: left;
+}
+h1, h2, h3, h4, h5, h6 {
+    font-size: 100%;
+    font-weight: normal;
+}
+q:before, q:after {
+    content: '';
+}
+abbr, acronym { 
+    border: 0;
+}
+
+a {
+    outline: none;
+}
+
+/*
+  ============================================
+  General
+  ============================================
+  */
+
+body {
+    font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
+    font-size: 13px;
+    line-height: 18px;
+    color: #222;
+}
+
+p {
+    margin-bottom: 18px;
+}
+
+ul, ol {
+    margin-bottom: 18px;
+}
+
+a {
+    text-decoration: none;
+    color: #205680;
+}
+
+a:hover {
+    text-decoration: underline;
+}
+
+em {
+    font-style: normal;
+    font-weight: bold;
+}
+
+h2 {
+    font-size: 24px;
+    margin-top: 64px;
+    margin-bottom: 32px;
+    line-height: 24px;
+    font-weight: normal;
+}
+
+h3 {
+    font-size: 14px;
+    margin-top: 36px;
+    margin-bottom: 18px;
+    line-height: 18px;
+    font-weight: bold;
+}
+
+h4 {
+    font-size: 15px;
+    margin-top: 18px;
+    margin-bottom: 18px;
+    font-weight: bold;
+}
+
+
+/*
+  ============================================
+  Header & Content & Footer (Layout)
+  ============================================
+  */
+
+body {
+    /*background: #ededed;*/
+    background: #d5e9ed;
+    background-image: url(../image/background_solid.png);
+}
+
+#Wrapper {
+    width: 934px; /* Page + Sidebar */
+    margin: 0px auto;
+    position: relative;
+}
+
+#Sidebar {
+    width: 120px;
+    /*float: right; */ /* absolute positioning instead */
+    position: absolute;
+    top: 0px;
+    left: 814px;
+}
+
+#Page {
+    width: 814px;
+    background: #fff url(../image/background.png) repeat-y;
+    position: absolute;
+    top: 70px;
+    left: 0px;
+}
+
+#Header {
+    text-indent: -9999px;
+    overflow: hidden;
+    width: 814px;
+    height: 265px;
+    position: relative;
+    /* background: url(../image/header.jpg) no-repeat; */
+}
+
+body.en #Header {
+    background-image: url(../image/header_en.jpg);
+}
+
+body.cn #Header {
+    background-image: url(../image/header_cn.jpg);
+}
+
+
+#Header a#LinkGadget {
+    display: block;
+    width: 90px;
+    height: 110px;
+    position: absolute;
+    top: 90px;
+    left: 613px;
+}
+
+#Content {
+    padding: 12px 114px 0px 114px;
+}
+
+#Content div#Tutorials {
+    margin-left: -49px;
+}
+
+#Footer {
+    height: 44px;
+    margin-top: 20px;
+    padding-top: 50px;
+    text-align: center;
+    font-size: 11px;
+    background: #d5e9ed url(../image/background-bottom.png) no-repeat;
+}
+
+#Footer a {
+    color: #aaa;
+    font-weight: bold;
+    margin: 0px 5px;
+}
+
+#Footer a img {
+    margin-left: 5px;
+    position: relative;
+    top: 3px;
+}
+
+/*
+  ============================================
+  NavBar
+  ============================================
+  */
+
+#NavBar {
+    margin: 0px 32px;
+}
+
+#NavBar ul {
+    height: 40px;
+    background: url(../image/nav-bar2.png) repeat-x;
+    position: relative;
+    list-style: none;
+    margin: 0px;
+}
+
+#NavBar li a {
+    position: absolute;
+    top: 0px;
+    left: 0px;
+    display: block;
+    width: 167px;
+    height: 40px;
+    margin: 0px;
+    padding: 0px;
+    text-indent: -9999px;
+}
+
+#NavBar li a:hover {
+    background-position: 0px -40px;
+}
+
+#NavBar li a:active {
+    background-position: 0px -80px;
+}
+
+#NavBar li a.current {
+    background-position: 0px -80px;
+}
+
+#NavBar #NavBarLink1 a {
+    left: 80px;
+    background-image: url(../image/nav-product2.png);
+    background-repeat: no-repeat;
+}
+
+#NavBar #NavBarLink2 a {
+    left: 340px;
+    background-image: url(../image/nav-support2.png);
+    background-repeat: no-repeat;
+}
+
+#NavBar #NavBarLink3 a {
+    left: 514px;
+    background-image: url(../image/nav-faq2.png);
+    background-repeat: no-repeat;
+}
+
+#NavBar #NavBarLang a {
+    left: 710px;
+    width: 40px;
+    background-repeat: no-repeat;
+    /* background-image: url(../image/lang_cn.gif); */
+}
+
+body.en #NavBar #NavBarLang a {
+    background-image: url(../image/lang_cn.gif);
+}
+
+body.cn #NavBar #NavBarLang a {
+    background-image: url(../image/lang_en.gif);
+}
+
+/*
+  ============================================
+  Content
+  ============================================
+  */
+
+#Content {
+    position: relative;
+}
+
+#Content ul {
+    list-style: disc;
+}
+
+#Content ul li {
+    margin-left: 20px;
+}
+
+#Content ol {
+    list-style: decimal;
+}
+
+#Content ol li {
+    margin-left: 20px;
+}
+
+#Content h2.first-headline {
+    margin-top: 0px;
+}
+
+/*
+  ============================================
+  FAQs
+  ============================================
+  */
+
+#Content .faq h3 {
+    margin-top: 54px;
+    font-size: 15px;
+}
+
+/*
+  ============================================
+  Table of Contents
+  ============================================
+  */
+
+#TableOfContents ul {
+    margin-left: 0px;
+    list-style: none;
+}
+
+#TableOfContents ul li {
+    margin-left: 0px;
+    font-weight: bold;
+    font-size: 13px;
+}
+
+#TableOfContents ul ul {
+    margin-top: 18px;
+    margin-left: 20px;
+    list-style: square;
+}
+
+#TableOfContents ul ul li {
+    margin-left: 0px;
+    font-weight: normal;
+    font-size: 13px;
+}
+
+a.internal {
+    color: #222;
+}
+
+a:hover.internal {
+    text-decoration: none;
+}
+
+/*
+  ============================================
+  Tutorials
+  ============================================
+  */
+
+#Tutorials {
+/*margin-top: 70px;*/
+}
+
+#Tutorials h2 {
+/*margin-left: 50px;*/
+}
+
+.tutorial {
+    clear: both;
+    height: 460px;
+    margin-top: 50px;
+    position: relative;
+}
+
+.tutorial p {
+/*width: inherit;*/ /* Overwrite general p style */
+}
+
+.tutorial .description {
+    margin-left: 362px;
+    /*width: 290px;*/
+    padding-top: 20px;
+}
+
+.tutorial dl dt {
+    float: left;
+    display: block;
+    width: 33px;
+    height: 33px;
+}
+
+.tutorial dl dd {
+    margin-left: 40px;
+    margin-bottom: 18px;
+}
+
+.tutorial .screenshot {
+    display: block;
+    width: 350px;
+    height: 460px;
+    background: url(../image/screenshot-shadow.jpg) no-repeat;
+    /*float: left;*/
+    position: absolute;
+    top: 0px;
+    left: 0px;
+    overflow: hidden;
+}
+
+.tutorial .screenshot img {
+    display: block;
+    width: 250px;
+    height: 392px;
+    position: absolute;
+    top: 2px;
+    left: 50px;
+}
+
+.tutorial .description a {
+    font-weight: bold;
+}
+
+/*
+  ============================================
+  Extra
+  ============================================
+  */
+
+.game_iframe{
+  border: 0px none;
+  width: 250px; height: 392px;
+  position: absolute;
+  left: 50px; top: 2px;
+  overflow: hidden;
+}
+
+.ad_iframe{
+  border: 0px none;
+  width: 273px; height: 373px;
+  filter:alpha(opacity=30); opacity:0.3;
+  overflow: hidden;
+}
+

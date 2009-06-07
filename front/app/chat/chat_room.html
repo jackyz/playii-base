@@ -1,0 +1,110 @@
+<!-- chat_room -->
+<style type="text/css">
+#chat_room {
+}
+#chat_room #box {
+  width:300px; height:150px;
+  left:250px; top:30px;
+}
+#chat_room #name {
+  width:150px;
+}
+#chat_room #error {
+  color:red;
+}
+</style>
+
+<div id="chat_room">
+  聊天室 <span id="name"></span><br/>
+  <form action="javascript:void();">
+    <input id="word" type="text" value="" />
+    <input id="send" type="submit" value="发送" />
+    <input id="test" type="button" value="测试" />
+  </form>
+  <br/>
+  用户 <br/>
+  <ul id="users">
+  </ul>
+  聊天 <br/>
+  <div id="words">
+  </div>
+</div>
+
+<script type="text/javascript">
+(function(){
+
+  var _sn="", _class = "chat_room";
+
+  // scene api wrap functions
+  function _cast(f){ return con.cast(_sn)(f);}
+  function _refresh(){  _cast('refresh')();  }
+  function _enter(){    _cast('enter')();    }
+  function _leave(){    _cast('leave')();    }
+  function _say(w){     _cast('say')(w);     }
+  function _test(w){    _cast('test')(w);    }
+  function _echo(w){    _cast('echo')(w);    }
+
+  // shortcut functions
+  function _tran(s){ return ui.tran(_sn, s);  }
+  function _escp(s){ return ui.escp(s);       }
+  function _ui(n){ return n ? $(n,$("#root #"+_class)) : $("#root #"+_class); }
+
+  $(document).bind(_class, function(event, instance){
+    _sn = _class+"_"+instance;
+    $.log("!!! sn :: "+_sn);
+    // show ui
+    $("#root").empty().append($("#tmpl #"+_class).clone());
+    // bind scene callback
+    con.bind(_sn, {
+      debug : function(){
+	var a = []; for(var i=0; i<arguments.length; i++) a.push(arguments[i]);
+	$.each(a, function(i, v){ $.log(v); });
+      },
+      error : function(){
+	var a = []; for(var i=0; i<arguments.length; i++) a.push(arguments[i]);
+	$.each(a, function(i, v){ $.log(v); });
+      },
+      refresh : function(u, v){
+	_ui("#users").empty();
+	$.each(v.ul, function(k, x){
+          _ui("#users").append("<li user='"+x.id+"'>"+x.nick+"</li>");
+	});
+        _ui("#name").text(v.name);
+      },
+      say : function(n, w){
+        _ui("#words").append(n+":"+w+"<br/>");
+      },
+      echo : function(timelocal, timeserver){
+	var now = (new Date()).getTime();
+	$.log("echo total:"+(now-timelocal)+"");
+      }
+    });
+    // auto run logics
+    $.thread(function(){ _cast('enter_debug')(); }, 100);
+    $.thread(function(){ _enter(); }, 200);
+    $.thread(function(){ _refresh(); }, 300);
+    // bind ui callback
+    _ui("form").submit(function(){
+      var w = $.unhtml($("#word", this).val());
+      if(!w) {
+      } else {
+        _say(w);
+        _ui("#words").append("me:"+w+"<br/>");
+      }
+      $("#word", this).val("").focus();
+      return false;
+    });
+    _ui("#test").click(function(){
+      var w = $.unhtml($("#word").val());
+      if(!w) {
+      } else {
+        _test(w);
+      }
+      $("#word").val("").focus();
+      return false;
+    });
+    // ...
+  });
+
+})();
+</script>

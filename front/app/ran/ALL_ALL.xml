@@ -1,0 +1,23 @@
+<messagebundle>
+  <msg name="title">Talk to Stranger</msg>
+  <msg name="desc">You never know who will you meet here.</msg>
+  <msg name="stg_from">Stranger was from</msg>
+  <msg name="geo_null">Somewhere</msg>
+  <msg name="wait_conn">Waiting for connect.</msg>
+  <msg name="fail_conn">Temporarily unavailable.</msg>
+  <msg name="wait_pick">Waiting for stranger.</msg>
+  <msg name="you_left">You has left.</msg>
+  <msg name="stg_left">Stranger has left.</msg>
+  <msg name="close_warn">Really want to quit? this operate will end current talk.
+
+  if just click by mistake, choose cancel to continue.
+  if really want to quit, choose ok anyway.
+
+tips: anytime in a talk, you can click leave to end it, and meet a new one.</msg>
+  <msg name="open">Start</msg>
+  <msg name="quit">Quit</msg>
+  <msg name="bore">Leave</msg>
+  <msg name="clea">Clear</msg>
+  <msg name="pick">Random</msg>
+  <msg name="send">Send</msg>
+</messagebundle>

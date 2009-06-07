@@ -1,0 +1,46 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+
+<head>
+<title>51 test canvaspage</title>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
+<script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.3.2/jquery.min.js"></script>
+<style>
+#canvas {
+  width: 800px; height:600px;
+  border: 0px #eee solid;
+}
+</style>
+</head>
+
+<body>
+
+  <div id="head" class="site">
+    <input id="inc" type="button" value="+" />
+    <input id="dec" type="button" value="-" />
+  </div>
+  <div id="body" class="site">
+    <script src="http://www.gmodules.com/ig/ifr?url=http://hosting.gmodules.com/ig/gadgets/file/116762558114727629131/gadget.xml&amp;synd=open&amp;w=250&amp;h=250&amp;title=Test&amp;border=%23ffffff%7C3px%2C1px+solid+%23999999&amp;output=js"></script>
+    <!--
+    <iframe id="canvas" src="http://playii.appspot.com/client/omegle/index.html?51_sig_time=1236933552&51_sig_user=jackyz_zhao&51_sig_app_key=aa6379fe399e4c9a22777623354bd1e4&51_sig_session_key=26b1c81f25b01e5533e16661b5713a7d&51_sig=e284d70637c6cf54fb26967eda8770f1" scrolling="auto"></iframe>
+    -->
+  </div>
+  <div id="foot" class="site">
+    <a href="http://www.playii.com" target=_blank>playii</a>
+    &copy; fun of realtime-web!
+  </div>
+  <br/>
+
+<script type="text/javascript">
+$(function(){
+  var fc = function(x){
+    $("#canvas").height( $("#canvas").height() + x );
+  }
+  $("#inc").click(function(){ fc(10);  });
+  $("#dec").click(function(){ fc(-10); });
+});
+</script>
+
+</body>
+
+</html>

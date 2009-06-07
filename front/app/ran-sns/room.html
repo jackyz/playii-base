@@ -1,0 +1,65 @@
+<!-- room -->
+<style>
+#room {
+}
+#room #ad {
+  position: absolute;
+  width:180px; height:480px;
+  right:30px; top:30px;
+  background: #fff;
+  border: 1px solid #eee;
+}
+#room #box {
+  width:520px; height:480px;
+  left:30px; top:30px;
+}
+#room #box #chat {
+  background: #fff;
+  border: 1px solid #eee;
+  padding: 5px;
+  height: 200px;
+}
+#room #box a {
+  text-decoration:none;
+}
+#room #box #next {
+  cursor: pointer;
+}
+#room #box li {
+  list-style: inside;
+  padding-left: 40px;  
+}
+</style>
+
+<div id="room">
+  <div class="box-bg"></div>
+  <div id="box" class="box-fg">
+    <div class="box-zebra"></div>
+    <div class="box-title">
+      Enjoy Omegle
+    </div>
+    <div class="box-texts">
+      <div id="chat">
+	聊天区域
+      </div>
+      <br/>
+      <br/>
+      <input id="next" type="submit" value="离开聊天" />
+    </div>
+  </div>
+  <div id="ad">
+    google 提供的广告
+  </div>
+</div>
+
+<script type="text/javascript">
+(function(){
+  // $.log("loading room.html");
+  var next = "adv_0";
+  $(document).bind("room", function(event){
+    $("#root").empty().append($("#tmpl #room").clone());
+    $("#next", $("#root #room")).focus();
+    $("#next", $("#root #room")).click(function(){ ui.load(next); });
+  });
+})();
+</script>
