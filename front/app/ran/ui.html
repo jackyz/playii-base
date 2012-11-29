@@ -381,14 +381,14 @@ google.setOnLoadCallback(function(){
   $.con = function(){
     
     // **** implement jsonp in iframe
-    var host = "http://74.207.243.96";
+    // var host = "http://74.207.243.96";
     // var host = "http://61.139.126.212:8080";
-    // var host = "http://127.0.0.1:8880";
+    var host = "http://127.0.0.1:8080";
     var ourl = host+"/_open?c=?"; // 连接URL
     var rurl = host+"/_recv?c=?"; // 接收URL
     var surl = host+"/_send?c=?"; // 发送URL
     var debug= 0;                 // 通讯调试
-    var timeout = 20000;          // 通讯超时 30 seconds
+    var timeout = 45000;          // 通讯超时 需大于服务端超时 30 seconds
 
     // **** we need two iframe, only one link per iframe
     var rifm = "recv";            // 接收通道
